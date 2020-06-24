@@ -1,0 +1,33 @@
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
+}
+
+#greeting-container {
+  margin-top: 20px;
+}
+
+h1
+{
+    color: maroon;
+}
+
+h2
+{
+    color: navy;
+}
+
+.github{
+    width:50%;
+    margin-right:2%;
+    float: left;
+}
+
+.linkedin {
+    width:50;
+    float: left;
+}
+.clearfix{
+    clear:both
+}
