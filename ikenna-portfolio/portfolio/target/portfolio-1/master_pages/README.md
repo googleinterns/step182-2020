@@ -1,0 +1,1 @@
+Contains screenshots of the website prior to latest pull
