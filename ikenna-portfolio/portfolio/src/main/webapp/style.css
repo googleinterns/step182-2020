@@ -5,7 +5,8 @@
 }
 
 .image-format {
-  width: 80%;
+  border: 10px solid black;
+  max-width: 80%;
 }
 
 .row {
