@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <title>Bootstap Portfolio</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
+</head>
+<body>
+  <div class="theme">
+    <!-- Navbar -->
+    <nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                         
+        </button>
+        <a class="navbar-brand" href="#">Me</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">INTRO</a></li>
+            <li><a href="#">STEP</a></li>
+            <li><a href="#">PROJECTS</a></li>
+            <li><a href="#">CALISTHENICS</a></li>
+        </ul>
+        </div>
+    </div>
+    </nav>
+
+    <!-- First Container -->
+    <div class="container-fluid bg-1 text-center">
+    <h3 class="margin">Ikenna's Portfolio</h3>
+    <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
+    <h3>I'm an adventurer</h3>
+    </div>
+
+    <!-- Second Container -->
+    <div class="container-fluid bg-2 text-center">
+    <h3 class="margin">STEP So Far</h3>
+    <h3><u>TODO</u></h3>
+    <p>Click here to read a random quote:</p>
+    <button onclick="addRandomQuote()">Hello</button>
+    <div id="quote-container"></div>
+    </div>
+
+    <!-- Third Container -->
+    <div class="container-fluid bg-3 text-center">
+      <h3 class="margin">Cool Projects</h3>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Project<span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href="#">CycleGAN</a></li>
+          <li><a href="#">Deep Photo Style Transfer</a></li>
+          <li><a href="#">JavaScript</a></li>
+        </ul>
+      </div>
+    <p class="desc">The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle 
+        consistency to turn something from one domain to another domain. For example, if I were to say “My name is Ikenna Elue” 
+        into a CycleGan that turns language into Spanish, then it would output “Me llamo Ikenna Elue”. Two perks of this model 
+        that make it stand out from the rest is that, using the example model described earlier, the model can only output in 
+        a 1:1 fashion (i.e. can’t say “Mi nombre es Ikenna Elue”) and if we put the Spanish back through the model it would 
+        become “My name is Ikenna Elue”. For this particular CycleGAN, we (my partner and I did this for a school project to 
+        reproduce a paper) turned images of clothing in the right side up domain into clothing of the rotated domain. The 
+        results are pictured above. From left to right respectively we have the original image, the generated image in the 
+        rotated domain, and the generated image in the right side up domain using the rotated domain image. <b>You can tell it's
+        a generated image based on the noisiness of the image</b></p>
+    <a href="#" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-search"></span> Search
+    </a>
+    </div>
+
+    <!-- Fourth Container (Grid) -->
+    <div class="container-fluid bg-4 text-center">    
+    <h3 class="margin">Calisthenics Goals</h3><br>
+    <div class="row">
+        <div class="col-sm-4">
+        <p class="desc"></p>
+        <img src="birds1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+        </div>
+        <div class="col-sm-4"> 
+        <p class="desc"></p>
+        <img src="birds2.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+        </div>
+        <div class="col-sm-4"> 
+        <p class="desc"></p>
+        <img src="birds3.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+        </div>
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="container-fluid bg-5 text-center">
+      <p class="desc">Thanks for reading!</p>
+      <p class="desc">Made with help from <a href="https://www.w3schools.com">www.w3schools.com</a></p> 
+    </footer>
+  </div>
+</body>
+</html>
