@@ -10,7 +10,130 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="script.js"></script>
+  <script type="text/javascript">
+    const project_desc = [
+    "The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle \
+      consistency to turn something from one domain to another domain. For example, if I were to say \"My name is Ikenna Elue\" \
+        into a CycleGan that turns language into Spanish, then it would output \"Me llamo Ikenna Elue\". Two perks of this model \
+        that make it stand out from the rest is that, using the example model described earlier, the model can only output in \
+        a 1:1 fashion (i.e. can’t say \"Mi nombre es Ikenna Elue\") and if we put the Spanish back through the model it would \
+        become \"My name is Ikenna Elue\". For this particular CycleGAN, we (my partner and I did this for a school project to \
+        reproduce a paper) turned images of clothing in the right side up domain into clothing of the rotated domain. The \
+        results are pictured above. From left to right respectively we have the original image, the generated image in the \
+        rotated domain, and the generated image in the right side up domain using the rotated domain image. <b>You can tell it\'s \
+        a generated image based on the noisiness of the image</b>",
+        
+        "Deep photo style transfer is an extension to the deep learning model Neural Style. Neural Style takes a content and style \
+        image as inputs and attempts to generate the content image in the style of the style image. One shortcoming of this model \
+        is that any generated image looks like a painting. Deep photo attempts to remedy this problem by using masks, laplacian \
+        matting, an extra loss function (see paper for more info). So far, my partner and I (this was a school project), have \
+        implemented Neural Style using the help of the tutorial found below. Doing such has yielded the result pictured above \
+        where from left to right is the content image, the style image, and the created image. Our progress on the deep photo \
+        portion of the project is technically done, but it looks terrible and was made using code we didn’t really understand (the \
+        original codebase was made in lua whereas we were used to python deep learning projects). Going forward, we hope to \
+        implement the model fully and integrate it into a web application.",
+        
+        "Although this project hasn’t been worked on for a while for reasons I’ll explain later, I still think it’s worth sharing. \
+        This project attempts to create a game engine that removes all dependencies from systems to make it multithreaded and modular. \
+        Although I technically succeeded in doing such I found out that based on the way opengl (a graphics library) renders its data, \
+        I am not allowed to render across multiple threads. The fix for this would be a synchronization at the end of each step of \
+        the the game state, but that seemed like an unrewarding solution. So, to this day, I am thinking of better solutions/trying to \
+        see how I can abstract the messaging system away from the game engine to make it easier to implement everything else. The \
+        abstraction would also allow me to implement other projects I might want multithreaded such as a genetic algorithm builder \
+        or neural net generator."
+        ];
+
+    const links = ["<p>Here's a link to the <a href=\"https://arxiv.org/pdf/1703.10593.pdf\">paper</a>.</p>",
+    "rada"];
+
+    const quotes = ["The absence of evidence is not the evidence of absence.", "Is mayonaise an instrument?", "The World!"];
+
+    function addRandomQuote() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById("quote-container").innerText = quote;
+    }
+
+    function changeCycleGAN() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("pro-desc").innerText = project_desc[0];
+      document.getElementById("pro-links").innerHTML = links[0];
+    }
+
+    function changeDeepPhoto() {
+      document.getElementById("pro-image1").src = "/images/dancing.jpg";
+      document.getElementById("pro-image2").src = "/images/picasso.jpg";
+      document.getElementById("pro-image3").src = "/images/Figure_1.png";
+      document.getElementById("pro-desc").innerText = project_desc[1];
+      document.getElementById("pro-links").innerText = links[1];
+    }
+
+    function changeCycleGAN1() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("pro-desc").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN2() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN3() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN4() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN5() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN6() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN7() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+    function changeCycleGAN8() {
+      document.getElementById("pro-image1").src = "/images/real.png";
+      document.getElementById("pro-image2").src = "/images/real_to_rot.png";
+      document.getElementById("pro-image3").src = "/images/rot_to_real.png";
+      document.getElementById("description").innerText = project_desc[0];
+      document.getElementById("links").innerText = links[0];
+    }
+
+  </script>
 </head>
 <body>
   <div class="theme">
@@ -49,34 +172,43 @@
     <h3 class="margin">STEP So Far</h3>
     <h3><u>TODO</u></h3>
     <p>Click here to read a random quote:</p>
-    <button onclick="addRandomQuote()">Hello</button>
+    <button onclick="addRandomQuote()">Try It!</button>
     <div id="quote-container"></div>
     </div>
 
     <!-- Third Container -->
     <div class="container-fluid bg-3 text-center">
       <h3 class="margin">Cool Projects</h3>
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Project<span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#">CycleGAN</a></li>
-          <li><a href="#">Deep Photo Style Transfer</a></li>
-          <li><a href="#">JavaScript</a></li>
-        </ul>
+      <div class="row">
+        <div class="column">
+          <button onclick="changeCycleGAN()">CycleGAN</button>
+        </div>
+        <div class="column">
+          <button onclick="changeDeepPhoto()">Deep Photo Style Transfer</button>
+        </div>
+        <div class="column">
+          <button onclick="changeMsgSys()">Message System</button>
+        </div>
       </div>
-    <p class="desc">The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle 
-        consistency to turn something from one domain to another domain. For example, if I were to say “My name is Ikenna Elue” 
-        into a CycleGan that turns language into Spanish, then it would output “Me llamo Ikenna Elue”. Two perks of this model 
-        that make it stand out from the rest is that, using the example model described earlier, the model can only output in 
-        a 1:1 fashion (i.e. can’t say “Mi nombre es Ikenna Elue”) and if we put the Spanish back through the model it would 
-        become “My name is Ikenna Elue”. For this particular CycleGAN, we (my partner and I did this for a school project to 
-        reproduce a paper) turned images of clothing in the right side up domain into clothing of the rotated domain. The 
-        results are pictured above. From left to right respectively we have the original image, the generated image in the 
-        rotated domain, and the generated image in the right side up domain using the rotated domain image. <b>You can tell it's
-        a generated image based on the noisiness of the image</b></p>
-    <a href="#" class="btn btn-default btn-lg">
-        <span class="glyphicon glyphicon-search"></span> Search
-    </a>
+      <div class="row">
+        <div class="column">
+          <img id="pro-image1" class="image-format" src="" alt="">
+        </div>
+        <div class="column">
+          <img id="pro-image2" class="image-format" src="" alt="">
+        </div>
+        <div class="column">
+          <img id="pro-image3" class="image-format" src="" alt="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <p id="pro-desc" class="desc"> </p>
+        </div>
+        <div class="column">
+          <p id="pro-links" class="desc"> </p>
+        </div>
+      </div>
     </div>
 
     <!-- Fourth Container (Grid) -->

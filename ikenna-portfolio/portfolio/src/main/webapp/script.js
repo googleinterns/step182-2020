@@ -16,7 +16,7 @@
  * Adds a random quote to the page.
  */
 function addRandomQuote() {
-  const quotes = ['The absence of evidence is not the evidence of absence.', 'Is mayonaise an instrument?', 'The World!'];
+  const quotes = ["The absence of evidence is not the evidence of absence.", "Is mayonaise an instrument?", "The World!"];
   const quote = quotes[Math.floor(Math.random() * quotes.length)];
   document.getElementById('quote-container').innerText = quote;
 }
