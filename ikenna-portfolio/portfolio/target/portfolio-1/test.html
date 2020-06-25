@@ -44,13 +44,20 @@
       or neural net generator."
     ];
 
-    const links = ["<p>Here's a link to the <a href=\"https://arxiv.org/pdf/1703.10593.pdf\">paper</a>.</p>",
-      "<p>Here's a link to the <a href=\"https://arxiv.org/pdf/1703.07511.pdf\">paper</a>.</p> \
-      <p>Here's a link to the pytorch <a href=\"https://pytorch.org/tutorials/advanced/neural_style_tutorial.html\">tutorial</a>.</p>", 
-      "<p>Here's a link to the <a href=\"https://www.gamasutra.com/blogs/MichaelKissner/20151027/257369/Writing_a_Game_Engine_from_Scratch__Part_1_Messaging.php\">site</a> explaining the message system further.</p>"
-      ];
+    const links = [
+      "Here's a link to the <a href=\"https://arxiv.org/pdf/1703.10593.pdf\">paper</a>.",
 
-    const quotes = ["The absence of evidence is not the evidence of absence.", "Is mayonaise an instrument?", "The World!"];
+      "Here's a link to the <a href=\"https://arxiv.org/pdf/1703.07511.pdf\">paper</a>.<br> \
+      Here's a link to the pytorch <a href=\"https://pytorch.org/tutorials/advanced/neural_style_tutorial.html\">tutorial</a>.", 
+      
+      "Here's a link to the <a href=\"https://www.gamasutra.com/blogs/MichaelKissner/20151027/257369/Writing_a_Game_Engine_from_Scratch__Part_1_Messaging.php\">site</a> explaining the message system further."
+    ];
+
+    const quotes = [
+      "The absence of evidence is not the evidence of absence.", 
+      "Is mayonaise an instrument?", 
+      "The World!"
+    ];
 
     const goal = "Goal: -";
     const current = "Current Ability: -";
@@ -69,7 +76,7 @@
       document.getElementById("pro-image1").src = "/images/real.png";
       document.getElementById("pro-image2").src = "/images/real_to_rot.png";
       document.getElementById("pro-image3").src = "/images/rot_to_real.png";
-      document.getElementById("pro-desc").innerText = project_desc[0];
+      document.getElementById("pro-desc").innerHTML = project_desc[0];
       document.getElementById("pro-links").innerHTML = links[0];
     }
 
@@ -77,15 +84,15 @@
       document.getElementById("pro-image1").src = "/images/dancing.jpg";
       document.getElementById("pro-image2").src = "/images/picasso.jpg";
       document.getElementById("pro-image3").src = "/images/Figure_1.png";
-      document.getElementById("pro-desc").innerText = project_desc[1];
+      document.getElementById("pro-desc").innerHTML = project_desc[1];
       document.getElementById("pro-links").innerHTML = links[1];
     }
 
     function changeMsgSys() {
-      document.getElementById("pro-image1").src = "/images/Message Bus.png";
-      document.getElementById("pro-image2").src = "";
+      document.getElementById("pro-image1").src = "";
+      document.getElementById("pro-image2").src = "/images/Message Bus.png";
       document.getElementById("pro-image3").src = "";
-      document.getElementById("pro-desc").innerText = project_desc[2];
+      document.getElementById("pro-desc").innerHTML = project_desc[2];
       document.getElementById("pro-links").innerHTML = links[2];
     }
 
@@ -108,7 +115,6 @@
       document.getElementById("cal-image2").src = "/images/supported_pistol_squat.jpg";
       document.getElementById("goal").innerText = goal.replace("-", "Pistol Squat");
       document.getElementById("current").innerText = current.replace("-", "Pole Supported Pistol Squat");
-      console.log("test: " + document.getElementById("cal-image2").style.width);
     }
 
     function changeFrontLever() {
@@ -129,6 +135,7 @@
 </head>
 <body onload="load()">
   <div class="theme">
+
     <!-- Navbar -->
     <nav class="navbar navbar-default">
       <div class="container">
@@ -139,7 +146,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>                         
         </button>
-        <a class="navbar-brand" href="#">Me</a>
+        <a class="navbar-brand" href="#">'kenna</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
@@ -156,8 +163,13 @@
     <div class="container-fluid bg-1 text-center">
       <h3 class="margin">Ikenna's Portfolio</h3>
       <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
-      <h3>I'm a Googler</h3>
-      <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago based industries such as JCC Apachi Camp (Jewish Community Center) and ASM (After School Matters). My favorite food is Nigerian jollof rice. I enjoy doing calisthenic based exercises, combination jump roping, and dancing. One non physical activity I enjoy is watching comedy animes or cartoons.</p>
+      <h3>I'm a Googler!!</h3>
+      <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American 
+      from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago 
+      based industries such as JCC Apachi Camp (Jewish Community Center) and ASM (After School Matters). 
+      My favorite food is Nigerian jollof rice. I enjoy doing calisthenic based exercises, combination 
+      jump roping, and dancing. One non physical activity I enjoy is watching comedy animes or cartoons.
+      </p>
       <br>
       <p class="desc">Here's a link to my LinkedIn <a href="https://www.linkedin.com/in/ikenna-elue-a28798166/">page</a></p>
       <p class="desc">Here's a link to my GitHub <a href="https://github.com/ike-elue">page</a></p>
@@ -186,6 +198,8 @@
           <button onclick="changeMsgSys()">Message System</button>
         </div>
       </div>
+      <hr>
+      <br>
       <div class="row">
         <div class="column">
           <img id="pro-image1" class="image-format" src="" alt="">
@@ -197,11 +211,12 @@
           <img id="pro-image3" class="image-format" src="" alt="">
         </div>
       </div>
+      <br>
       <div class="row">
-        <div class="column">
+        <div class="col-sm-8">
           <p id="pro-desc" class="desc"> </p>
         </div>
-        <div class="column">
+        <div class="col-sm-4">
           <p id="pro-links" class="desc"> </p>
         </div>
       </div>
@@ -227,6 +242,7 @@
           <button onclick="changeHSPU()">Freestanding Handstand Push Up</button>
         </div>
       </div>
+      <br>
       <div class="row">
         <div class="column">
           <img src="" id="cal-image1" class="img-responsive margin image-format" alt="">
@@ -242,9 +258,10 @@
     <!-- Footer -->
     <footer class="container-fluid bg-5 text-center">
       <p class="desc">Thanks for reading!</p>
-      <p class="desc">Made with help from <a href="https://www.w3schools.com">www.w3schools.com</a></p>
-      <p>Click <a href="index.html">here</a> to return to the old site!</p> 
+      <p class="desc">Made with a lot of help from <a href="https://www.w3schools.com">www.w3schools.com</a></p>
+      <p class="desc">Click <a href="index.html">here</a> to return to the old site!</p> 
     </footer>
+
   </div>
 </body>
 </html>

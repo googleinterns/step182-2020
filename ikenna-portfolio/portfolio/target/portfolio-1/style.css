@@ -19,8 +19,8 @@
 }
   
 .bg-3 { 
-  background-color: #daad86;
-  color: #ffffff;
+  background-color: #b89b1a;
+  color: #070101;
 }
 
 .bg-4 { 
@@ -36,8 +36,6 @@
 .column {
   flex: 1 1 auto;
   padding: 5px;
-  align-items: center;
-  justify-content: center;
 }
 
 .container-fluid {
