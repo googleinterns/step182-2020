@@ -11,41 +11,38 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    /*
-    Can use window onload to "click" first buttons
-    */
 
     const project_desc = [
-    "The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle \
+      "The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle \
       consistency to turn something from one domain to another domain. For example, if I were to say \"My name is Ikenna Elue\" \
-        into a CycleGan that turns language into Spanish, then it would output \"Me llamo Ikenna Elue\". Two perks of this model \
-        that make it stand out from the rest is that, using the example model described earlier, the model can only output in \
-        a 1:1 fashion (i.e. can’t say \"Mi nombre es Ikenna Elue\") and if we put the Spanish back through the model it would \
-        become \"My name is Ikenna Elue\". For this particular CycleGAN, we (my partner and I did this for a school project to \
-        reproduce a paper) turned images of clothing in the right side up domain into clothing of the rotated domain. The \
-        results are pictured above. From left to right respectively we have the original image, the generated image in the \
-        rotated domain, and the generated image in the right side up domain using the rotated domain image. <b>You can tell it\'s \
-        a generated image based on the noisiness of the image</b>",
+      into a CycleGan that turns language into Spanish, then it would output \"Me llamo Ikenna Elue\". Two perks of this model \
+      that make it stand out from the rest is that, using the example model described earlier, the model can only output in \
+      a 1:1 fashion (i.e. can’t say \"Mi nombre es Ikenna Elue\") and if we put the Spanish back through the model it would \
+      become \"My name is Ikenna Elue\". For this particular CycleGAN, we (my partner and I did this for a school project to \
+      reproduce a paper) turned images of clothing in the right side up domain into clothing of the rotated domain. The \
+      results are pictured above. From left to right respectively we have the original image, the generated image in the \
+      rotated domain, and the generated image in the right side up domain using the rotated domain image. <b>You can tell it\'s \
+      a generated image based on the noisiness of the image</b>",
         
-        "Deep photo style transfer is an extension to the deep learning model Neural Style. Neural Style takes a content and style \
-        image as inputs and attempts to generate the content image in the style of the style image. One shortcoming of this model \
-        is that any generated image looks like a painting. Deep photo attempts to remedy this problem by using masks, laplacian \
-        matting, an extra loss function (see paper for more info). So far, my partner and I (this was a school project), have \
-        implemented Neural Style using the help of the tutorial found below. Doing such has yielded the result pictured above \
-        where from left to right is the content image, the style image, and the created image. Our progress on the deep photo \
-        portion of the project is technically done, but it looks terrible and was made using code we didn’t really understand (the \
-        original codebase was made in lua whereas we were used to python deep learning projects). Going forward, we hope to \
-        implement the model fully and integrate it into a web application.",
+      "Deep photo style transfer is an extension to the deep learning model Neural Style. Neural Style takes a content and style \
+      image as inputs and attempts to generate the content image in the style of the style image. One shortcoming of this model \
+      is that any generated image looks like a painting. Deep photo attempts to remedy this problem by using masks, laplacian \
+      matting, an extra loss function (see paper for more info). So far, my partner and I (this was a school project), have \
+      implemented Neural Style using the help of the tutorial found below. Doing such has yielded the result pictured above \
+      where from left to right is the content image, the style image, and the created image. Our progress on the deep photo \
+      portion of the project is technically done, but it looks terrible and was made using code we didn’t really understand (the \
+      original codebase was made in lua whereas we were used to python deep learning projects). Going forward, we hope to \
+      implement the model fully and integrate it into a web application.",
         
-        "Although this project hasn’t been worked on for a while for reasons I’ll explain later, I still think it’s worth sharing. \
-        This project attempts to create a game engine that removes all dependencies from systems to make it multithreaded and modular. \
-        Although I technically succeeded in doing such I found out that based on the way opengl (a graphics library) renders its data, \
-        I am not allowed to render across multiple threads. The fix for this would be a synchronization at the end of each step of \
-        the the game state, but that seemed like an unrewarding solution. So, to this day, I am thinking of better solutions/trying to \
-        see how I can abstract the messaging system away from the game engine to make it easier to implement everything else. The \
-        abstraction would also allow me to implement other projects I might want multithreaded such as a genetic algorithm builder \
-        or neural net generator."
-        ];
+      "Although this project hasn’t been worked on for a while for reasons I’ll explain later, I still think it’s worth sharing. \
+      This project attempts to create a game engine that removes all dependencies from systems to make it multithreaded and modular. \
+      Although I technically succeeded in doing such I found out that based on the way opengl (a graphics library) renders its data, \
+      I am not allowed to render across multiple threads. The fix for this would be a synchronization at the end of each step of \
+      the the game state, but that seemed like an unrewarding solution. So, to this day, I am thinking of better solutions/trying to \
+      see how I can abstract the messaging system away from the game engine to make it easier to implement everything else. The \
+      abstraction would also allow me to implement other projects I might want multithreaded such as a genetic algorithm builder \
+      or neural net generator."
+    ];
 
     const links = ["<p>Here's a link to the <a href=\"https://arxiv.org/pdf/1703.10593.pdf\">paper</a>.</p>",
       "<p>Here's a link to the <a href=\"https://arxiv.org/pdf/1703.07511.pdf\">paper</a>.</p> \
@@ -57,6 +54,11 @@
 
     const goal = "Goal: -";
     const current = "Current Ability: -";
+
+    function load() {
+      changeCycleGAN();
+      changeVSit()
+    }
 
     function addRandomQuote() {
       const quote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -125,49 +127,49 @@
 
   </script>
 </head>
-<body>
+<body onload="load()">
   <div class="theme">
     <!-- Navbar -->
     <nav class="navbar navbar-default">
-    <div class="container">
+      <div class="container">
         <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>                         
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                         
         </button>
         <a class="navbar-brand" href="#">Me</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right">
             <li><a href="#">INTRO</a></li>
             <li><a href="#">STEP</a></li>
             <li><a href="#">PROJECTS</a></li>
             <li><a href="#">CALISTHENICS</a></li>
-        </ul>
+          </ul>
         </div>
-    </div>
+      </div>
     </nav>
 
     <!-- First Container -->
     <div class="container-fluid bg-1 text-center">
-    <h3 class="margin">Ikenna's Portfolio</h3>
-    <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
-    <h3>I'm a Googler</h3>
-    <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago based industries such as JCC Apachi Camp (Jewish Community Center) and ASM (After School Matters). My favorite food is Nigerian jollof rice. I enjoy doing calisthenic based exercises, combination jump roping, and dancing. One non physical activity I enjoy is watching comedy animes or cartoons.</p>
-    <br>
+      <h3 class="margin">Ikenna's Portfolio</h3>
+      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
+      <h3>I'm a Googler</h3>
+      <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago based industries such as JCC Apachi Camp (Jewish Community Center) and ASM (After School Matters). My favorite food is Nigerian jollof rice. I enjoy doing calisthenic based exercises, combination jump roping, and dancing. One non physical activity I enjoy is watching comedy animes or cartoons.</p>
+      <br>
       <p class="desc">Here's a link to my LinkedIn <a href="https://www.linkedin.com/in/ikenna-elue-a28798166/">page</a></p>
       <p class="desc">Here's a link to my GitHub <a href="https://github.com/ike-elue">page</a></p>
     </div>
 
     <!-- Second Container -->
     <div class="container-fluid bg-2 text-center">
-    <h3 class="margin">STEP So Far</h3>
-    <h3><u>TODO</u></h3>
-    <p>Click here to read a random quote:</p>
-    <button onclick="addRandomQuote()">Try It!</button>
-    <div id="quote-container"></div>
+      <h3 class="margin">STEP So Far</h3>
+      <h3><u>TODO</u></h3>
+      <p>Click here to read a random quote:</p>
+      <button onclick="addRandomQuote()">Try It!</button>
+      <div id="quote-container"></div>
     </div>
 
     <!-- Third Container -->
@@ -207,8 +209,8 @@
 
     <!-- Fourth Container-->
     <div class="container-fluid bg-4 text-center">    
-    <h3 class="margin">Calisthenics Goals</h3><br>
-    <div class="row">
+      <h3 class="margin">Calisthenics Goals</h3><br>
+      <div class="row">
         <div class="column">
           <button onclick="changeVSit()">V Sit</button>
         </div>
@@ -224,23 +226,24 @@
         <div class="column">
           <button onclick="changeHSPU()">Freestanding Handstand Push Up</button>
         </div>
-    </div>
-    <div class="row">
+      </div>
+      <div class="row">
         <div class="column">
-            <img src="" id="cal-image1" class="img-responsive margin image-format" alt="">
-            <h3 id="goal"></h3>
+          <img src="" id="cal-image1" class="img-responsive margin image-format" alt="">
+          <h3 id="goal"></h3>
         </div>
         <div class="column"> 
-            <img src="" id="cal-image2" class="img-responsive margin image-format" alt="">
-            <h3 id="current"></h3>
+          <img src="" id="cal-image2" class="img-responsive margin image-format" alt="">
+          <h3 id="current"></h3>
         </div>
-    </div>
+      </div>
     </div>
 
     <!-- Footer -->
     <footer class="container-fluid bg-5 text-center">
       <p class="desc">Thanks for reading!</p>
-      <p class="desc">Made with help from <a href="https://www.w3schools.com">www.w3schools.com</a></p> 
+      <p class="desc">Made with help from <a href="https://www.w3schools.com">www.w3schools.com</a></p>
+      <p>Click <a href="index.html">here</a> to return to the old site!</p> 
     </footer>
   </div>
 </body>
