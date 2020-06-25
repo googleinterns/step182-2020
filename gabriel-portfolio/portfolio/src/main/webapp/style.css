@@ -1,10 +1,12 @@
-#content {
+#content 
+{
   margin-left: auto;
   margin-right: auto;
   width: 650px;
 }
 
-#greeting-container {
+#greeting-container 
+{
   margin-top: 20px;
 }
 
@@ -18,16 +20,13 @@ h2
     color: navy;
 }
 
-.github{
-    width:50%;
-    margin-right:2%;
-    float: left;
+.row 
+{
+  display: flex;
 }
 
-.linkedin {
-    width:50;
-    float: left;
-}
-.clearfix{
-    clear:both
+.picture
+{
+  flex: 33.33%;
+  padding: 5px;
 }

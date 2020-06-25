@@ -15,9 +15,13 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
+function addRandomGreeting() 
+{
   const greetings =
-      ['I can solve a rubiks cube in less than a minute'];
+      ['I can solve a rubiks cube in less than a minute',
+       'I speak english and spanish fluently',
+       'Both of my parents are from Cuba',
+       'My favorite food is fried fish'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
