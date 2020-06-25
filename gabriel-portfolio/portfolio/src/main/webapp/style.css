@@ -1,32 +1,26 @@
-#content 
-{
+#content {
   margin-left: auto;
   margin-right: auto;
   width: 650px;
 }
 
-#greeting-container 
-{
+#greeting-container {
   margin-top: 20px;
 }
 
-h1
-{
+h1 {
     color: maroon;
 }
 
-h2
-{
+h2 {
     color: navy;
 }
 
-.row 
-{
+.row  {
   display: flex;
 }
 
-.picture
-{
+.picture {
   flex: 33.33%;
   padding: 5px;
 }

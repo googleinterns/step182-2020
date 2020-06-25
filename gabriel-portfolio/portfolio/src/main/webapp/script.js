@@ -15,8 +15,7 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() 
-{
+function addRandomGreeting() {
   const greetings =
       ['I can solve a rubiks cube in less than a minute',
        'I speak english and spanish fluently',
