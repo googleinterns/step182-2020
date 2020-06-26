@@ -62,6 +62,9 @@ const quotes = [
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
+/**
+* Changes Projects and Calisthenics Containers to their default states
+*/
 function load() {
   changeCycleGAN();
   changeVSit()
@@ -75,6 +78,9 @@ function addRandomQuote() {
   document.getElementById("quote-container").innerText = quote;
 }
 
+/**
+* Changes Projects Container to CycleGAN state
+*/
 function changeCycleGAN() {
   document.getElementById("pro-image1").src = "/images/real.png";
   document.getElementById("pro-image2").src = "/images/real_to_rot.png";
@@ -83,6 +89,9 @@ function changeCycleGAN() {
   document.getElementById("pro-links").innerHTML = links[0];
 }
 
+/**
+* Changes Projects Container to Deep Photo Style Transfer state
+*/
 function changeDeepPhoto() {
   document.getElementById("pro-image1").src = "/images/dancing.jpg";
   document.getElementById("pro-image2").src = "/images/picasso.jpg";
@@ -91,6 +100,9 @@ function changeDeepPhoto() {
   document.getElementById("pro-links").innerHTML = links[1];
 }
 
+/**
+* Changes Projects Container to Message System state
+*/
 function changeMsgSys() {
   document.getElementById("pro-image1").src = "";
   document.getElementById("pro-image2").src = "/images/Message Bus.png";
@@ -99,6 +111,9 @@ function changeMsgSys() {
   document.getElementById("pro-links").innerHTML = links[2];
 }
 
+/**
+* Changes Calisthenics Container to V Sit state
+*/
 function changeVSit() {
   document.getElementById("cal-image1").src = "/images/vsit.jpg";
   document.getElementById("cal-image2").src = "/images/lsit.jpg";
@@ -106,6 +121,9 @@ function changeVSit() {
   document.getElementById("current").innerText = current.replace("-", "L Sit");
 }
 
+/**
+* Changes Calisthenics Container to Back Lever state
+*/
 function changeBackLever() {
   document.getElementById("cal-image1").src = "/images/back_lever.jpg";
   document.getElementById("cal-image2").src = "/images/adv_tuck_back_lever.jpg";
@@ -113,6 +131,9 @@ function changeBackLever() {
   document.getElementById("current").innerText = current.replace("-", "Advanced Tuck Back Lever");
 }
 
+/**
+* Changes Calisthenics Container to Pistol Squat state
+*/
 function changePistolSquat() {
   document.getElementById("cal-image1").src = "/images/pistol_squat.jpg";
   document.getElementById("cal-image2").src = "/images/supported_pistol_squat.jpg";
@@ -120,6 +141,9 @@ function changePistolSquat() {
   document.getElementById("current").innerText = current.replace("-", "Pole Supported Pistol Squat");
 }
 
+/**
+* Changes Calisthenics Container to Front Lever state
+*/
 function changeFrontLever() {
   document.getElementById("cal-image1").src = "/images/front_lever.jpg";
   document.getElementById("cal-image2").src = "/images/single_leg_front_lever.png";
@@ -127,6 +151,9 @@ function changeFrontLever() {
   document.getElementById("current").innerText = current.replace("-", "Single Leg Front Lever");
 }
 
+/**
+* Changes Calisthenics Container to Freestanding Handstand Push Up state
+*/
 function changeHSPU() {
   document.getElementById("cal-image1").src = "/images/hspu.jpg";
   document.getElementById("cal-image2").src = "/images/decline_pike_push_up.jpg";
