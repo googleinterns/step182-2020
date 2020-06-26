@@ -25,7 +25,21 @@ function addRandomGreeting() {
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
+  // Show the hide-message button
+  const hide = document.getElementById("hide-message");
+  hide.style.visibility = "visible";
+
   // Add it to the page.
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
+}
+
+function hideMessage() {
+  // Set the message to an empty string
+  const greetingContainer = document.getElementById('greeting-container');
+  greetingContainer.innerText = "";
+
+  // Hide the hide-message button
+  const button = document.getElementById("hide-message");
+  button.style.visibility = "hidden";
 }
