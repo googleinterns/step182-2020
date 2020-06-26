@@ -61,13 +61,11 @@
   border-radius: 0;
   font-size: 12px;
   letter-spacing: 5px;
-  margin-bottom: 0;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding: 15px 0;
 }
 
 .navbar-nav  li a:hover {
-  color: #1abc9c !important; /*Will prolly delete*/
+  color: #1abc9c !important; /*Color gets lost on hover, need priority for constrast*/
 }
 
 .row {
