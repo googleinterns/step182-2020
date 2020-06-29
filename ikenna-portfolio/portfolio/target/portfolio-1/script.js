@@ -57,23 +57,25 @@ const goal = "Goal: -";
 const current = "Current Ability: -";
 
 /**
-* Changes Projects and Calisthenics Containers to their default states
+* Initializes the page with containers and server requests
 */
-function load() {
-  changeCycleGAN();
-  changeVSit()
-}
-
 async function initializePage() {
   const response = await fetch('/data');
   const msg = await response.json();
-  console.log(msg);
   let entire_msg = "";
   for(m of msg) {
     entire_msg += "<p>" + m + "</p>";
   }
   document.getElementById('hello-world').innerHTML = entire_msg;
-  load();
+  loadInteractiveContainers();
+}
+
+/**
+* Changes Projects and Calisthenics Containers to their default states
+*/
+function loadInteractiveContainers() {
+  changeCycleGAN();
+  changeVSit()
 }
 
 /**

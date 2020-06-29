@@ -62,7 +62,6 @@ const current = "Current Ability: -";
 async function initializePage() {
   const response = await fetch('/data');
   const msg = await response.json();
-  console.log(msg);
   let entire_msg = "";
   for(m of msg) {
     entire_msg += "<p>" + m + "</p>";
