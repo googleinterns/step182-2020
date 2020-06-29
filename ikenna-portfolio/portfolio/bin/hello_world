@@ -1,13 +1,13 @@
 #!/bin/bash
-echo -n "Enter some commit message > "
+echo -n "Please Enter a Commit Message > "
 read commit
 git add .
 git commit -m "$commit"
-# git checkout -b "ike-deploy"
-# git pull origin master
-# cd ..
-# mvn package appengine:deploy
-# git add .
-# git commit -m "Deploy Site"
-# git checkout -b $1
-# git branch -D ike-deploy
+git checkout -b "ike-deploy"
+git pull origin master
+cd ..
+mvn package appengine:deploy
+git add .
+git commit -m "Deploy Site"
+git checkout -b $1
+git branch -D ike-deploy
