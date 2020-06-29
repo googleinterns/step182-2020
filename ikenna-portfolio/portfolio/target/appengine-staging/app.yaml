@@ -39,6 +39,10 @@ handlers:
   script: unused
   login: optional
   secure: optional
+- url: /random
+  script: unused
+  login: optional
+  secure: optional
 - url: /data
   script: unused
   login: optional
