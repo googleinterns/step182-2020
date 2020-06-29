@@ -1,12 +1,13 @@
 #!/bin/bash
-
+echo -n "Enter some commit message > "
+read commit
 git add .
-git commit -m $2
-git checkout -b "ike-deploy"
-git pull origin master
-cd ..
-mvn package appengine:deploy
-git add .
-git commit -m "Deploy Site"
-git checkout -b $1
-git branch -D ike-deploy
+git commit -m "$commit"
+# git checkout -b "ike-deploy"
+# git pull origin master
+# cd ..
+# mvn package appengine:deploy
+# git add .
+# git commit -m "Deploy Site"
+# git checkout -b $1
+# git branch -D ike-deploy
