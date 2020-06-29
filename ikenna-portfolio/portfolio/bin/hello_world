@@ -1,0 +1,15 @@
+#!/bin/bash
+
+branch_name = $1
+commit_msg = $2
+
+git add .
+git commit -m commit_msg
+git checkout -b "ike-deploy"
+git pull origin ike-deploy
+cd ..
+mvn package appengine:deploy
+git add .
+git commit -m "Deploy Site"
+git checkout -b branch_name
+git branch -d ike-deploy
