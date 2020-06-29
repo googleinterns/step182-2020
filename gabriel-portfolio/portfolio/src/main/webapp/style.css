@@ -1,0 +1,34 @@
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
+}
+
+#greeting-container {
+  margin-top: 20px;
+}
+
+h1 {
+  color: maroon;
+}
+
+h2 {
+  color: navy;
+}
+
+.row  {
+  display: flex;
+}
+
+.picture {
+  flex: 33.33%;
+  padding: 5px;
+}
+
+body {
+    background-color: aqua;
+}
+
+#hide-message {
+    visibility: hidden;
+}
