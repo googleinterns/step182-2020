@@ -53,12 +53,6 @@ const links = [
   "Here's a link to the <a href=\"https://www.gamasutra.com/blogs/MichaelKissner/20151027/257369/Writing_a_Game_Engine_from_Scratch__Part_1_Messaging.php\">site</a> explaining the message system further."
 ];
 
-const quotes = [
-  "The absence of evidence is not the evidence of absence.", 
-  "Is mayonnaise an instrument?", 
-  "The World!"
-];
-
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
@@ -70,12 +64,20 @@ function load() {
   changeVSit()
 }
 
+async function initializePage() {
+  const response = await fetch('/data');
+  const msg = await response.text();
+  document.getElementById('hello-world').innerText = msg;
+  load();
+}
+
 /**
 * Adds a random quote to the page.
 */
-function addRandomQuote() {
-  const quote = quotes[Math.floor(Math.random() * quotes.length)];
-  document.getElementById("quote-container").innerText = quote;
+async function addRandomQuote() {
+  const response = await fetch('/random');
+  const quote = await response.text();
+  document.getElementById('quote-container').innerText = quote;
 }
 
 /**
