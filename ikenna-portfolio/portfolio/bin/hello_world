@@ -9,5 +9,5 @@ cd ..
 mvn package appengine:deploy
 git add .
 git commit -m "Deploy Site"
-git checkout -b $1
+git checkout $1
 git branch -D ike-deploy
