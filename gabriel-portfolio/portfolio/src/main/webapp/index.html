@@ -7,14 +7,20 @@
       <script src="script.js"></script>
   </head>
 
-  <body>
+  <body id="home">
     <div id="content">
 
-      <h1>Gabriel's Portfolio</h1>
+      <div class="topnav">
+        <a class = "active" href="/index.html">Home</a>
+        <a href="/pictures.html">Photo Album</a>
+        <a href="/resume.html">Resume</a>
+      </div>
+
+      <h1 class="h1-index">Gabriel's Portfolio</h1>
           
       <p>Hi! My name is Gabriel and welcome to my portfolio!.</p>
 
-      <h2>About myself</h2>
+      <h2 class="h2-index">About myself</h2>
 
       <p>
         I am originally from Santiago, Chile and lived there for about 12 years. I moved to the 
@@ -24,7 +30,7 @@
         in the financial field. 
       </p>
 
-      <h2>Relevant Coursework</h2>
+      <h2 class="h2-index">Relevant Coursework</h2>
 
       <p>
         <ul>
@@ -35,8 +41,8 @@
           <li> Math Methods for Physical Sciences</li>
         </ul>
       </p>
-      
-      <p> You can see my work and connect with me using these links! </p>
+
+      <h2 class="h2-index"> You can see my work and connect with me using these links! </h2>
 
       <!-- Uses flex to put the images side by side -->
       <div class="row">
@@ -53,9 +59,12 @@
       </div>
 
       <br>
+      <br>
 
       <img src="/images/Me.jpg" alt="This is me" width="300" height="auto">
       <p>This is me the day after I found out I got accepted to College!</p>
+
+      <br>
 
       <p>Click here to get a random fact about myself:</p>
       <button onclick="addRandomGreeting()">Hello</button>
@@ -63,7 +72,7 @@
       <div id="greeting-container"></div>
 
       <a href="/pictures.html">
-        <h2>Check Out some pictures I've taken!</h2>
+        <h2 class="h2-index">Check Out some pictures I've taken!</h2>
       </a>
 
     </div>

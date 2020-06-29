@@ -7,30 +7,37 @@
     <script src="script.js"></script>
   </head>
 
-  <body>
-    <div id="content">    
-      <h1>WELCOME TO MY PHOTO ALBUM!</h1>
+  <body id="photo-album">
+    <div id="content">
 
-      <a href="/index.html">
-        <h3>Go back to home page</h3>
-      </a>
+      <div class="topnav">
+        <a href="/index.html">Home</a>
+        <a class = "active" href="/pictures.html">Photo Album</a>
+        <a href="/resume.html">Resume</a>
+      </div>
 
-      <p> 
-        This is me, my high school CS teacher, and my best friend at his 18th birthday party.
-      </p>
-      <img src="/photos/Birthday pic.png" alt="This is me" width="300" height="auto">
-      <br>
-      <br>
+      <h1 class="h1-photo-album">WELCOME TO MY PHOTO ALBUM!</h1>
 
-      <p> 
-        These are some pictures I took in DeLand, FL during a computer science competition trip. <br>
-        Pictured in order: The DeLand court house, and the DeLand house where the founder of the town lived.
-      </p>
-      <img src="/photos/Stetson Court.png" alt="This is me" width="300" height="auto">
-      <img src="/photos/DeLand House.png" alt="This is me" width="300" height="auto">
-      <br>
-      <br>
+      <div id="birthday-pic">
+        <p> 
+          This is me, my high school CS teacher, and my best friend at his 18th birthday party.
+        </p>
+        <img src="/photos/birthday-pic.png" alt="This is me" width="300" height="auto">
+        <br>
+        <br>
+      </div>
 
+      <div id="stetson">
+        <p> 
+          These are some pictures I took in DeLand, FL during a computer science competition trip. <br>
+          Pictured in order: The DeLand court house, and the DeLand house where the founder of the town lived.
+        </p>
+        <img src="/photos/stetson-court.png" alt="This is me" width="300" height="auto">
+        <img src="/photos/deland-house.png" alt="This is me" width="300" height="auto">
+        <br>
+        <br>
+      </div>
+      
       <p>
         This picture was taken at Los Lagos, Cuba while I was visiting my family there.
       </p>
@@ -59,7 +66,7 @@
 
       
       <p> 
-        A few days before leaving for college, I got invited to NYC for a job interview. I used to opportunity to visit one of my CSSI friends who goes to Columbia.
+        A few days before leaving for college, I got invited to NYC for a job interview. I used the opportunity to visit one of my CSSI friends who goes to Columbia.
       </p>
       <img src="/photos/Columbia.png" alt="This is me" width="300" height="auto">
       <br>

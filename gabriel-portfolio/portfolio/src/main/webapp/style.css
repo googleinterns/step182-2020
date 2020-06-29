@@ -1,34 +1,102 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 100%
+}
+
+/*****************************/
+/* Styling for navegation bar */
+/*****************************/
+
+.topnav {
+  /* Styling the navegation bar */
+  background-color:purple;
+  overflow: hidden;
+}
+
+.topnav a {
+  /* Style the links inside the navigation bar */
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  /* Change the color of links on hover */
+  background-color: #ddd;
+  color: black;
+}
+
+
+.topnav a.active {
+  /* Add a color to the active/current link */
+  background-color: violet;
+  color: white;
+}
+
+/*****************************/
+/* Styling for the home page */
+/*****************************/
+
+#home {
+    background-color: lavender;
 }
 
 #greeting-container {
   margin-top: 20px;
 }
 
-h1 {
+.h1-index {
   color: maroon;
 }
 
-h2 {
+.h2-index {
   color: navy;
 }
 
+#hide-message {
+  /* By defualt the button is hidden */
+  visibility: hidden;
+}
+
+
+/* Used to diplay social media pictures in one row */
 .row  {
   display: flex;
 }
 
 .picture {
-  flex: 33.33%;
+  flex: 50%;
   padding: 5px;
 }
 
-body {
-    background-color: aqua;
+/*****************************/
+/* Styling for photo album */
+/*****************************/
+
+#photo-album {
+  /* Set the background color of the photo album */
+  background-color: aqua;
 }
 
-#hide-message {
-    visibility: hidden;
+.h1-photo-album {
+  color: maroon;
 }
+
+.h2-photo-album {
+  color: navy;
+}
+
+/*#birthday-pic {
+  Working on adding a gradient background 
+  background-image: linear-gradient(aqua, blue);
+}*/
+
+/*#stetson {
+  background-image: linear-gradient(blue, yellow);
+}*/
+
+
