@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<Comment> comments;
+  public static List<Comment> comments;
 
   @Override
   public void init() {
@@ -43,9 +43,8 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Delete makes this more complicated
     if(comments.isEmpty()) {
-      Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+      Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
       for (Entity entity : results.asIterable()) {

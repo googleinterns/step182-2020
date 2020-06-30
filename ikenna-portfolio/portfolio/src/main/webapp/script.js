@@ -175,3 +175,8 @@ function changeHSPU() {
   document.getElementById("goal").innerText = goal.replace("-", "Freestanding Handstand Push Up");
   document.getElementById("current").innerText = current.replace("-", "Decline Pike Push Up");
 }
+
+async function deleteAllComments() {
+  await fetch('/delete-comments');
+  addComment();
+}

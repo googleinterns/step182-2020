@@ -45,4 +45,9 @@ public class Comment {
   public long getTimestamp() {
     return timestamp;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Name: %s, Text: %s, Timestamp: %d", name, text, timestamp); 
+  }
 }
