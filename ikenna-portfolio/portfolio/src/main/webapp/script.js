@@ -79,7 +79,7 @@ async function addComment() {
   console.log(comments);
   for(comment of comments) {
     if(comment.name === "") continue;
-    msg += "<p>User: " + comment.name + "<br>" + comment.comment + "</p>";
+    msg += "<p>User: " + comment.name + "<br>" + comment.text + "</p>";
   }
   document.getElementById('comments').innerHTML = msg;
 }

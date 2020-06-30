@@ -21,15 +21,28 @@ import java.util.List;
 
 public class Comment {
   private final String name;
-  private final String comment;
+  private final String text;
+  private final long timestamp;
 
-  public Comment(String comment) {
-    this("Anonymous", comment);
+  public Comment(String text, long timestamp) {
+    this("Anonymous", text, timestamp);
   }
 
-  public Comment(String name, String comment) {
+  public Comment(String name, String text, long timestamp) {
     this.name = name;
-    this.comment = comment;
+    this.text = text;
+    this.timestamp = timestamp;
   }
 
+  public String getName() {
+    return name;
+  }
+  
+  public String getText() {
+    return text;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
+  }
 }
