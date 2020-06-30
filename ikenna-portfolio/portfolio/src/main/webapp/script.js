@@ -60,13 +60,7 @@ const current = "Current Ability: -";
 * Initializes the page with containers and server requests
 */
 async function initializePage() {
-  const response = await fetch('/data');
-  const msg = await response.json();
-  let entire_msg = "";
-  for(m of msg) {
-    entire_msg += "<p>" + m + "</p>";
-  }
-  document.getElementById('hello-world').innerHTML = entire_msg;
+  addComment();
   loadInteractiveContainers();
 }
 
@@ -76,6 +70,18 @@ async function initializePage() {
 function loadInteractiveContainers() {
   changeCycleGAN();
   changeVSit()
+}
+
+async function addComment() {
+  const response = await fetch('/data');
+  const comments = await response.json();
+  let msg = "";
+  console.log(comments);
+  for(comment of comments) {
+    if(comment.name === "") continue;
+    msg += "<p>User: " + comment.name + "<br>" + comment.comment + "</p>";
+  }
+  document.getElementById('comments').innerHTML = msg;
 }
 
 /**

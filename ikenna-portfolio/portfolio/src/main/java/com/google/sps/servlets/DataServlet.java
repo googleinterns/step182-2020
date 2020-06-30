@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,22 +28,30 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns JSON content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private List<String> msgs;
+
+  private List<Comment> comments;
 
   @Override
   public void init() {
-    msgs = new ArrayList<>();
-    msgs.add("Ur doing great!");
-    msgs.add("U da best!");
-    msgs.add("Sunshine is u, prolly!");
-    msgs = Collections.unmodifiableList(msgs);
+    comments = new ArrayList<>();
+    comments.add(new Comment("", ""));
   }
-
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Gson gson = new Gson();
-    String json = gson.toJson(msgs);
+    String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String name = request.getParameter("name-box");
+    String text = request.getParameter("text-box");
+    boolean empty_name = name == null || name.equals("");
+    Comment comment = empty_name ? new Comment(text) : new Comment(name, text);
+    comments.add(comment);
+    response.sendRedirect("/index.html");
   }
 }
