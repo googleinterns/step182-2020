@@ -1,4 +1,0 @@
-Features for mvp:
-- Background info
-- image gallery page (Calisthenics Page)
-- outside links (LinkedIn and Github)
