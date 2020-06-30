@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,7 @@ public final class RandomServlet extends HttpServlet {
     quotes.add("The absence of evidence is not the evidence of absence.");
     quotes.add("Is mayonnaise an instrument?");
     quotes.add("The World!");
+    quotes = Collections.unmodifiableList(quotes);
   }
 
   @Override
