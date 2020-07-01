@@ -76,7 +76,6 @@ async function addComment() {
   const response = await fetch('/data');
   const comments = await response.json();
   let msg = "";
-  console.log(comments);
   for(comment of comments) {
     if(comment.name === "") continue;
     msg += "<p>User: " + comment.name + "<br>" + comment.text + "</p>";
