@@ -47,7 +47,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     if(comments.isEmpty()) {
-      QueryResultList<Entity> results = database.getContents("timestamp", true, 5, 0);
+      QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents("timestamp", true, 5, 0);
       Iterator r = results.iterator();
       while(r.hasNext()) {
         Entity entity = (Entity) r.next();

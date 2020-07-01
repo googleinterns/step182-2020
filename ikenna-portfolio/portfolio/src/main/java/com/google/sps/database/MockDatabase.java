@@ -17,7 +17,7 @@ package com.google.sps.database;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
-import com.google.sps.database.DatabaseInterface;
+import java.util.List;
 
 public class MockDatabase implements DatabaseInterface {
   @Override
@@ -31,7 +31,7 @@ public class MockDatabase implements DatabaseInterface {
   }
   
   @Override
-  public QueryResultList<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
+  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
     return null;
   }
   

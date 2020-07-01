@@ -26,7 +26,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.sps.data.Comment;
-//import com.google.sps.database.DatabaseInterface;
+import java.util.List;
 
 public class CommentDatabase implements DatabaseInterface {
   @Override
@@ -50,7 +50,7 @@ public class CommentDatabase implements DatabaseInterface {
   }
   
   @Override
-  public QueryResultList<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
+  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
     Query query = new Query("Comment");
     
     if(ascending) query.addSort(sort_attr, Query.SortDirection.ASCENDING);

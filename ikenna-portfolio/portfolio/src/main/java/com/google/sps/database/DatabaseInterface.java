@@ -15,13 +15,13 @@
 package com.google.sps.database;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
+import java.util.List;
 
 
 public interface DatabaseInterface {
   public void deleteEntity(long id);
   public void deleteAllEntities();
-  public QueryResultList<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset);
+  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset);
   public void storeEntity(Comment c);
 }
