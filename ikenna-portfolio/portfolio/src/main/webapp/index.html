@@ -131,16 +131,24 @@
 
     <!--Comments Container-->
     <div id="comments-sect" class="container-fluid bg-5 text-center">
-      <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3><br>
-      <form action="/data" method="POST" class="desc">      
-        <label for="text">Name:</label><br>
-        <input type="text" id="name-box" name="name-box"><br>
-        <textarea name="text-box" color="black">Question?, Comment., Concern!</textarea><br>
-        <input type="submit" id="submit" name="submit"><br>
-        <label for="submit">We promise to take your posts seriously >:)</label><br>
-        <p id="comments" class="desc"></p>
-      </form><br>
-      <button onclick="deleteAllComments()">Clear All Comments From Database</button>
+      <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3>
+      <h4 class="margin">We promise to take your posts seriously >:)</h4><br>
+      <button onclick="deleteAllComments()">Clear All Comments From Database</button><br>
+      <form action="/data" method="POST" class="desc">
+        <div class="comment-wrapper">
+          <div class="panel-info">
+            <div class="panel-body">
+              <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
+              <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
+              <input type="submit" class="btn btn-info pull-right">
+              <div class="clearfix"></div><hr>
+                <ul id="comments" class="media-list">
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
     <!-- Footer -->

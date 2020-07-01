@@ -56,6 +56,8 @@ const links = [
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
+const comment_item = "<li class=\"media\"><div class=\"media-body\"><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
+
 /**
 * Initializes the page with containers and server requests
 */
@@ -78,7 +80,7 @@ async function addComment() {
   let msg = "";
   for(comment of comments) {
     if(comment.name === "") continue;
-    msg += "<p>User: " + comment.name + "<br>" + comment.text + "</p>";
+    msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_name", comment.name).replace("comment_text", comment.text);
   }
   document.getElementById('comments').innerHTML = msg;
 }

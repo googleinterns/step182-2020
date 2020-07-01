@@ -24,7 +24,7 @@
 
 .bg-5 { 
   background-color: #b89b1a;
-  color: #555555;
+  color: #070101;
 }
 
 .bg-6 { 
@@ -35,6 +35,11 @@
 .column {
   flex: 1 1 auto;
   padding: 5px;
+}
+
+.comment-wrapper .media-list .media {
+  border:2px solid #e5e7e8;
+  overflow:auto;
 }
 
 .container-fluid {
