@@ -69,7 +69,9 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
     boolean empty_name = name == null || name.equals("");
-    Comment comment = empty_name ? new Comment(text, timestamp) : new Comment(name, text, timestamp);
+    String true_name = name.replaceAll("<[^>]*>", "Please Don't Inject HTML");
+    String true_text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
+    Comment comment = empty_name ? new Comment(true_text, timestamp) : new Comment(true_name, true_text, timestamp);
 
     Entity comment_entity = new Entity("Comment");
     comment_entity.setProperty("name", comment.getName());
