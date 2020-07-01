@@ -14,36 +14,28 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.sps.data.Comment;
+
+import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns JSON content. */
+/** Servlet that deletes comments from database. */
 @WebServlet("/delete-comments")
 public class DeleteCommentsServlet extends HttpServlet {
   
+  private CommentDatabase database;
+
+  @Override
+  public void init() {
+    database = new CommentDatabase();
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("Comment");
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      Key key = KeyFactory.createKey("Comment", id);
-      datastore.delete(key);
-    }
+    database.deleteAllEntities();
     DataServlet.comments.clear();
   }
 }
