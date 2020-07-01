@@ -23,34 +23,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
-  
-  private List<String> messages;
-
-  @Override
-  public void init() {
-    messages = new ArrayList<>();
-    messages.add("What do you YOU");
-    messages.add("care about what");
-    messages.add("other people think");
-  }
-  
+/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+@WebServlet("/get-greeting")
+public class GreetingServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json;");
-    String json = convertToJsonUsingGson(messages);
-    response.getWriter().println(json);
+    response.setContentType("text/html;");
+    response.getWriter().println("Hello Gabriel!");
   }
-
-  /*
-    Converts an arraylist to an JSON string using the Gson library
-  */
-  private String convertToJsonUsingGson(List<String> list) {
-    Gson gson = new Gson();
-    String json = gson.toJson(list);
-    return json;
-  }
-
 }
+
+

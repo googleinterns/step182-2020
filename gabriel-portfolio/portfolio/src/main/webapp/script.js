@@ -13,33 +13,78 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * Adds a random fact to the page.
  */
-function addRandomGreeting() {
-  const greetings =
+function addRandomFact() {
+  const randomFacts =
       ['I can solve a rubiks cube in less than a minute',
        'I speak english and spanish fluently',
        'Both of my parents are from Cuba',
        'My favorite food is fried fish'];
 
   // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  const randomFact = randomFacts[Math.floor(Math.random() * randomFacts.length)];
 
   // Show the hide-message button
-  const hide = document.getElementById("hide-message");
+  const hide = document.getElementById("hide-random-fact");
   hide.style.visibility = "visible";
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  const randomFactContainer = document.getElementById('random-fact-container');
+  randomFactContainer.innerText = randomFact;
 }
 
-function hideMessage() {
+/*
+  hides the random fact
+*/
+function hideRandomFact() {
   // Set the message to an empty string
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = "";
+  const randomFactContainer = document.getElementById('random-fact-container');
+  randomFactContainer.innerText = "";
 
   // Hide the hide-message button
-  const button = document.getElementById("hide-message");
+  const button = document.getElementById("hide-random-fact");
   button.style.visibility = "hidden";
+}
+
+/*
+  uses the fetch() function to get the greeting text from /get-greeting
+*/
+async function getGreeting() {
+  const response = await fetch('/get-greeting');
+  const quote = await response.text();
+  document.getElementById('greeting-container').innerText = quote;
+}
+
+/* 
+  Creates an <li> element containing text 
+*/
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
+/*
+  uses fetch() to get comments from /data
+*/
+async function getComments() {
+  const response = await fetch('/data');
+  const comments = await response.json();
+  console.log(comments);
+  const commentList = document.getElementById('comments-container');
+  commentList.innerHTML = '';
+  // loop through the strings in the json object
+  var i=0;
+  while(comments[i]) {
+    commentList.appendChild(createListElement(comments[i]));
+    i++;
+  }
+}
+
+/*
+  onLoad function for the body to run javascript when the page loads
+*/
+function onloadIndex() {
+  getComments();
 }
