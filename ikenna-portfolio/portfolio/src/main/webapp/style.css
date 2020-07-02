@@ -2,6 +2,13 @@
   margin-top: 20px;
 }
 
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
 .bg-1 { 
   background-color: #7a5b31;
   color: #ffffff;
@@ -57,6 +64,11 @@
   max-width: 80%;
 }
 
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
 .margin {
   margin-bottom: 45px;
 }
@@ -71,6 +83,11 @@
 
 .navbar-nav  li a:hover {
   color: #1abc9c !important; /*Color gets lost on hover, need priority for constrast*/
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
 }
 
 .row {
