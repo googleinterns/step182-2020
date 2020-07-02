@@ -16,7 +16,6 @@ package com.google.sps.database;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
-import com.google.appengine.api.datastore.Entity;
 import com.google.sps.data.Comment;
 import java.util.*;
 
