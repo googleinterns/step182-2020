@@ -16,27 +16,48 @@ package com.google.sps.database;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
+import com.google.appengine.api.datastore.Entity;
 import com.google.sps.data.Comment;
-import java.util.List;
+import java.util.*;
 
 public class MockDatabase implements DatabaseInterface {
+  private List<Entity> comments = new ArrayList<>();
+  private int size = 0;
   @Override
   public void deleteEntity(long id) {
-
+    if((int)id > size || comments.get((int)id) == null) return;
+    comments.set((int)id, null);
+    size--;
   }
 
   @Override
   public void deleteAllEntities() {
-
+    comments.clear();
+    size = 0;
   }
   
   @Override
   public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
-    return null;
+    List<Entity> results = new ArrayList<>();
+    for(Entity e : comments)
+      if(e != null)
+        results.add(e); 
+    return results;
   }
   
   @Override
-  public void storeEntity(Comment c) {
-      
+  public long storeEntity(Comment c) {
+    Entity comment_entity = new Entity("Comment");
+    comment_entity.setProperty("name", c.getName());
+    comment_entity.setProperty("text", c.getText());
+    comment_entity.setProperty("timestamp", c.getTimestamp());
+    comments.add(comment_entity);
+    size++;     
+    return comments.size() - 1;
+  }
+
+  @Override
+  public int size() {
+    return size;
   }
 }

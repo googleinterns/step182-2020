@@ -20,18 +20,27 @@ import java.util.Collections;
 import java.util.List;
 
 public class Comment {
-  private final String name;
-  private final String text;
-  private final long timestamp;
+  public long id;
+  protected final String name;
+  protected final String text;
+  protected final long timestamp;
 
   public Comment(String text, long timestamp) {
     this("Anonymous", text, timestamp);
   }
 
   public Comment(String name, String text, long timestamp) {
+    this.id = -1;
     this.name = name;
     this.text = text;
     this.timestamp = timestamp;
+  }
+
+  public Comment(Comment c) {
+    this.id = c.id;
+    this.name = c.name;
+    this.text = c.text;
+    this.timestamp = c.timestamp;  
   }
 
   public String getName() {
@@ -44,6 +53,10 @@ public class Comment {
 
   public long getTimestamp() {
     return timestamp;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   @Override

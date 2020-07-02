@@ -23,5 +23,6 @@ public interface DatabaseInterface {
   public void deleteEntity(long id);
   public void deleteAllEntities();
   public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset);
-  public void storeEntity(Comment c);
+  public long storeEntity(Comment c);
+  public int size();
 }

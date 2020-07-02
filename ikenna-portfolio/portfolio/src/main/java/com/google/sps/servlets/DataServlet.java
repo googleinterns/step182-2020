@@ -47,14 +47,16 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     if(comments.isEmpty()) {
-      QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents("timestamp", true, 5, 0);
+      QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents("timestamp", true, 10, 0);
       Iterator r = results.iterator();
       while(r.hasNext()) {
         Entity entity = (Entity) r.next();
+        long id = entity.getKey().getId();
         String name = (String) entity.getProperty("name");
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
         Comment comment = new Comment(name, text, timestamp);
+        comment.setId(id);
         comments.add(comment);
       }
       if(comments.isEmpty()) comments.add(new Comment("", "", 0)); // Fixes situation where database is empty
@@ -67,7 +69,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Comment comment = generateComment(request);
-    database.storeEntity(comment);
+    comment.setId(database.storeEntity(comment));
     comments.add(comment);
     response.sendRedirect("/index.html");
   }

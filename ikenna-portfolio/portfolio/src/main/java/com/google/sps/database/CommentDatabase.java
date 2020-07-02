@@ -76,12 +76,22 @@ public class CommentDatabase implements DatabaseInterface {
   }
   
   @Override
-  public void storeEntity(Comment c) {
+  public long storeEntity(Comment c) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity comment_entity = new Entity("Comment");
     comment_entity.setProperty("name", c.getName());
     comment_entity.setProperty("text", c.getText());
     comment_entity.setProperty("timestamp", c.getTimestamp());
-    datastore.put(comment_entity);
+    return datastore.put(comment_entity).getId();
+  }
+
+  @Override
+  public int size() {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
+    int counter = 0;
+    for (Entity entity : results.asIterable()) counter++;
+    return counter;
   }
 }
