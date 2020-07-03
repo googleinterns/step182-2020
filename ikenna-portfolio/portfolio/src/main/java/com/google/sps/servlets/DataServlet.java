@@ -31,37 +31,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns JSON content. */
+/** Servlet that creates comments from form data. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  public static List<Comment> comments;
   private CommentDatabase database;
+  private List<Comment> comments;
 
   @Override
   public void init() {
-    comments = new ArrayList<>();
     database = new CommentDatabase();
+    comments = new ArrayList<>();
   }
-  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    if(comments.isEmpty()) {
-      QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents("timestamp", true, 10, 0);
-      Iterator r = results.iterator();
-      while(r.hasNext()) {
-        Entity entity = (Entity) r.next();
-        long id = entity.getKey().getId();
-        String name = (String) entity.getProperty("name");
-        String text = (String) entity.getProperty("text");
-        long timestamp = (long) entity.getProperty("timestamp");
-        Comment comment = new Comment(name, text, timestamp);
-        comment.setId(id);
-        comments.add(comment);
-      }
-      if(comments.isEmpty()) comments.add(new Comment("", "", 0)); // Fixes situation where database is empty
+    comments.clear();
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(CountServlet.search, CountServlet.ascending, CountServlet.count, CountServlet.page);
+    Iterator r = results.iterator();
+    while(r.hasNext()) {
+      Entity entity = (Entity) r.next();
+      long id = entity.getKey().getId();
+      String name = (String) entity.getProperty("name");
+      String text = (String) entity.getProperty("text");
+      long timestamp = (long) entity.getProperty("timestamp");
+      Comment comment = new Comment(name, text, timestamp);
+      comment.setId(id);
+      comments.add(comment);
     }
-
+    if(comments.isEmpty()) comments.add(new Comment("", "", 0));
     response.setContentType("application/json;");
     response.getWriter().println(getJson());
   }
@@ -70,14 +68,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Comment comment = generateComment(request);
     comment.setId(database.storeEntity(comment));
-    comments.add(comment);
     response.sendRedirect("/index.html");
-  }
-
-  private String getJson() {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    return json;
   }
 
   private Comment generateComment(HttpServletRequest request) {
@@ -89,5 +80,11 @@ public class DataServlet extends HttpServlet {
     String true_text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     Comment comment = empty_name ? new Comment(true_text, timestamp) : new Comment(true_name, true_text, timestamp);
     return comment;
+  }
+  
+  private String getJson() {
+    Gson gson = new Gson();
+    String json = gson.toJson(comments);
+    return json;
   }
 }

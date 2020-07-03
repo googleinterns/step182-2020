@@ -50,7 +50,7 @@ public class CommentDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
+  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page) {
     Query query = new Query("Comment");
     
     if(ascending) query.addSort(sort_attr, Query.SortDirection.ASCENDING);
@@ -70,7 +70,7 @@ public class CommentDatabase implements DatabaseInterface {
 	    break;
 	  cursor = result_list.getCursor();
       count++;
-	} while (count < offset);
+	} while (count < page);
 
     return result_list;
   }

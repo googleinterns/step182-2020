@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.database;
+package com.google.sps.data;
 
-import com.google.appengine.api.datastore.Entity;
-import com.google.sps.data.Comment;
-import java.util.List;
+public class Metadata {
+  private final int count;
+  private final int page;
+  private final boolean ascending;
+  private final String search;
 
-
-public interface DatabaseInterface {
-  public void deleteEntity(long id);
-  public void deleteAllEntities();
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page);
-  public long storeEntity(Comment c);
-  public int size();
+  public Metadata(int count, int page, boolean ascending, String search) {
+    this.count = count;
+    this.page = page;
+    this.ascending = ascending;
+    this.search = search;
+  }
 }

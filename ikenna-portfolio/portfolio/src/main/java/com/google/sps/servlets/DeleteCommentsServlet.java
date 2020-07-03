@@ -34,8 +34,8 @@ public class DeleteCommentsServlet extends HttpServlet {
   }
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     database.deleteAllEntities();
-    DataServlet.comments.clear();
+    response.sendRedirect("/index.html");
   }
 }

@@ -58,11 +58,14 @@ const current = "Current Ability: -";
 
 const comment_item = "<li class=\"media\"><div class=\"media-body\"><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
 
+const comment_count = "<small>Comments Per Page: -</small>";
+const page_count = "<small>Page: -</small>";
+
 /**
 * Initializes the page with containers and server requests
 */
 async function initializePage() {
-  addComment();
+  addComments();
   loadInteractiveContainers();
 }
 
@@ -74,24 +77,28 @@ function loadInteractiveContainers() {
   changeVSit()
 }
 
-async function addComment() {
-  const response = await fetch('/data');
-  const comments = await response.json();
+async function addComments() {
+  const dresponse = await fetch("/data");
+  const comments = await dresponse.json();
+  const mresponse = await fetch("/count")
+  const metadata = await mresponse.json(); 
   let msg = "";
+  document.getElementById('comment-count').innerHTML = comment_count.replace("-", metadata.count);
+  document.getElementById('page-count').innerHTML = page_count.replace("-", metadata.page);
   for(comment of comments) {
     if(comment.name === "") continue;
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_name", comment.name).replace("comment_text", comment.text);
   }
-  document.getElementById('comments').innerHTML = msg;
+  document.getElementById("comments").innerHTML = msg;
 }
 
 /**
 * Adds a random quote to the page.
 */
 async function addRandomQuote() {
-  const response = await fetch('/random');
+  const response = await fetch("/random");
   const quote = await response.text();
-  document.getElementById('quote-container').innerText = quote;
+  document.getElementById("quote-container").innerText = quote;
 }
 
 /**
@@ -175,9 +182,4 @@ function changeHSPU() {
   document.getElementById("cal-image2").src = "/images/decline_pike_push_up.jpg";
   document.getElementById("goal").innerText = goal.replace("-", "Freestanding Handstand Push Up");
   document.getElementById("current").innerText = current.replace("-", "Decline Pike Push Up");
-}
-
-async function deleteAllComments() {
-  await fetch('/delete-comments');
-  addComment();
 }

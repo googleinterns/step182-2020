@@ -14,15 +14,8 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
-import com.google.sps.data.Comment;
+import com.google.sps.data.*;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
@@ -36,15 +29,29 @@ import java.lang.*;
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
 
-  @Override
-  public void init() {
-    
-  }
+  public static int count = 10;
+  public static int page = 0;
+  public static boolean ascending = true;
+  public static String search = "timestamp";
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int count = Integer.parseInt(request.getParameter("count"));
-    response.setContentType("text/html;");
-    response.getWriter().println("" + count);
+    Metadata metadata = new Metadata(count, page, ascending, search);
+    response.setContentType("application/json;");
+    response.getWriter().println(getJson(metadata));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String count_string = request.getParameter("count");
+    if(count_string == null || !count_string.equals(""))
+      count = Integer.parseInt(count_string);
+    response.sendRedirect("/index.html#comments-sect");
+  }
+
+  private String getJson(Metadata metadata) {
+    Gson gson = new Gson();
+    String json = gson.toJson(metadata);
+    return json;
   }
 }

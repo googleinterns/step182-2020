@@ -36,7 +36,7 @@ public class MockDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int offset) {
+  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page) {
     List<Entity> results = new ArrayList<>();
     for(Entity e : comments)
       if(e != null)
