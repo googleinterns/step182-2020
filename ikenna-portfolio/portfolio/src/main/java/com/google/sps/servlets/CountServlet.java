@@ -43,7 +43,7 @@ public class CountServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Metadata metadata = new Metadata(count, page, ascending, search);
+    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), ascending, search);
     response.setContentType("application/json;");
     response.getWriter().println(getJson(metadata));
   }

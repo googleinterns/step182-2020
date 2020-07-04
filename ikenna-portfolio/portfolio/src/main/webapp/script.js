@@ -59,7 +59,7 @@ const current = "Current Ability: -";
 const comment_item = "<li class=\"media\"><div class=\"media-body\"><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
 
 const comment_count = "<small>Comments Per Page: -</small>";
-const page_count = "<small>Page: -</small>";
+const page_count = "<small>Page: page_num-page_max</small>";
 
 /**
 * Initializes the page with containers and server requests
@@ -84,7 +84,7 @@ async function addComments() {
   const metadata = await mresponse.json(); 
   let msg = "";
   document.getElementById('comment-count').innerHTML = comment_count.replace("-", metadata.count);
-  document.getElementById('page-count').innerHTML = page_count.replace("-", (metadata.page + 1));
+  document.getElementById('page-count').innerHTML = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.max_pages);
   for(comment of comments) {
     if(comment.name === "") continue;
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_name", comment.name).replace("comment_text", comment.text);

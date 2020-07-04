@@ -101,8 +101,6 @@ public class CommentDatabase implements DatabaseInterface {
     int size = size();
     int remainder = size % batch_size != 0 ? 1 : 0;
     int page_count = (int)Math.floor((float)size/batch_size);
-    System.out.println("Remainder: " + remainder);
-    System.out.println("Page Count: " + page_count);    
     return page_count + remainder;
   }
 }

@@ -17,12 +17,14 @@ package com.google.sps.data;
 public class Metadata {
   private final int count;
   private final int page;
+  private final int max_pages;
   private final boolean ascending;
   private final String search;
 
-  public Metadata(int count, int page, boolean ascending, String search) {
+  public Metadata(int count, int page, int max_pages, boolean ascending, String search) {
     this.count = count;
     this.page = page;
+    this.max_pages = max_pages;
     this.ascending = ascending;
     this.search = search;
   }

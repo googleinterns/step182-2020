@@ -68,7 +68,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Comment comment = generateComment(request);
     comment.setId(database.storeEntity(comment));
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/index.html#comments-sect");
   }
 
   private Comment generateComment(HttpServletRequest request) {
