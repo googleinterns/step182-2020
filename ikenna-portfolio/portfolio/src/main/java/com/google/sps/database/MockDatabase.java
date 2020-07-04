@@ -17,6 +17,7 @@ package com.google.sps.database;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
+import java.lang.*;
 import java.util.*;
 
 public class MockDatabase implements DatabaseInterface {
@@ -58,5 +59,12 @@ public class MockDatabase implements DatabaseInterface {
   @Override
   public int size() {
     return size;
+  }
+
+  @Override
+  public int getMaxPages(int batch_size) {
+    int remainder = size % batch_size != 0 ? 1 : 0;
+    int page_count = (int)Math.floor((float)size/batch_size);
+    return page_count + remainder;
   }
 }

@@ -34,6 +34,13 @@ public class CountServlet extends HttpServlet {
   public static boolean ascending = true;
   public static String search = "timestamp";
   
+  private CommentDatabase database;
+  
+  @Override
+  public void init() {
+    database = new CommentDatabase();
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Metadata metadata = new Metadata(count, page, ascending, search);
@@ -44,8 +51,13 @@ public class CountServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String count_string = request.getParameter("count");
-    if(count_string == null || !count_string.equals(""))
+    if(!count_string.equals(""))
       count = Integer.parseInt(count_string);
+    String move_page = request.getParameter("move-page");
+    if(move_page != null) {
+        if(move_page.equals("left") && page != 0) page--;
+        else if(move_page.equals("right") && page != database.getMaxPages(count) - 1) page++;
+    }
     response.sendRedirect("/index.html#comments-sect");
   }
 

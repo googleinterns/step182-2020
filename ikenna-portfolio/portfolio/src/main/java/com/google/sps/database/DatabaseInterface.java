@@ -25,4 +25,5 @@ public interface DatabaseInterface {
   public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page);
   public long storeEntity(Comment c);
   public int size();
+  public int getMaxPages(int batch_size);
 }

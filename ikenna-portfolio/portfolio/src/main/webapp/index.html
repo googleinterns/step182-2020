@@ -56,7 +56,7 @@
     <div id="random-sect" class="container-fluid bg-2 text-center">
       <h3 class="margin">Enjoy This Random Button...If You Dare</h3>
       <h3 class="margin">>:)</h3>
-      <button onclick="addRandomQuote()">Try It!</button>
+      <button type="button" onclick="addRandomQuote()">Try It!</button>
       <div id="quote-container"></div>
     </div>
 
@@ -65,13 +65,13 @@
       <h3 class="margin">Cool Projects</h3>
       <div class="row">
         <div class="column">
-          <button onclick="changeCycleGAN()">CycleGAN</button>
+          <button type="button" onclick="changeCycleGAN()">CycleGAN</button>
         </div>
         <div class="column">
-          <button onclick="changeDeepPhoto()">Deep Photo Style Transfer</button>
+          <button type="button" onclick="changeDeepPhoto()">Deep Photo Style Transfer</button>
         </div>
         <div class="column">
-          <button onclick="changeMsgSys()">Message System</button>
+          <button type="button" onclick="changeMsgSys()">Message System</button>
         </div>
       </div><hr><br>
       <div class="row">
@@ -101,19 +101,19 @@
       <h3 class="margin">Calisthenics Goals</h3><br>
       <div class="row">
         <div class="column">
-          <button onclick="changeVSit()">V Sit</button>
+          <button type="button" onclick="changeVSit()">V Sit</button>
         </div>
         <div class="column">
-          <button onclick="changeBackLever()">Back Lever</button>
+          <button type="button" onclick="changeBackLever()">Back Lever</button>
         </div>
         <div class="column">
-          <button onclick="changePistolSquat()">Pistol Squat</button>
+          <button type="button" onclick="changePistolSquat()">Pistol Squat</button>
         </div>
         <div class="column">
-          <button onclick="changeFrontLever()">Front Lever</button>
+          <button type="button" onclick="changeFrontLever()">Front Lever</button>
         </div>
         <div class="column">
-          <button onclick="changeHSPU()">Freestanding Handstand Push Up</button>
+          <button type="button" onclick="changeHSPU()">Freestanding Handstand Push Up</button>
         </div>
       </div>
       <br>
@@ -134,7 +134,7 @@
       <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3>
       <h4 class="margin">We promise to take your posts seriously >:)</h4>
       <form action="/delete-comments" method="POST">
-        <button onclick="deleteAllComments()">Clear All Comments From Database</button><br><br>
+        <button type="button" onclick="deleteAllComments()">Clear All Comments From Database</button><br><br>
       </form>
       <form action="/data" method="POST" class="desc">
         <div class="comment-wrapper">
@@ -168,20 +168,20 @@
                   <div class="pull-right">
                     <div class=row>
                       <div class="col-md-4">
-                        <button><i class="arrow left"></i></button>
+                        <button name="move-page" value="left"><i class="arrow left"></i></button>
                       </div>
                       <div class="col-md-4">
                         <p id="page-count" class="desc"></p>
                       </div>
                       <div class="col-md-4">
-                        <button><i class="arrow right"></i></button>
+                        <button name="move-page" value="right"><i class="arrow right"></i></button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div><hr><br>
               <ul id="comments" class="media-list">
-                    <!--Comments Go Here-->
+                <!--Comments Go Here-->
               </ul>
             </div>
           </div>

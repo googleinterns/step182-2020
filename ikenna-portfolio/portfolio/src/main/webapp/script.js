@@ -84,7 +84,7 @@ async function addComments() {
   const metadata = await mresponse.json(); 
   let msg = "";
   document.getElementById('comment-count').innerHTML = comment_count.replace("-", metadata.count);
-  document.getElementById('page-count').innerHTML = page_count.replace("-", metadata.page);
+  document.getElementById('page-count').innerHTML = page_count.replace("-", (metadata.page + 1));
   for(comment of comments) {
     if(comment.name === "") continue;
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_name", comment.name).replace("comment_text", comment.text);

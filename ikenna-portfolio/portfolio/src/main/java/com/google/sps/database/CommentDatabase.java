@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
+import java.lang.*;
 import java.util.List;
 
 public class CommentDatabase implements DatabaseInterface {
@@ -70,7 +71,7 @@ public class CommentDatabase implements DatabaseInterface {
 	    break;
 	  cursor = result_list.getCursor();
       count++;
-	} while (count < page);
+	} while (count <= page);
 
     return result_list;
   }
@@ -93,5 +94,15 @@ public class CommentDatabase implements DatabaseInterface {
     int counter = 0;
     for (Entity entity : results.asIterable()) counter++;
     return counter;
+  }
+
+  @Override
+  public int getMaxPages(int batch_size) {
+    int size = size();
+    int remainder = size % batch_size != 0 ? 1 : 0;
+    int page_count = (int)Math.floor((float)size/batch_size);
+    System.out.println("Remainder: " + remainder);
+    System.out.println("Page Count: " + page_count);    
+    return page_count + remainder;
   }
 }

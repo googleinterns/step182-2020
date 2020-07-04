@@ -47,7 +47,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     comments.clear();
-    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(CountServlet.search, CountServlet.ascending, CountServlet.count, CountServlet.page);
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(CountServlet.search, CountServlet.ascending, CountServlet.count, CountServlet.page);  
     Iterator r = results.iterator();
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
