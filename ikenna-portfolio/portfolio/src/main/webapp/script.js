@@ -53,6 +53,8 @@ const links = [
   "Here's a link to the <a href=\"https://www.gamasutra.com/blogs/MichaelKissner/20151027/257369/Writing_a_Game_Engine_from_Scratch__Part_1_Messaging.php\">site</a> explaining the message system further."
 ];
 
+const project_name = "<small>Project Showing: -</small>";
+
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
@@ -66,19 +68,32 @@ const page_count = "<small>Page: page_num-page_max</small>";
 * Initializes the page with containers and server requests
 */
 async function initializePage() {
-  addComments();
-  loadInteractiveContainers();
+  loadProjectsContainer();
+  loadCalisthenicsContainer();
+  loadCommentsContainer();
 }
 
-/**
-* Changes Projects and Calisthenics Containers to their default states
-*/
-function loadInteractiveContainers() {
-  changeCycleGAN();
-  changeVSit()
+async function loadProjectsContainer() {
+  const response = await fetch("/projects");
+  const project = await response.json();
+  document.getElementById("project-name").innerHTML = project_name.replace("-", project.name);
+  document.getElementById("pro-image1").src = project.img1;
+  document.getElementById("pro-image2").src = project.img2;
+  document.getElementById("pro-image3").src = project.img3;
+  document.getElementById("pro-desc").innerHTML = project.desc;
+  document.getElementById("pro-links").innerHTML = project.links;
 }
 
-async function addComments() {
+async function loadCalisthenicsContainer() {
+  const response = await fetch("/calisthenics");
+  const calisthenics = await response.json();
+  document.getElementById("cal-image1").src = calisthenics.img1;
+  document.getElementById("cal-image2").src = calisthenics.img2;
+  document.getElementById("goal").innerText = goal.replace("-", calisthenics.title1);
+  document.getElementById("current").innerText = current.replace("-", calisthenics.title2);
+}
+
+async function loadCommentsContainer() {
   const dresponse = await fetch("/data");
   const comments = await dresponse.json();
   const mresponse = await fetch("/count")
@@ -112,87 +127,4 @@ async function addRandomQuote() {
   const response = await fetch("/random");
   const quote = await response.text();
   document.getElementById("quote-container").innerText = quote;
-}
-
-/**
-* Changes Projects Container to CycleGAN state
-*/
-function changeCycleGAN() {
-  document.getElementById("pro-image1").src = "/images/real.png";
-  document.getElementById("pro-image2").src = "/images/real_to_rot.png";
-  document.getElementById("pro-image3").src = "/images/rot_to_real.png";
-  document.getElementById("pro-desc").innerHTML = project_desc[0];
-  document.getElementById("pro-links").innerHTML = links[0];
-}
-
-/**
-* Changes Projects Container to Deep Photo Style Transfer state
-*/
-function changeDeepPhoto() {
-  document.getElementById("pro-image1").src = "/images/dancing.jpg";
-  document.getElementById("pro-image2").src = "/images/picasso.jpg";
-  document.getElementById("pro-image3").src = "/images/Figure_1.png";
-  document.getElementById("pro-desc").innerHTML = project_desc[1];
-  document.getElementById("pro-links").innerHTML = links[1];
-}
-
-/**
-* Changes Projects Container to Message System state
-*/
-function changeMsgSys() {
-  document.getElementById("pro-image1").src = "";
-  document.getElementById("pro-image2").src = "/images/Message Bus.png";
-  document.getElementById("pro-image3").src = "";
-  document.getElementById("pro-desc").innerHTML = project_desc[2];
-  document.getElementById("pro-links").innerHTML = links[2];
-}
-
-/**
-* Changes Calisthenics Container to V Sit state
-*/
-function changeVSit() {
-  document.getElementById("cal-image1").src = "/images/vsit.jpg";
-  document.getElementById("cal-image2").src = "/images/lsit.jpg";
-  document.getElementById("goal").innerText = goal.replace("-", "V Sit");
-  document.getElementById("current").innerText = current.replace("-", "L Sit");
-}
-
-/**
-* Changes Calisthenics Container to Back Lever state
-*/
-function changeBackLever() {
-  document.getElementById("cal-image1").src = "/images/back_lever.jpg";
-  document.getElementById("cal-image2").src = "/images/adv_tuck_back_lever.jpg";
-  document.getElementById("goal").innerText = goal.replace("-", "Back Lever");
-  document.getElementById("current").innerText = current.replace("-", "Advanced Tuck Back Lever");
-}
-
-/**
-* Changes Calisthenics Container to Pistol Squat state
-*/
-function changePistolSquat() {
-  document.getElementById("cal-image1").src = "/images/pistol_squat.jpg";
-  document.getElementById("cal-image2").src = "/images/supported_pistol_squat.jpg";
-  document.getElementById("goal").innerText = goal.replace("-", "Pistol Squat");
-  document.getElementById("current").innerText = current.replace("-", "Pole Supported Pistol Squat");
-}
-
-/**
-* Changes Calisthenics Container to Front Lever state
-*/
-function changeFrontLever() {
-  document.getElementById("cal-image1").src = "/images/front_lever.jpg";
-  document.getElementById("cal-image2").src = "/images/single_leg_front_lever.png";
-  document.getElementById("goal").innerText = goal.replace("-", "Front Lever");
-  document.getElementById("current").innerText = current.replace("-", "Single Leg Front Lever");
-}
-
-/**
-* Changes Calisthenics Container to Freestanding Handstand Push Up state
-*/
-function changeHSPU() {
-  document.getElementById("cal-image1").src = "/images/hspu.jpg";
-  document.getElementById("cal-image2").src = "/images/decline_pike_push_up.jpg";
-  document.getElementById("goal").innerText = goal.replace("-", "Freestanding Handstand Push Up");
-  document.getElementById("current").innerText = current.replace("-", "Decline Pike Push Up");
 }

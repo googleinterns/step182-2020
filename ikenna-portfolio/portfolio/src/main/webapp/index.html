@@ -63,17 +63,16 @@
     <!-- Projects Container -->
     <div id="projects-sect" class="container-fluid bg-3 text-center">
       <h3 class="margin">Cool Projects</h3>
-      <div class="row">
-        <div class="column">
-          <button type="button" onclick="changeCycleGAN()">CycleGAN</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changeDeepPhoto()">Deep Photo Style Transfer</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changeMsgSys()">Message System</button>
-        </div>
-      </div><hr><br>
+      <form action="/projects" method="POST">
+        <label id="project-name" for="pro"></label><br>
+        <button class="btn btn-info">Go!</button>
+        <select name="pro" id="pro" class="btn btn-secondary dropdown-toggle">
+          <option value="">--Please choose a project--</option>  
+          <option value="cyclegan">CycleGAN</option>
+          <option value="deep-photo">Deep Photo Style Transfer</option>
+          <option value="msg-sys">Message System</option>
+        </select>
+      </form><hr><br>
       <div class="row">
         <div class="column">
           <img id="pro-image1" class="image-format" src="" alt="">
@@ -88,35 +87,28 @@
       <br>
       <div class="row">
         <div class="col-sm-8">
-          <p id="pro-desc" class="desc"> </p>
+          <p id="pro-desc" class="desc"></p>
         </div>
         <div class="col-sm-4">
-          <p id="pro-links" class="desc"> </p>
+          <p id="pro-links" class="desc"></p>
         </div>
       </div>
     </div>
 
     <!-- Calisthenics Container-->
-    <div id="calisthenics-sect" class="container-fluid bg-4 text-center">    
-      <h3 class="margin">Calisthenics Goals</h3><br>
-      <div class="row">
-        <div class="column">
-          <button type="button" onclick="changeVSit()">V Sit</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changeBackLever()">Back Lever</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changePistolSquat()">Pistol Squat</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changeFrontLever()">Front Lever</button>
-        </div>
-        <div class="column">
-          <button type="button" onclick="changeHSPU()">Freestanding Handstand Push Up</button>
-        </div>
-      </div>
-      <br>
+    <div id="calisthenics-sect" class="container-fluid bg-4 text-center">
+      <h3 class="margin">Calisthenics Goals</h3>      
+      <form action="/calisthenics" method="POST">
+        <button class="btn btn-info">Go!</button>
+        <select name="cal" id="cal" class="btn btn-secondary dropdown-toggle">
+          <option value="">--Please choose an exercise--</option>  
+          <option value="vs">V Sit</option>
+          <option value="bl">Back Lever</option>
+          <option value="ps">Pistol Squat</option>
+          <option value="fl">Front Lever</option>
+          <option value="hspu">Freestanding Handstand Push Up</option>
+        </select>
+      </form><br>
       <div class="row">
         <div class="column">
           <img src="" id="cal-image1" class="img-responsive margin image-format" alt="">
@@ -162,7 +154,7 @@
                 </div>
                 <div class="col-md-4">
                   <label id="filter-label" for="filter"></label><br>
-                  <button class="btn btn-info">Go!</button>
+                  <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
                   <select name="filter" id="filter" class="btn btn-secondary dropdown-toggle">
                     <option value="">--Please choose a filter--</option>  
                     <option value="oldest">Oldest</option>
