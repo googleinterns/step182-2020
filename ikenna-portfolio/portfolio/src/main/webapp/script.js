@@ -36,9 +36,7 @@ async function loadProjectsContainer() {
   const response = await fetch("/projects");
   const project = await response.json();
   document.getElementById("project-name").innerHTML = project_name.replace("-", project.name);
-  document.getElementById("pro-image1").src = project.img1;
-  document.getElementById("pro-image2").src = project.img2;
-  document.getElementById("pro-image3").src = project.img3;
+  document.getElementById("projects-pics").innerHTML = project.imageHTML;
   document.getElementById("pro-desc").innerHTML = project.desc;
   document.getElementById("pro-links").innerHTML = project.links;
 }

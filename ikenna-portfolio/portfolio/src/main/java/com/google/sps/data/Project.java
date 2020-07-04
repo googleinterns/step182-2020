@@ -16,18 +16,28 @@ package com.google.sps.data;
 
 public class Project {
   private final String name;
-  private final String img1;
-  private final String img2;
-  private final String img3;
+  private final String imageHTML;
   private final String desc;
   private final String links;
   
   public Project(String name, String img1, String img2, String img3, String desc, String links) {
+    this(name, img1, img2, img3, desc, links, 3);
+  }
+
+  public Project(String name, String img1, String img2, String img3, String desc, String links, int sections) {
     this.name = name;
-    this.img1 = img1;
-    this.img2 = img2;
-    this.img3 = img3;
+    this.imageHTML = getImageHTML(sections, new String[] {img1, img2, img3});
     this.desc = desc;
     this.links = links;
+  }
+
+  private String getImageHTML(int sections, String[] src) {
+    String html = "";
+    if (sections == 3)
+      for(int i = 0; i < sections; i++)
+        html += "<div class=\"col-sm-4\"><img class=\"image-format\" src=\"" + src[i] + "\"></div>";
+    else
+      html = "<div class=\"col-sm\"><img class=\"image-format\" src=\"" + src[0] + "\"></div>";
+    return html;
   }
 }

@@ -86,7 +86,7 @@ public final class ProjectsServlet extends HttpServlet {
     if(type != null) {
       if(type.equals("cyclegan")) project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
       else if(type.equals("deep-photo")) project = new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]);
-      else if(type.equals("msg-sys")) project = new Project("Message System", "", "/images/Message Bus.png", "", project_desc[2], links[2]);
+      else if(type.equals("msg-sys")) project = new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1);
     }
     response.sendRedirect("/index.html#projects-sect");
   }
