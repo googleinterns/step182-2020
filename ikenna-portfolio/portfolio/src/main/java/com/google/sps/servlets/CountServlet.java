@@ -55,8 +55,27 @@ public class CountServlet extends HttpServlet {
       count = Integer.parseInt(count_string);
     String move_page = request.getParameter("move-page");
     if(move_page != null) {
-        if(move_page.equals("left") && page != 0) page--;
-        else if(move_page.equals("right") && page != database.getMaxPages(count) - 1) page++;
+      if(move_page.equals("left") && page != 0) page--;
+      else if(move_page.equals("right") && page != database.getMaxPages(count) - 1) page++;
+    }
+    String filter = request.getParameter("filter");
+    if(filter != null) {
+      if(filter.equals("oldest")) {
+        ascending = true;
+        search = "timestamp";
+      }
+      else if(filter.equals("newest")) {
+        ascending = false;
+        search = "timestamp";
+      }
+      else if(filter.equals("name-a")) {
+        ascending = true;
+        search = "name";
+      }
+      else if(filter.equals("name-d")) {
+        ascending = false;
+        search = "name";
+      }
     }
     response.sendRedirect("/index.html#comments-sect");
   }

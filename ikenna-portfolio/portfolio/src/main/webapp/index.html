@@ -161,8 +161,15 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <button>Placeholder Filter Button</button>
-                  <!--Make into radio/select buttons-->
+                  <label id="filter-label" for="filter"></label><br>
+                  <button class="btn btn-info">Go!</button>
+                  <select name="filter" id="filter" class="btn btn-secondary dropdown-toggle">
+                    <option value="">--Please choose a filter--</option>  
+                    <option value="oldest">Oldest</option>
+                    <option value="newest">Newest</option>
+                    <option value="name-a">Name A-Z</option>
+                    <option value="name-d">Name Z-A</option>
+                  </select>
                 </div>
                 <div class="col-md-4"> 
                   <div class="pull-right">
