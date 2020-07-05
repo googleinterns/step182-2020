@@ -115,9 +115,6 @@
     <div id="comments-sect" class="container-fluid bg-5 text-center">
       <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3>
       <h4 class="margin">We promise to take your posts seriously >:)</h4>
-      <form action="/delete-comments" method="POST">
-        <button type="button" onclick="deleteAllComments()">Clear All Comments From Database</button><br><br>
-      </form>
       <form action="/data" method="POST" class="desc">
         <div class="comment-wrapper">
           <div class="panel-info">
@@ -169,6 +166,14 @@
                   </div>
                 </div>
               </div><hr><br>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form action="/delete-comments" method="POST" class="desc">
+        <div class="comment-wrapper">
+          <div class="panel-info">
+            <div class="panel-body">      
               <ul id="comments" class="media-list">
                 <!--Comments Go Here-->
               </ul>

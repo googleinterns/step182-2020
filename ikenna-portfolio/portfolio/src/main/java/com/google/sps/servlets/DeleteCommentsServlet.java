@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
+import java.util.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,11 @@ public class DeleteCommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    database.deleteAllEntities();
-    response.sendRedirect("/index.html");
+    String id_string = request.getParameter("delete-comment");
+    if(id_string != null) {
+      long id = Long.parseLong(id_string);
+      database.deleteEntity(id);
+    }
+    response.sendRedirect("/index.html#comments-sect");
   }
 }

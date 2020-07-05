@@ -17,7 +17,7 @@ const project_name = "<small>Project Showing: -</small>";
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
-const comment_item = "<li class=\"media\"><div class=\"media-body\"><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
+const comment_item = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"pull-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
 
 const comment_count = "<small>Comments Per Page: -</small>";
 const current_filter = "<small>Current Filter: -</small>"
@@ -61,7 +61,7 @@ async function loadCommentsContainer() {
   document.getElementById('page-count').innerHTML = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.max_pages); 
   for(comment of comments) {
     if(comment.name === "") continue;
-    msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_name", comment.name).replace("comment_text", comment.text);
+    msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
   }
   document.getElementById("comments").innerHTML = msg;
 }
