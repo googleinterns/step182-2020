@@ -28,17 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   
   private List<String> comments;
-  private int numberOfComments;
   static Gson gson;
 
   @Override
   public void init() {
-    numberOfComments = 3;
-    comments = new ArrayList<String>(numberOfComments);
-    comments.add("What do You");
-    comments.add("care what other");
-    comments.add("people think?");
-    comments = Collections.unmodifiableList(comments);
+    comments = new ArrayList<String>();
     gson = new Gson();
   }
   
@@ -47,6 +41,25 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     String json = gson.toJson(comments);
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String comment = getParameter(request, "text-input", "");
+    comments.add(comment);
+    response.sendRedirect("/index.html");
+  }
+
+  /*
+    Returns a certain parameter from a post requests
+    if it doesn't exist, it returns the a default value 
+  */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 
 }
