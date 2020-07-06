@@ -7,7 +7,7 @@
       <script src="script.js"></script>
   </head>
 
-  <body onload="onloadIndex()" id="home">
+  <body id="home">
     <div id="content">
 
       <div class="topnav">
@@ -18,9 +18,6 @@
       <h1 class="h1-index">Gabriel's Portfolio</h1>
           
       <p>Hi! My name is Gabriel and welcome to my portfolio!.</p>
-
-      <button onclick="getGreeting()">Click here to say hi!</button>
-      <div id="greeting-container"></div>
 
       <h2 class="h2-index">About myself</h2>
 
@@ -77,10 +74,20 @@
       </a>
 
       <h2 class="h2-index">Comments</h2>
+
+      <form action="javascript:getComments();">
+        <label for="maxNumberOfComments">Enter the number of comments to wish to see:</label>
+        <input type="number" id="maxNumberOfComments" name="maxNumberOfComments" min="1" max="1000">
+        <input type="submit">
+      </form>
+
       <div id="comments-container"></div>
+
+      <br>
+
       <form action="/data" method="POST">
-        <p>enter a new comment</p>
-        <textarea name="text-input">type here</textarea>
+        <label for="commentBox">enter a new comment</p>
+        <textarea id="commentBox" name="text-input">type here</textarea>
         <br>
         <input type="submit">
       </form>

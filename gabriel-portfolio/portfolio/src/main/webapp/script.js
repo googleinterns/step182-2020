@@ -75,16 +75,11 @@ async function getComments() {
   const commentList = document.getElementById('comments-container');
   commentList.innerHTML = '';
   // loop through the strings in the json object
+  const maxNumberOfComments = document.getElementById("maxNumberOfComments").value;
+  console.log(maxNumberOfComments);
   var i=0;
-  while(comments[i]) {
+  while(comments[i] && i < maxNumberOfComments) {
     commentList.appendChild(createListElement(comments[i]));
     i++;
   }
-}
-
-/*
-  onLoad function for the body to run javascript when the page loads
-*/
-function onloadIndex() {
-  getComments();
 }

@@ -33,6 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
+  final String commentEntity = "Comment";
+  final String textProperty = "text";
+  final String timestampProperty = "timestamp";
+
   static Gson gson;
 
   @Override
@@ -43,15 +47,21 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    Query query = new Query("Comment");
+    Query query = new Query(commentEntity).addSort(timestampProperty, SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     // loop through the query to get the text from each comment
     List<String> comments = new ArrayList<String>();
+    int commentCounter = 0;
+    
+    loopThroughComments: 
     for(Entity e : results.asIterable()) {
-        String text = (String) e.getProperty("text");
-        comments.add(text);
+        String text = (String) e.getProperty(textProperty);
+        if(!(text == null)) {
+          comments.add(text);
+          commentCounter++;
+        }
     }
     
     // convert string to json and output
@@ -62,10 +72,13 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String text = getParameter(request, "text-input", "");
     
-    Entity comment = new Entity("Comment");
-    comment.setProperty("text", text);
+    String text = getParameter(request, "text-input", "");
+    long timestamp = System.currentTimeMillis();
+    
+    Entity comment = new Entity(commentEntity);
+    comment.setProperty(textProperty, text);
+    comment.setProperty(timestampProperty, timestamp);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(comment);
 
