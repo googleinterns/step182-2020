@@ -8,15 +8,26 @@
   margin-top: 20px;
 }
 
+.image-1 {
+    height: 500px;
+    width: 600px;
+}
+
 /* Style the links inside the navigation bar */
 .topnav a {
-  float: left;
   color: blue;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+  float: left;    
   font-size: 17px;
+  padding: 14px 16px;
+  text-align: center;
+  text-decoration: none;
 }
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: blue;
+  color: white;
+
 
 /* Change the color of links on hover */
 .topnav a:hover {
@@ -24,8 +35,3 @@
   color: black;
 }
 
-/* Add a color to the active/current link */
-.topnav a.active {
-  background-color: blue;
-  color: white;
-}
