@@ -13,6 +13,12 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,26 +33,42 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  private List<String> comments;
   static Gson gson;
 
   @Override
   public void init() {
-    comments = new ArrayList<String>();
     gson = new Gson();
   }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json;");
+
+    Query query = new Query("Comment");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    // loop through the query to get the text from each comment
+    List<String> comments = new ArrayList<String>();
+    for(Entity e : results.asIterable()) {
+        String text = (String) e.getProperty("text");
+        comments.add(text);
+    }
+    
+    // convert string to json and output
     String json = gson.toJson(comments);
+    response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = getParameter(request, "text-input", "");
-    comments.add(comment);
+    String text = getParameter(request, "text-input", "");
+    
+    Entity comment = new Entity("Comment");
+    comment.setProperty("text", text);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(comment);
+
     response.sendRedirect("/index.html");
   }
 
