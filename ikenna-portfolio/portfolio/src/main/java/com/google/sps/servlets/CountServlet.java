@@ -64,8 +64,10 @@ public class CountServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String countString = request.getParameter("count");
-    if(!countString.equals(""))
+    if(!countString.equals("")) {
       count = Integer.parseInt(countString);
+      page = 0;
+    }
     String movePage = request.getParameter("move-page");
     if(movePage != null) {
       if(movePage.equals("left") && page != 0) {
