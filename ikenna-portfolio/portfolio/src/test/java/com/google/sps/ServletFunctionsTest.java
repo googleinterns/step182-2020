@@ -14,19 +14,32 @@
 
 package com.google.sps;
 
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.sps.servlets.DataServlet;
 import java.io.*;
 import javax.servlet.http.*;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ServletFunctionsTest extends Mockito {
-  /*
+  
+  private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+
+  @Before
+  public void setUp() {
+    helper.setUp();
+  }
+
+  @After
+  public void tearDown() {
+    helper.tearDown();
+  }
+
   @Test
   public void testDataServletPost() throws Exception {
-    return;
     HttpServletRequest request = mock(HttpServletRequest.class);       
     HttpServletResponse response = mock(HttpServletResponse.class);    
 
@@ -35,18 +48,12 @@ public class ServletFunctionsTest extends Mockito {
 
     when(request.getParameter("name-box")).thenReturn(name);
     when(request.getParameter("text-box")).thenReturn(text);
-
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter writer = new PrintWriter(stringWriter);
-    when(response.getWriter()).thenReturn(writer);
-
-    new DataServlet().doPost(request, response);
+    
+    DataServlet ds = new DataServlet();
+    ds.init();
+    ds.doPost(request, response);
 
     verify(request, atLeast(1)).getParameter("name-box");
     verify(request, atLeast(1)).getParameter("text-box");
-    writer.flush();
-    assertTrue(stringWriter.toString().contains(name));
-    assertTrue(stringWriter.toString().contains(text));
   }
-  */
 }

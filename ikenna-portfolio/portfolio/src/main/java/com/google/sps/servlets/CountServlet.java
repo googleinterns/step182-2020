@@ -29,23 +29,29 @@ import java.lang.*;
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
 
-  public static int count = 10;
-  public static int page = 0;
-  public static boolean ascending = true;
-  public static String search = "timestamp";
+  private int count;
+  private int page;
+  private boolean ascending;
+  private String search;
   
   private CommentDatabase database;
-  
+  private Metadata metadata;
+
   @Override
   public void init() {
     database = new CommentDatabase();
+    metadata = new Metadata();
+    count = metadata.getCount();
+    page = metadata.getPage();
+    ascending = metadata.getAscending();
+    search = metadata.getSearch();
+    metadata.setMaxPages(database.getMaxPages(count));
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), ascending, search);
     response.setContentType("application/json;");
-    response.getWriter().println(getJson(metadata));
+    response.getWriter().println(getJson());
   }
 
   @Override
@@ -77,10 +83,12 @@ public class CountServlet extends HttpServlet {
         search = "name";
       }
     }
+    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), ascending, search);
+    this.metadata = new Metadata(metadata);
     response.sendRedirect("/index.html#comments-sect");
   }
 
-  private String getJson(Metadata metadata) {
+  private String getJson() {
     Gson gson = new Gson();
     String json = gson.toJson(metadata);
     return json;

@@ -19,9 +19,9 @@ const current = "Current Ability: -";
 
 const comment_item = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"pull-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
 
-const comment_count = "<small>Comments Per Page: -</small>";
-const current_filter = "<small>Current Filter: -</small>"
-const page_count = "<small>Page: page_num-page_max</small>";
+const comment_count = "Comments Per Page: -";
+const current_filter = "Current Filter: -"
+const page_count = "Page: page_num of page_max";
 
 /**
 * Initializes the page with containers and server requests
@@ -44,21 +44,22 @@ async function loadProjectsContainer() {
 async function loadCalisthenicsContainer() {
   const response = await fetch("/calisthenics");
   const calisthenics = await response.json();
-  document.getElementById("cal-image1").src = calisthenics.img1;
-  document.getElementById("cal-image2").src = calisthenics.img2;
-  document.getElementById("goal").innerText = goal.replace("-", calisthenics.title1);
-  document.getElementById("current").innerText = current.replace("-", calisthenics.title2);
+  document.getElementById("cal-image1").src = calisthenics.goalImg;
+  document.getElementById("cal-image2").src = calisthenics.currentAblityImg;
+  document.getElementById("goal").innerText = goal.replace("-", calisthenics.goalName);
+  document.getElementById("current").innerText = current.replace("-", calisthenics.currentAblityName);
 }
 
 async function loadCommentsContainer() {
-  const dresponse = await fetch("/data");
-  const comments = await dresponse.json();
   const mresponse = await fetch("/count")
-  const metadata = await mresponse.json(); 
+  const metadata = await mresponse.json();
+  addMetadata(metadata);  
+  const dresponse = await fetch("/data");
+  const comments = await dresponse.json(); 
   let msg = "";
-  document.getElementById('comment-count').innerHTML = comment_count.replace("-", metadata.count);
-  document.getElementById('filter-label').innerHTML = current_filter.replace("-", getFilter(metadata.ascending, metadata.search));
-  document.getElementById('page-count').innerHTML = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.max_pages); 
+  document.getElementById("comment-count").innerText = comment_count.replace("-", metadata.count);
+  document.getElementById("filter-label").innerText = current_filter.replace("-", metadata.filterLabel);
+  document.getElementById("page-count").innerText = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.maxPages); 
   for(comment of comments) {
     if(comment.name === "") continue;
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
@@ -66,15 +67,14 @@ async function loadCommentsContainer() {
   document.getElementById("comments").innerHTML = msg;
 }
 
-function getFilter(ascending, search) {
-  if(ascending) {
-    if(search === "timestamp") return "Oldest";
-    if(search === "name") return "Name A-Z";
-  }
-  else {
-    if(search === "timestamp") return "Newest";
-    if(search === "name") return "Name Z-A"; 
-  }
+async function addMetadata(metadata) {
+  const params = new URLSearchParams();
+  params.append("count", metadata.count);
+  params.append("page", metadata.page);
+  params.append("maxPages", metadata.maxPages);
+  params.append("ascending", metadata.ascending);
+  params.append("search", metadata.search);
+  await fetch("/data", {method: "POST", body: params});
 }
 
 /**

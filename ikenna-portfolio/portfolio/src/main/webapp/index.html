@@ -116,69 +116,61 @@
       <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3>
       <h4 class="margin">We promise to take your posts seriously >:)</h4>
       <form action="/data" method="POST" class="desc">
-        <div class="comment-wrapper">
-          <div class="panel-info">
-            <div class="panel-body">
-              <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
-              <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
-              <input type="submit" class="btn btn-info pull-right">
-              <div class="clearfix"></div><hr>
-            </div>
-          </div>
+        <div class="comment-wrapper panel-info panel-body">
+          <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
+          <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
+          <input type="submit" class="btn btn-info pull-right">
+          <div class="clearfix"></div><hr>
         </div>
       </form>
       <form action="/count" method="POST" class="desc">
-        <div class="comment-wrapper">
-          <div class="panel-info">
-            <div class="panel-body">
-              <div class=row>
+        <div class="comment-wrapper panel-info panel-body">
+          <div class="row">
+            <div class="col-sm-4 pull-left">
+              <div class="pull-left">
+                <label for="count">
+                  <small id="comment-count"></small>
+                </label><br>
+                <button class="btn btn-info">Go!</button>
+                <input type="number" id="count" name="count" min="1" max="10">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <label for="filter">
+                <small id="filter-label"></small>    
+              </label><br>
+              <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
+              <select name="filter" id="filter" class="btn btn-secondary dropdown-toggle">
+                <option value="">--Please choose a filter--</option>  
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+                <option value="name-a">Name A-Z</option>
+                <option value="name-d">Name Z-A</option>
+              </select>
+            </div>
+            <div class="col-sm-4"> 
+              <div class="row pull-right">
                 <div class="col-sm-4">
-                  <div class="pull-left">
-                    <label id="comment-count" for="count"></label><br>
-                    <button class="btn btn-info">Go!</button>
-                    <input type="number" id="count" name="count" min="1" max="10">
-                  </div>
+                  <button name="move-page" value="left"><i class="arrow left"></i></button>
                 </div>
                 <div class="col-sm-4">
-                  <label id="filter-label" for="filter"></label><br>
-                  <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
-                  <select name="filter" id="filter" class="btn btn-secondary dropdown-toggle">
-                    <option value="">--Please choose a filter--</option>  
-                    <option value="oldest">Oldest</option>
-                    <option value="newest">Newest</option>
-                    <option value="name-a">Name A-Z</option>
-                    <option value="name-d">Name Z-A</option>
-                  </select>
+                  <p class="desc">
+                    <small id="page-count"></small>
+                  </p>
                 </div>
-                <div class="col-sm-4"> 
-                  <div class="pull-right">
-                    <div class=row>
-                      <div class="col-sm-4">
-                        <button name="move-page" value="left"><i class="arrow left"></i></button>
-                      </div>
-                      <div class="col-sm-4">
-                        <p id="page-count" class="desc"></p>
-                      </div>
-                      <div class="col-sm-4">
-                        <button name="move-page" value="right"><i class="arrow right"></i></button>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-sm-4">
+                  <button name="move-page" value="right"><i class="arrow right"></i></button>
                 </div>
-              </div><hr><br>
+              </div>
             </div>
           </div>
-        </div>
+        </div><hr><br>
       </form>
       <form action="/delete-comments" method="POST" class="desc">
-        <div class="comment-wrapper">
-          <div class="panel-info">
-            <div class="panel-body">      
-              <ul id="comments" class="media-list">
+        <div class="comment-wrapper panel-info panel-body">     
+          <ul id="comments" class="media-list">
                 <!--Comments Go Here-->
-              </ul>
-            </div>
-          </div>
+          </ul>
         </div>
       </form>
     </div>

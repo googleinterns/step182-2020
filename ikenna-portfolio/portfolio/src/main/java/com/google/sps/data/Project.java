@@ -14,6 +14,12 @@
 
 package com.google.sps.data;
 
+/**
+* The Project class stores information that represents how the projects container
+* will look like.
+* 
+*  
+*/
 public class Project {
   private final String name;
   private final String imageHTML;
@@ -33,11 +39,13 @@ public class Project {
 
   private String getImageHTML(int sections, String[] src) {
     String html = "";
-    if (sections == 3)
+    if (sections == 3) {
       for(int i = 0; i < sections; i++)
         html += "<div class=\"col-sm-4\"><img class=\"image-format\" src=\"" + src[i] + "\"></div>";
-    else
+    }
+    else {
       html = "<div class=\"col-sm\"><img class=\"image-format\" src=\"" + src[0] + "\"></div>";
+    }
     return html;
   }
 }

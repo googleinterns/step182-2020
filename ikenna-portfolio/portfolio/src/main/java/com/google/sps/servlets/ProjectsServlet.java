@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns a random quote. */
+/** Servlet that creates a Project object based on user clicks. */
 @WebServlet("/projects")
 public final class ProjectsServlet extends HttpServlet {
 

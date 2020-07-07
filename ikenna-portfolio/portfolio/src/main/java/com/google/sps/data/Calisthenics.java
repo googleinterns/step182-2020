@@ -14,16 +14,22 @@
 
 package com.google.sps.data;
 
+/**
+* The Calisthenics class stores information that represents how the calisthenics container
+* will look like.
+* 
+*  
+*/
 public class Calisthenics {
-  private final String img1;
-  private final String img2;
-  private final String title1;
-  private final String title2;
+  private final String goalImg;
+  private final String currentAblityImg;
+  private final String goalName;
+  private final String currentAblityName;
 
-  public Calisthenics(String img1, String img2, String title1, String title2) {
-    this.img1 = img1;
-    this.img2 = img2;
-    this.title1 = title1;
-    this.title2 = title2;
+  public Calisthenics(String goalImg, String currentAblityImg, String goalName, String currentAblityName) {
+    this.goalImg = goalImg;
+    this.currentAblityImg = currentAblityImg;
+    this.goalName = goalName;
+    this.currentAblityName = currentAblityName;
   }
 }

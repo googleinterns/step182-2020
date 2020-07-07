@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns a random quote. */
+/** Servlet that creates a Calisthenics object based on user clicks. */
 @WebServlet("/calisthenics")
 public final class CalisthenicsServlet extends HttpServlet {
 

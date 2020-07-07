@@ -30,66 +30,74 @@ import java.lang.*;
 import java.util.List;
 
 public class CommentDatabase implements DatabaseInterface {
+
+  private final String COMMENT_TAG = "Comment"; 
+
   @Override
   public void deleteEntity(long id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key key = KeyFactory.createKey("Comment", id);
+    Key key = KeyFactory.createKey(COMMENT_TAG, id);
     datastore.delete(key);
   }
 
   @Override
   public void deleteAllEntities() {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("Comment");
+    Query query = new Query(COMMENT_TAG);
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       long id = entity.getKey().getId();
-      Key key = KeyFactory.createKey("Comment", id);
+      Key key = KeyFactory.createKey(COMMENT_TAG, id);
       datastore.delete(key);
     }
   }
   
   @Override
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page) {
-    Query query = new Query("Comment");
+  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page) {
+    Query query = new Query(COMMENT_TAG);
     
-    if(ascending) query.addSort(sort_attr, Query.SortDirection.ASCENDING);
-    else query.addSort(sort_attr, Query.SortDirection.DESCENDING);
-   
+    if(ascending) {
+      query.addSort(sortAttr, Query.SortDirection.ASCENDING);
+    }
+    else {
+      query.addSort(sortAttr, Query.SortDirection.DESCENDING);
+    }
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    FetchOptions fetch_options = FetchOptions.Builder.withLimit(batch_size);
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(batchSize);
     Cursor cursor = null;
 	int count  = 0;
-    QueryResultList<Entity> result_list = null;
-
+    QueryResultList<Entity> resultList = null;
+    
+    /*Moves database cursor based on page and grabs up to batchSize elements from the cursor position*/
 	do {
 	  if(cursor != null)
-		fetch_options.startCursor(cursor);		
-	  result_list = datastore.prepare(query).asQueryResultList(fetch_options);
-	  if (result_list.size() < batch_size)
+		fetchOptions.startCursor(cursor);		
+	  resultList = datastore.prepare(query).asQueryResultList(fetchOptions);
+	  if (resultList.size() < batchSize)
 	    break;
-	  cursor = result_list.getCursor();
+	  cursor = resultList.getCursor();
       count++;
 	} while (count <= page);
 
-    return result_list;
+    return resultList;
   }
   
   @Override
   public long storeEntity(Comment c) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity comment_entity = new Entity("Comment");
-    comment_entity.setProperty("name", c.getName());
-    comment_entity.setProperty("text", c.getText());
-    comment_entity.setProperty("timestamp", c.getTimestamp());
-    return datastore.put(comment_entity).getId();
+    Entity commentEntity = new Entity(COMMENT_TAG);
+    commentEntity.setProperty("name", c.getName());
+    commentEntity.setProperty("text", c.getText());
+    commentEntity.setProperty("timestamp", c.getTimestamp());
+    return datastore.put(commentEntity).getId();
   }
 
   @Override
   public int size() {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("Comment");
+    Query query = new Query(COMMENT_TAG);
     PreparedQuery results = datastore.prepare(query);
     int counter = 0;
     for (Entity entity : results.asIterable()) counter++;
@@ -97,10 +105,10 @@ public class CommentDatabase implements DatabaseInterface {
   }
 
   @Override
-  public int getMaxPages(int batch_size) {
+  public int getMaxPages(int batchSize) {
     int size = size();
-    int remainder = size % batch_size != 0 ? 1 : 0;
-    int page_count = (int)Math.floor((float)size/batch_size);
-    return page_count + remainder;
+    int remainder = size % batchSize != 0 ? 1 : 0;
+    int pageCount = (int)Math.floor((float)size/batchSize);
+    return pageCount + remainder;
   }
 }

@@ -31,8 +31,13 @@ public class Comment {
 
   public Comment(String name, String text, long timestamp) {
     this.id = -1;
-    this.name = name;
-    this.text = text;
+    if(name == null || name.equals("")) {
+        this.name = "Anonymous";
+    }
+    else {
+        this.name = name.replaceAll("<[^>]*>", "Please Don't Inject HTML");
+    }
+    this.text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     this.timestamp = timestamp;
   }
 

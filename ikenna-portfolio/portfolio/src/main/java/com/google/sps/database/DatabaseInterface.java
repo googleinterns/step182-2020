@@ -22,8 +22,8 @@ import java.util.List;
 public interface DatabaseInterface {
   public void deleteEntity(long id);
   public void deleteAllEntities();
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page);
+  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page);
   public long storeEntity(Comment c);
   public int size();
-  public int getMaxPages(int batch_size);
+  public int getMaxPages(int batchSize);
 }

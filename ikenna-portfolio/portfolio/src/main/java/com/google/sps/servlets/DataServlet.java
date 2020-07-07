@@ -22,7 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
-import com.google.sps.data.Comment;
+import com.google.sps.data.*;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
@@ -37,17 +37,19 @@ public class DataServlet extends HttpServlet {
 
   private CommentDatabase database;
   private List<Comment> comments;
+  private Metadata metadata;
 
   @Override
   public void init() {
     database = new CommentDatabase();
     comments = new ArrayList<>();
+    metadata = new Metadata();
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     comments.clear();
-    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(CountServlet.search, CountServlet.ascending, CountServlet.count, CountServlet.page);  
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSearch(), metadata.getAscending(), metadata.getCount(), metadata.getPage());  
     Iterator r = results.iterator();
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
@@ -66,19 +68,27 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Comment comment = generateComment(request);
-    comment.setId(database.storeEntity(comment));
-    response.sendRedirect("/index.html#comments-sect");
+    if(request.getParameter("count") != null) {
+      int count = Integer.parseInt(request.getParameter("count"));
+      int page = Integer.parseInt(request.getParameter("page"));
+      int maxPages = Integer.parseInt(request.getParameter("maxPages"));
+      boolean ascending = Boolean.parseBoolean(request.getParameter("ascending"));
+      String search = request.getParameter("search");
+      Metadata metadata = new Metadata(count, page, maxPages, ascending, search);
+      this.metadata = new Metadata(metadata);
+    } 
+    else {
+      Comment comment = generateComment(request);
+      comment.setId(database.storeEntity(comment));
+      response.sendRedirect("/index.html#comments-sect");
+    }
   }
 
   private Comment generateComment(HttpServletRequest request) {
     String name = request.getParameter("name-box");
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
-    boolean empty_name = name == null || name.equals("");
-    String true_name = name.replaceAll("<[^>]*>", "Please Don't Inject HTML");
-    String true_text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
-    Comment comment = empty_name ? new Comment(true_text, timestamp) : new Comment(true_name, true_text, timestamp);
+    Comment comment = new Comment(name, text, timestamp);
     return comment;
   }
   

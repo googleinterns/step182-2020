@@ -37,7 +37,7 @@ public class MockDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(String sort_attr, boolean ascending, int batch_size, int page) {
+  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page) {
     List<Entity> results = new ArrayList<>();
     for(Entity e : comments)
       if(e != null)
@@ -47,11 +47,11 @@ public class MockDatabase implements DatabaseInterface {
   
   @Override
   public long storeEntity(Comment c) {
-    Entity comment_entity = new Entity("Comment");
-    comment_entity.setProperty("name", c.getName());
-    comment_entity.setProperty("text", c.getText());
-    comment_entity.setProperty("timestamp", c.getTimestamp());
-    comments.add(comment_entity);
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("name", c.getName());
+    commentEntity.setProperty("text", c.getText());
+    commentEntity.setProperty("timestamp", c.getTimestamp());
+    comments.add(commentEntity);
     size++;     
     return comments.size() - 1;
   }
@@ -62,9 +62,9 @@ public class MockDatabase implements DatabaseInterface {
   }
 
   @Override
-  public int getMaxPages(int batch_size) {
-    int remainder = size % batch_size != 0 ? 1 : 0;
-    int page_count = (int)Math.floor((float)size/batch_size);
-    return page_count + remainder;
+  public int getMaxPages(int batchSize) {
+    int remainder = size % batchSize != 0 ? 1 : 0;
+    int pageCount = (int)Math.floor((float)size/batchSize);
+    return pageCount + remainder;
   }
 }
