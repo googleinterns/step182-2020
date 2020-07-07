@@ -54,6 +54,14 @@ public class CountServlet extends HttpServlet {
     response.getWriter().println(getJson());
   }
 
+  
+  /**
+   * This method creates metadata from the comments container
+   * that describes how the comments in the comments container
+   * should be displayed.
+   * @param request 
+   * @param response 
+  */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String count_string = request.getParameter("count");
