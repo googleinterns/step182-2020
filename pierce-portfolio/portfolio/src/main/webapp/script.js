@@ -55,7 +55,7 @@ function handleResponse(response) {
   textPromise.then(addMessageToDom);
 }
 
-/** Adds a random messe to the DOM. */
+/** Adds the hello world message to the DOM. */
 function addMessageToDom(message) {
   console.log('Adding message to dom: ' + message);
 
