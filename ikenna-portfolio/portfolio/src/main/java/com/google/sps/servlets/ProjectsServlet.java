@@ -84,9 +84,17 @@ public final class ProjectsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String type = request.getParameter("pro");
     if(type != null) {
-      if(type.equals("cyclegan")) project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
-      else if(type.equals("deep-photo")) project = new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]);
-      else if(type.equals("msg-sys")) project = new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1);
+      switch(type) {
+        case "cyclegan":
+          project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
+          break;
+        case "deep-photo":
+          project = new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]);
+          break;
+        case "msg-sys":
+          project = new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1);
+          break;
+      }
     }
     response.sendRedirect("/index.html#projects-sect");
   }

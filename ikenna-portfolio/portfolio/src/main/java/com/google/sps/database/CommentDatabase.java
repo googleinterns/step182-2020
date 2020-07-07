@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata.Search;
 import java.lang.*;
 import java.util.List;
 
@@ -54,14 +55,14 @@ public class CommentDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page) {
+  public List<Entity> getContents(Search search, int batchSize, int page) {
     Query query = new Query(COMMENT_TAG);
     
-    if(ascending) {
-      query.addSort(sortAttr, Query.SortDirection.ASCENDING);
+    if(search.getAscending()) {
+      query.addSort(search.getAttribute(), Query.SortDirection.ASCENDING);
     }
     else {
-      query.addSort(sortAttr, Query.SortDirection.DESCENDING);
+      query.addSort(search.getAttribute(), Query.SortDirection.DESCENDING);
     }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -72,11 +73,13 @@ public class CommentDatabase implements DatabaseInterface {
     
     /*Moves database cursor based on page and grabs up to batchSize elements from the cursor position*/
 	do {
-	  if(cursor != null)
-		fetchOptions.startCursor(cursor);		
+	  if(cursor != null) {
+		fetchOptions.startCursor(cursor);
+      }		
 	  resultList = datastore.prepare(query).asQueryResultList(fetchOptions);
-	  if (resultList.size() < batchSize)
+	  if (resultList.size() < batchSize) {
 	    break;
+      }
 	  cursor = resultList.getCursor();
       count++;
 	} while (count <= page);
@@ -100,7 +103,9 @@ public class CommentDatabase implements DatabaseInterface {
     Query query = new Query(COMMENT_TAG);
     PreparedQuery results = datastore.prepare(query);
     int counter = 0;
-    for (Entity entity : results.asIterable()) counter++;
+    for (Entity entity : results.asIterable()) {
+      counter++;
+    }
     return counter;
   }
 

@@ -17,6 +17,7 @@ package com.google.sps.database;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata.Search;
 import java.lang.*;
 import java.util.*;
 
@@ -25,7 +26,9 @@ public class MockDatabase implements DatabaseInterface {
   private int size = 0;
   @Override
   public void deleteEntity(long id) {
-    if((int)id > size || comments.get((int)id) == null) return;
+    if((int)id > size || comments.get((int)id) == null) {
+      return;
+    }
     comments.set((int)id, null);
     size--;
   }
@@ -37,11 +40,13 @@ public class MockDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page) {
+  public List<Entity> getContents(Search search, int batchSize, int page) {
     List<Entity> results = new ArrayList<>();
-    for(Entity e : comments)
-      if(e != null)
-        results.add(e); 
+    for(Entity e : comments) {
+      if(e != null) {
+        results.add(e);
+      } 
+    }
     return results;
   }
   

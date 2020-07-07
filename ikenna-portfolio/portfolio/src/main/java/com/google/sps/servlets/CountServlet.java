@@ -15,7 +15,8 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-import com.google.sps.data.*;
+import com.google.sps.data.Metadata;
+import com.google.sps.data.Metadata.Search;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
@@ -31,8 +32,7 @@ public class CountServlet extends HttpServlet {
 
   private int count;
   private int page;
-  private boolean ascending;
-  private String search;
+  private Search search;
   
   private CommentDatabase database;
   private Metadata metadata;
@@ -43,7 +43,6 @@ public class CountServlet extends HttpServlet {
     metadata = new Metadata();
     count = metadata.getCount();
     page = metadata.getPage();
-    ascending = metadata.getAscending();
     search = metadata.getSearch();
     metadata.setMaxPages(database.getMaxPages(count));
   }
@@ -64,34 +63,27 @@ public class CountServlet extends HttpServlet {
   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String count_string = request.getParameter("count");
-    if(!count_string.equals(""))
-      count = Integer.parseInt(count_string);
-    String move_page = request.getParameter("move-page");
-    if(move_page != null) {
-      if(move_page.equals("left") && page != 0) page--;
-      else if(move_page.equals("right") && page != database.getMaxPages(count) - 1) page++;
+    String countString = request.getParameter("count");
+    if(!countString.equals(""))
+      count = Integer.parseInt(countString);
+    String movePage = request.getParameter("move-page");
+    if(movePage != null) {
+      if(movePage.equals("left") && page != 0) {
+        page--;
+      }
+      else if(movePage.equals("right") && page != database.getMaxPages(count) - 1) {
+        page++;
+      }
     }
     String filter = request.getParameter("filter");
     if(filter != null) {
-      if(filter.equals("oldest")) {
-        ascending = true;
-        search = "timestamp";
-      }
-      else if(filter.equals("newest")) {
-        ascending = false;
-        search = "timestamp";
-      }
-      else if(filter.equals("name-a")) {
-        ascending = true;
-        search = "name";
-      }
-      else if(filter.equals("name-d")) {
-        ascending = false;
-        search = "name";
+      for(Search s : Search.values()) {
+        if(s.name().equalsIgnoreCase(filter)) {
+          search = s;
+        }
       }
     }
-    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), ascending, search);
+    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), search);
     this.metadata = new Metadata(metadata);
     response.sendRedirect("/index.html#comments-sect");
   }

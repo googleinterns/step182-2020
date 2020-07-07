@@ -17,57 +17,56 @@ package com.google.sps.data;
 /**
 * The Metadata class stores information that represents how the comment container
 * will look like.
-* 
-*  
 */
 public class Metadata {
+
+  public enum Search {
+    OLDEST("timestamp", true),
+    NEWEST("timestamp", false),
+    NAME_A_Z("name", true),
+    NAME_Z_A("name", false);
+
+    String attribute;
+    boolean ascending;
+
+    Search(String attr, boolean asc) {
+      attribute = attr;
+      ascending = asc;
+    }
+
+    public String getAttribute() {
+      return attribute;
+    }
+
+    public boolean getAscending() {
+      return ascending;
+    }
+  }
+
   protected final int count;
   protected final int page;
   protected int maxPages;
-  protected final boolean ascending;
-  protected final String search;
+  protected final Search search;
   protected final String filterLabel;
 
   public Metadata() {
-    this(10, 0, -1, true, "timestamp");
+    this(10, 0, -1, Search.OLDEST);
   }
 
-  public Metadata(int count, int page, int maxPages, boolean ascending, String search) {
+  public Metadata(int count, int page, int maxPages, Search search) {
     this.count = count;
     this.page = page;
     this.maxPages = maxPages;
-    this.ascending = ascending;
     this.search = search;
-    this.filterLabel = getFilter(ascending, search);
+    this.filterLabel = search.name();
   }
 
   public Metadata(Metadata metadata) {
     this.count = metadata.count;
     this.page = metadata.page;
     this.maxPages = metadata.maxPages;
-    this.ascending = metadata.ascending;
     this.search = metadata.search;
     this.filterLabel = metadata.filterLabel;
-  }
-
-  private String getFilter(boolean ascending, String search) {
-    if(ascending) {
-      if(search.equals("timestamp")) {
-        return "Oldest";
-      }
-      if(search.equals("name")) {
-        return "Name A-Z";
-      }
-    }
-    else {
-      if(search.equals("timestamp")) {
-        return "Newest";
-      }
-      if(search.equals("name")) {
-        return "Name Z-A";
-      } 
-    }
-    return "";
   }
 
   public int getCount() {
@@ -86,11 +85,7 @@ public class Metadata {
     this.maxPages = maxPages;
   }
 
-  public boolean getAscending() {
-    return ascending;
-  }
-  
-  public String getSearch() {
+  public Search getSearch() {
     return search;
   }
   

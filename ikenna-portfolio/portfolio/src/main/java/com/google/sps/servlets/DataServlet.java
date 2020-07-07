@@ -22,9 +22,12 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
-import com.google.sps.data.*;
+import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata;
+import com.google.sps.data.Metadata.Search;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
+import java.lang.*;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +52,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     comments.clear();
-    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSearch(), metadata.getAscending(), metadata.getCount(), metadata.getPage());  
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSearch(), metadata.getCount(), metadata.getPage());  
     Iterator r = results.iterator();
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
@@ -72,9 +75,8 @@ public class DataServlet extends HttpServlet {
       int count = Integer.parseInt(request.getParameter("count"));
       int page = Integer.parseInt(request.getParameter("page"));
       int maxPages = Integer.parseInt(request.getParameter("maxPages"));
-      boolean ascending = Boolean.parseBoolean(request.getParameter("ascending"));
-      String search = request.getParameter("search");
-      Metadata metadata = new Metadata(count, page, maxPages, ascending, search);
+      String filterLabel = request.getParameter("filterLabel");
+      Metadata metadata = new Metadata(count, page, maxPages, Search.valueOf(filterLabel));
       this.metadata = new Metadata(metadata);
     } 
     else {

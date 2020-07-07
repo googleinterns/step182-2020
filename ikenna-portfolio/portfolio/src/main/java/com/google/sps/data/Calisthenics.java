@@ -17,8 +17,6 @@ package com.google.sps.data;
 /**
 * The Calisthenics class stores information that represents how the calisthenics container
 * will look like.
-* 
-*  
 */
 public class Calisthenics {
   private final String goalImg;

@@ -43,11 +43,23 @@ public final class CalisthenicsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String type = request.getParameter("cal");
     if(type != null) {
-      if(type.equals("vs")) calisthenics = new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit");
-      else if(type.equals("bl")) calisthenics = new Calisthenics("/images/back_lever.jpg", "/images/adv_tuck_back_lever.jpg", "Back Lever", "Advanced Tuck Back Lever");
-      else if(type.equals("ps")) calisthenics = new Calisthenics("/images/pistol_squat.jpg", "/images/supported_pistol_squat.jpg", "Pistol Squat", "Pole Supported Pistol Squat");
-      else if(type.equals("fl")) calisthenics = new Calisthenics("/images/front_lever.jpg", "/images/single_leg_front_lever.png", "Front Lever", "Single Leg Front Lever");
-      else if(type.equals("hspu")) calisthenics = new Calisthenics("/images/hspu.jpg", "/images/decline_pike_push_up.jpg", "Freestanding Handstand Push Up", "Decline Pike Push Up");
+      switch(type) {
+        case "vs":
+          calisthenics = new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit");
+          break;
+        case "bl":
+          calisthenics = new Calisthenics("/images/back_lever.jpg", "/images/adv_tuck_back_lever.jpg", "Back Lever", "Advanced Tuck Back Lever");
+          break;
+        case "ps":
+          calisthenics = new Calisthenics("/images/pistol_squat.jpg", "/images/supported_pistol_squat.jpg", "Pistol Squat", "Pole Supported Pistol Squat");
+          break;
+        case "fl":
+          calisthenics = new Calisthenics("/images/front_lever.jpg", "/images/single_leg_front_lever.png", "Front Lever", "Single Leg Front Lever");
+          break;
+        case "hspu":
+          calisthenics = new Calisthenics("/images/hspu.jpg", "/images/decline_pike_push_up.jpg", "Freestanding Handstand Push Up", "Decline Pike Push Up");
+          break;
+      }
     }
     response.sendRedirect("/index.html#calisthenics-sect");
   }

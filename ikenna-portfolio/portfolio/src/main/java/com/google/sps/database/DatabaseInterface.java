@@ -16,13 +16,14 @@ package com.google.sps.database;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata.Search;
 import java.util.List;
 
 
 public interface DatabaseInterface {
   public void deleteEntity(long id);
   public void deleteAllEntities();
-  public List<Entity> getContents(String sortAttr, boolean ascending, int batchSize, int page);
+  public List<Entity> getContents(Search search, int batchSize, int page);
   public long storeEntity(Comment c);
   public int size();
   public int getMaxPages(int batchSize);

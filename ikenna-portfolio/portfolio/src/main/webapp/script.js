@@ -58,7 +58,7 @@ async function loadCommentsContainer() {
   const comments = await dresponse.json(); 
   let msg = "";
   document.getElementById("comment-count").innerText = comment_count.replace("-", metadata.count);
-  document.getElementById("filter-label").innerText = current_filter.replace("-", metadata.filterLabel);
+  document.getElementById("filter-label").innerText = current_filter.replace("-", metadata.filterLabel).replace("_", " ").replace("_", "-");
   document.getElementById("page-count").innerText = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.maxPages); 
   for(comment of comments) {
     if(comment.name === "") continue;
@@ -72,8 +72,7 @@ async function addMetadata(metadata) {
   params.append("count", metadata.count);
   params.append("page", metadata.page);
   params.append("maxPages", metadata.maxPages);
-  params.append("ascending", metadata.ascending);
-  params.append("search", metadata.search);
+  params.append("filterLabel", metadata.filterLabel);
   await fetch("/data", {method: "POST", body: params});
 }
 
