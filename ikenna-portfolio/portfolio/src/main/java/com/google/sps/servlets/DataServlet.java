@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.lang.*;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,20 +39,16 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private CommentDatabase database;
-  private List<Comment> comments;
-  private Metadata metadata;
-
-  @Override
-  public void init() {
-    database = new CommentDatabase();
-    comments = new ArrayList<>();
-    metadata = new Metadata();
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    comments.clear();
+    CommentDatabase database = new CommentDatabase();
+    List<Comment> comments = new ArrayList<>();
+    HttpSession session = request.getSession();
+    Metadata metadata = (Metadata) session.getAttribute("metadata");
+    if(metadata == null) {
+      metadata = new Metadata();
+    }
+
     QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSearch(), metadata.getCount(), metadata.getPage());  
     Iterator r = results.iterator();
     while(r.hasNext()) {
@@ -64,20 +61,25 @@ public class DataServlet extends HttpServlet {
       comment.setId(id);
       comments.add(comment);
     }
-    if(comments.isEmpty()) comments.add(new Comment("", "", 0));
+    
+    if(comments.isEmpty()) {
+      comments.add(new Comment("", "", 0));
+    }
+    
     response.setContentType("application/json;");
-    response.getWriter().println(getJson());
+    response.getWriter().println(getJson(comments));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    CommentDatabase database = new CommentDatabase();
+
     if(request.getParameter("count") != null) {
+      HttpSession session = request.getSession();
       int count = Integer.parseInt(request.getParameter("count"));
       int page = Integer.parseInt(request.getParameter("page"));
-      int maxPages = Integer.parseInt(request.getParameter("maxPages"));
       String filterLabel = request.getParameter("filterLabel");
-      Metadata metadata = new Metadata(count, page, maxPages, Search.valueOf(filterLabel));
-      this.metadata = new Metadata(metadata);
+      session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), Search.valueOf(filterLabel)));
     } 
     else {
       Comment comment = generateComment(request);
@@ -94,7 +96,7 @@ public class DataServlet extends HttpServlet {
     return comment;
   }
   
-  private String getJson() {
+  private String getJson(List<Comment> comments) {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;

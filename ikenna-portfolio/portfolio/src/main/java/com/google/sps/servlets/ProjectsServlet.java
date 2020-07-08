@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.*;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/projects")
 public final class ProjectsServlet extends HttpServlet {
 
-  private Project project;
   private final String[] project_desc = new String[] {
     "The CycleGAN is a deep learning model that uses two generative adversarial networks (GAN) and the concept of cycle " +
     "consistency to turn something from one domain to another domain. For example, if I were to say \"My name is Ikenna Elue\" " +
@@ -68,38 +68,38 @@ public final class ProjectsServlet extends HttpServlet {
     "Here's a link to the <a href=\"https://www.gamasutra.com/blogs/MichaelKissner/20151027/257369/Writing_a_Game_Engine_from_Scratch__Part_1_Messaging.php\">site</a> explaining the message system further."
   };
 
-
-  @Override
-  public void init() {
-    project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Project project = (Project) session.getAttribute("project");
+    if(project == null) {
+      project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
+    }
     response.setContentType("application/json;");
-    response.getWriter().println(getJson());
+    response.getWriter().println(getJson(project));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String type = request.getParameter("pro");
     if(type != null) {
+      HttpSession session = request.getSession();
       switch(type) {
         case "cyclegan":
-          project = new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]);
+          session.setAttribute("project", new Project("CycleGAN", "/images/real.png", "/images/real_to_rot.png", "/images/rot_to_real.png", project_desc[0], links[0]));
           break;
         case "deep-photo":
-          project = new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]);
+          session.setAttribute("project", new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]));
           break;
         case "msg-sys":
-          project = new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1);
+          session.setAttribute("project",  new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1));
           break;
       }
     }
     response.sendRedirect("/index.html#projects-sect");
   }
 
-  private String getJson() {
+  private String getJson(Project project) {
     Gson gson = new Gson();
     String json = gson.toJson(project);
     return json;

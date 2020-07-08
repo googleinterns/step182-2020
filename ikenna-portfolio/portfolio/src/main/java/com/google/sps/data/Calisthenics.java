@@ -14,11 +14,13 @@
 
 package com.google.sps.data;
 
+import java.io.Serializable;
+
 /**
 * The Calisthenics class stores information that represents how the calisthenics container
 * will look like.
 */
-public class Calisthenics {
+public class Calisthenics implements Serializable {
   private final String goalImg;
   private final String currentAblityImg;
   private final String goalName;

@@ -21,6 +21,7 @@ import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,27 +31,15 @@ import java.lang.*;
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
 
-  private int count;
-  private int page;
-  private Search search;
-  
-  private CommentDatabase database;
-  private Metadata metadata;
-
-  @Override
-  public void init() {
-    database = new CommentDatabase();
-    metadata = new Metadata();
-    count = metadata.getCount();
-    page = metadata.getPage();
-    search = metadata.getSearch();
-    metadata.setMaxPages(database.getMaxPages(count));
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Metadata metadata = (Metadata) session.getAttribute("metadata");
+    if(metadata == null) {
+      metadata = new Metadata();
+    }
     response.setContentType("application/json;");
-    response.getWriter().println(getJson());
+    response.getWriter().println(getJson(metadata));
   }
 
   
@@ -63,11 +52,24 @@ public class CountServlet extends HttpServlet {
   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    CommentDatabase database = new CommentDatabase();
+    HttpSession session = request.getSession();
+    
+    Metadata metadata = (Metadata) session.getAttribute("metadata");
+    if(metadata == null) {
+      metadata = new Metadata();
+    }
+    
+    int count = metadata.getCount();
+    int page = metadata.getPage();
+    Search search = metadata.getSearch();
+
     String countString = request.getParameter("count");
     if(!countString.equals("")) {
       count = Integer.parseInt(countString);
       page = 0;
     }
+
     String movePage = request.getParameter("move-page");
     if(movePage != null) {
       if(movePage.equals("left") && page != 0) {
@@ -77,6 +79,7 @@ public class CountServlet extends HttpServlet {
         page++;
       }
     }
+    
     String filter = request.getParameter("filter");
     if(filter != null) {
       for(Search s : Search.values()) {
@@ -85,12 +88,12 @@ public class CountServlet extends HttpServlet {
         }
       }
     }
-    Metadata metadata = new Metadata(count, page, database.getMaxPages(count), search);
-    this.metadata = new Metadata(metadata);
+    
+    session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), search));
     response.sendRedirect("/index.html#comments-sect");
   }
 
-  private String getJson() {
+  private String getJson(Metadata metadata) {
     Gson gson = new Gson();
     String json = gson.toJson(metadata);
     return json;

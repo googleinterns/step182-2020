@@ -14,11 +14,19 @@
 
 package com.google.sps.data;
 
+import java.io.Serializable;
+
 /**
 * The Metadata class stores information that represents how the comment container
 * will look like.
 */
-public class Metadata {
+public class Metadata implements Serializable {
+
+  /* Default Values */
+  private static final int COUNT = 10;
+  private static final int PAGE = 0;
+  private static final int MAX_PAGES = 1;
+  private static final Search SEARCH = Search.OLDEST;
 
   public enum Search {
     OLDEST("timestamp", true),
@@ -50,7 +58,7 @@ public class Metadata {
   protected final String filterLabel;
 
   public Metadata() {
-    this(10, 0, -1, Search.OLDEST);
+    this(COUNT, PAGE, MAX_PAGES, SEARCH);
   }
 
   public Metadata(int count, int page, int maxPages, Search search) {

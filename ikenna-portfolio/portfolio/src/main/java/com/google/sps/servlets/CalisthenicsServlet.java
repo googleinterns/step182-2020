@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.*;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,45 +27,44 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/calisthenics")
 public final class CalisthenicsServlet extends HttpServlet {
 
-  private Calisthenics calisthenics;
-
-  @Override
-  public void init() {
-    calisthenics = new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit");
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    Calisthenics calisthenics = (Calisthenics) session.getAttribute("calisthenics");
+    if(calisthenics == null) {
+      calisthenics = new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit");
+    }
     response.setContentType("application/json;");
-    response.getWriter().println(getJson());
+    response.getWriter().println(getJson(calisthenics));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String type = request.getParameter("cal");
     if(type != null) {
+      HttpSession session = request.getSession();
       switch(type) {
         case "vs":
-          calisthenics = new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit");
+          session.setAttribute("calisthenics", new Calisthenics("/images/vsit.jpg", "/images/lsit.jpg", "V Sit", "L Sit"));
           break;
         case "bl":
-          calisthenics = new Calisthenics("/images/back_lever.jpg", "/images/adv_tuck_back_lever.jpg", "Back Lever", "Advanced Tuck Back Lever");
+          session.setAttribute("calisthenics", new Calisthenics("/images/back_lever.jpg", "/images/adv_tuck_back_lever.jpg", "Back Lever", "Advanced Tuck Back Lever"));
           break;
         case "ps":
-          calisthenics = new Calisthenics("/images/pistol_squat.jpg", "/images/supported_pistol_squat.jpg", "Pistol Squat", "Pole Supported Pistol Squat");
+          session.setAttribute("calisthenics", new Calisthenics("/images/pistol_squat.jpg", "/images/supported_pistol_squat.jpg", "Pistol Squat", "Pole Supported Pistol Squat"));
           break;
         case "fl":
-          calisthenics = new Calisthenics("/images/front_lever.jpg", "/images/single_leg_front_lever.png", "Front Lever", "Single Leg Front Lever");
+          session.setAttribute("calisthenics", new Calisthenics("/images/front_lever.jpg", "/images/single_leg_front_lever.png", "Front Lever", "Single Leg Front Lever"));
           break;
         case "hspu":
-          calisthenics = new Calisthenics("/images/hspu.jpg", "/images/decline_pike_push_up.jpg", "Freestanding Handstand Push Up", "Decline Pike Push Up");
+          session.setAttribute("calisthenics", new Calisthenics("/images/hspu.jpg", "/images/decline_pike_push_up.jpg", "Freestanding Handstand Push Up", "Decline Pike Push Up"));
           break;
       }
     }
     response.sendRedirect("/index.html#calisthenics-sect");
   }
 
-  private String getJson() {
+  private String getJson(Calisthenics calisthenics) {
     Gson gson = new Gson();
     String json = gson.toJson(calisthenics);
     return json;

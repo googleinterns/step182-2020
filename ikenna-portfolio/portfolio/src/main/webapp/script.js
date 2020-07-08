@@ -55,8 +55,8 @@ async function loadCalisthenicsContainer() {
 async function loadMetadata() {
   const mresponse = await fetch("/count")
   const metadata = await mresponse.json();
-  addMetadata(metadata);  
-  return metadata;
+  await addMetadata(metadata);  
+  return await metadata;
 }
 
 async function loadCommentsContainer(metadata) {
@@ -73,13 +73,12 @@ async function loadCommentsContainer(metadata) {
   document.getElementById("comments").innerHTML = msg;
 }
 
-function addMetadata(metadata) {
+async function addMetadata(metadata) {
   const params = new URLSearchParams();
   params.append("count", metadata.count);
   params.append("page", metadata.page);
-  params.append("maxPages", metadata.maxPages);
   params.append("filterLabel", metadata.filterLabel);
-  fetch("/data", {method: "POST", body: params});
+  await fetch("/data", {method: "POST", body: params});
 }
 
 /**

@@ -14,11 +14,12 @@
 
 package com.google.sps.data;
 
+import java.io.Serializable;
 /**
 * The Project class stores information that represents how the projects container
 * will look like.
 */
-public class Project {
+public class Project implements Serializable {
   private final String name;
   private final String imageHTML;
   private final String desc;

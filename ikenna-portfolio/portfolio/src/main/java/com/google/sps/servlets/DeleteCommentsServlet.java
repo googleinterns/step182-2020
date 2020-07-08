@@ -27,18 +27,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/delete-comments")
 public class DeleteCommentsServlet extends HttpServlet {
   
-  private CommentDatabase database;
-
-  @Override
-  public void init() {
-    database = new CommentDatabase();
-  }
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String id_string = request.getParameter("delete-comment");
-    if(id_string != null) {
-      long id = Long.parseLong(id_string);
+    CommentDatabase database = new CommentDatabase();
+    String idString = request.getParameter("delete-comment");
+    if(idString != null) {
+      long id = Long.parseLong(idString);
       database.deleteEntity(id);
     }
     response.sendRedirect("/index.html#comments-sect");
