@@ -29,9 +29,7 @@ const page_count = "Page: page_num of page_max";
 async function initializePage() {
   loadProjectsContainer();
   loadCalisthenicsContainer();
-  loadMetadata().then((metadata) => {
-    loadCommentsContainer(metadata);
-  });
+  loadCommentsContainer();
 }
 
 async function loadProjectsContainer() {
@@ -52,14 +50,9 @@ async function loadCalisthenicsContainer() {
   document.getElementById("current").innerText = current.replace("-", calisthenics.currentAblityName);
 }
 
-async function loadMetadata() {
+async function loadCommentsContainer() {
   const mresponse = await fetch("/count")
   const metadata = await mresponse.json();
-  await addMetadata(metadata);  
-  return await metadata;
-}
-
-async function loadCommentsContainer(metadata) {
   const dresponse = await fetch("/data");
   const comments = await dresponse.json(); 
   let msg = "";
@@ -71,14 +64,6 @@ async function loadCommentsContainer(metadata) {
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
   }
   document.getElementById("comments").innerHTML = msg;
-}
-
-async function addMetadata(metadata) {
-  const params = new URLSearchParams();
-  params.append("count", metadata.count);
-  params.append("page", metadata.page);
-  params.append("sortLabel", metadata.sortLabel);
-  await fetch("/data", {method: "POST", body: params});
 }
 
 /**

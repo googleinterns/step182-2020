@@ -73,19 +73,9 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     CommentDatabase database = new CommentDatabase();
-
-    if(request.getParameter("count") != null) {
-      HttpSession session = request.getSession();
-      int count = Integer.parseInt(request.getParameter("count"));
-      int page = Integer.parseInt(request.getParameter("page"));
-      String sortLabel = request.getParameter("sortLabel");
-      session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), Sort.valueOf(sortLabel)));
-    } 
-    else {
-      Comment comment = generateComment(request);
-      comment.setId(database.storeEntity(comment));
-      response.sendRedirect("/index.html#comments-sect");
-    }
+    Comment comment = generateComment(request);
+    comment.setId(database.storeEntity(comment));
+    response.sendRedirect("/index.html#comments-sect");
   }
 
   private Comment generateComment(HttpServletRequest request) {

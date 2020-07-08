@@ -33,10 +33,12 @@ public class CountServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    CommentDatabase database = new CommentDatabase();
     HttpSession session = request.getSession();
     Metadata metadata = (Metadata) session.getAttribute("metadata");
     if(metadata == null) {
       metadata = new Metadata();
+      metadata.setMaxPages(database.getMaxPages(metadata.getCount()));
     }
     response.setContentType("application/json;");
     response.getWriter().println(getJson(metadata));
