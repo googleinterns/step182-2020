@@ -7,14 +7,19 @@
       <script src="script.js"></script>
   </head>
 
-  <body>
+  <body id="home">
     <div id="content">
 
-      <h1>Gabriel's Portfolio</h1>
+      <div class="topnav">
+        <a class = "active" href="/index.html">Home</a>
+        <a href="/photo-album.html">Photo Album</a>
+      </div>
+
+      <h1 class="h1-index">Gabriel's Portfolio</h1>
           
       <p>Hi! My name is Gabriel and welcome to my portfolio!.</p>
 
-      <h2>About myself</h2>
+      <h2 class="h2-index">About myself</h2>
 
       <p>
         I am originally from Santiago, Chile and lived there for about 12 years. I moved to the 
@@ -24,7 +29,7 @@
         in the financial field. 
       </p>
 
-      <h2>Relevant Coursework</h2>
+      <h2 class="h2-index">Relevant Coursework</h2>
 
       <p>
         <ul>
@@ -35,36 +40,57 @@
           <li> Math Methods for Physical Sciences</li>
         </ul>
       </p>
-      
-      <p> You can see my work and connect with me using these links! </p>
+
+      <h2 class="h2-index"> You can see my work and connect with me using these links! </h2>
+
 
       <!-- Uses flex to put the images side by side -->
       <div class="row">
-        <div class="picture">
+        <div class="personal-link">
           <a href="https://www.linkedin.com/in/gabrielgonzalez01">
-            <img src="/images/LinkedIn-Logo.png" alt="LinkedIn" style="width:70%">
+            <img class="picture" src="/images/LinkedIn-Logo.png" alt="LinkedIn">
           </a>
         </div>
-        <div class="picture">
+        <div class="personal-link">
           <a href="https://github.com/GabrielGonzalezDiaz">
-            <img src="/images/github-logo.png" alt="GitHub" style="width:70%">
+            <img class="picture" src="/images/github-logo.png" alt="GitHub">
           </a>
         </div>
       </div>
 
+      <br>
       <br>
 
       <img src="/images/Me.jpg" alt="This is me" width="300" height="auto">
       <p>This is me the day after I found out I got accepted to College!</p>
 
       <p>Click here to get a random fact about myself:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <button id="hide-message" onclick="hideMessage()">Hide Message</button>
-      <div id="greeting-container"></div>
+      <button onclick="addRandomFact()">Hello</button>
+      <button id="hide-random-fact" onclick="hideRandomFact()">Hide random fact</button>
+      <div id="random-fact-container"></div>
 
       <a href="/pictures.html">
-        <h2>Check Out some pictures I've taken!</h2>
+        <h2 class="h2-index">Check Out some pictures I've taken!</h2>
       </a>
+
+      <h2 class="h2-index">Comments</h2>
+
+      <form action="javascript:getComments();">
+        <label for="maxNumberOfComments">Enter the number of comments to wish to see:</label>
+        <input type="number" id="maxNumberOfComments" name="maxNumberOfComments" min="1" max="1000">
+        <input type="submit">
+      </form>
+
+      <div id="comments-container"></div>
+
+      <br>
+
+      <form action="/data" method="POST">
+        <label for="commentBox">enter a new comment</p>
+        <textarea id="commentBox" name="text-input">type here</textarea>
+        <br>
+        <input type="submit">
+      </form>
 
     </div>
   </body>

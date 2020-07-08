@@ -1,34 +1,104 @@
+/*****************************/
+/* Styling for all content   */ 
+/*****************************/
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 80%
 }
 
-#greeting-container {
+/*****************************/
+/*Styling for navegation bar */ 
+/*****************************/
+
+/* Styling the navegation bar */
+.topnav {
+  background-color:purple;
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  color: #f2f2f2;
+  float: left;
+  font-size: 17px;
+  padding: 14px 16px;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: violet;
+  color: white;
+}
+
+/*****************************/
+/* Styling for the home page */
+/*****************************/
+
+#home {
+    background-color: lavender;
+}
+
+#random-fact-container {
   margin-top: 20px;
 }
 
-h1 {
+.h1-index {
   color: maroon;
 }
 
-h2 {
+.h2-index {
   color: navy;
 }
 
-.row  {
-  display: flex;
+/* By defualt the button is hidden */
+#hide-message {
+  visibility: hidden;
 }
 
-.picture {
+.row  {
+  display: inline-flex;
+}
+
+.personal-link {
   flex: 33.33%;
   padding: 5px;
 }
 
-body {
-    background-color: aqua;
+.picture {
+  width: 300px;
+  height: auto;
 }
 
-#hide-message {
-    visibility: hidden;
+/*****************************/
+/* Styling for photo album */
+/*****************************/
+
+/* Set the background color of the photo album */
+#photo-album {
+  background-color: aqua;
 }
+
+.h1-photo-album {
+  color: maroon;
+}
+
+.h2-photo-album {
+  color: navy;
+}
+
+.photo {
+  width: 300px;
+  height: auto;
+}
+
+
+
