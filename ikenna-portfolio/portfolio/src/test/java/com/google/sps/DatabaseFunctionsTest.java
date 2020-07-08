@@ -17,7 +17,7 @@ package com.google.sps;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.sps.data.Comment;
-import com.google.sps.data.Metadata.Search;
+import com.google.sps.data.Metadata.Sort;
 import com.google.sps.database.*;
 import java.io.*;
 import javax.servlet.http.*;
@@ -51,7 +51,7 @@ public class DatabaseFunctionsTest extends Mockito {
     assertTrue(database.size() == 2);
     database.deleteEntity(id1);
     assertTrue(database.size() == 1);
-    assertTrue((long)(database.getContents(Search.OLDEST, 10, 0).get(0).getProperty("timestamp")) == 2);
+    assertTrue((long)(database.getContents(Sort.OLDEST, 10, 0).get(0).getProperty("timestamp")) == 2);
   }
 
   @Test

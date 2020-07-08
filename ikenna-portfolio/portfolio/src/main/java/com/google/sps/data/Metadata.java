@@ -22,13 +22,15 @@ import java.io.Serializable;
 */
 public class Metadata implements Serializable {
 
+  private static final long serialVersionUID = 9118902220109880243L;     
+
   /* Default Values */
   private static final int COUNT = 10;
   private static final int PAGE = 0;
   private static final int MAX_PAGES = 1;
-  private static final Search SEARCH = Search.OLDEST;
+  private static final Sort SORT = Sort.OLDEST;
 
-  public enum Search {
+  public enum Sort {
     OLDEST("timestamp", true),
     NEWEST("timestamp", false),
     NAME_A_Z("name", true),
@@ -37,7 +39,7 @@ public class Metadata implements Serializable {
     String attribute;
     boolean ascending;
 
-    Search(String attr, boolean asc) {
+    Sort(String attr, boolean asc) {
       attribute = attr;
       ascending = asc;
     }
@@ -54,27 +56,27 @@ public class Metadata implements Serializable {
   protected final int count;
   protected final int page;
   protected int maxPages;
-  protected final Search search;
-  protected final String filterLabel;
+  protected final Sort sort;
+  protected final String sortLabel;
 
   public Metadata() {
-    this(COUNT, PAGE, MAX_PAGES, SEARCH);
+    this(COUNT, PAGE, MAX_PAGES, SORT);
   }
 
-  public Metadata(int count, int page, int maxPages, Search search) {
+  public Metadata(int count, int page, int maxPages, Sort sort) {
     this.count = count;
     this.page = page;
     this.maxPages = maxPages;
-    this.search = search;
-    this.filterLabel = search.name();
+    this.sort = sort;
+    this.sortLabel = sort.name();
   }
 
   public Metadata(Metadata metadata) {
     this.count = metadata.count;
     this.page = metadata.page;
     this.maxPages = metadata.maxPages;
-    this.search = metadata.search;
-    this.filterLabel = metadata.filterLabel;
+    this.sort = metadata.sort;
+    this.sortLabel = metadata.sortLabel;
   }
 
   public int getCount() {
@@ -93,11 +95,11 @@ public class Metadata implements Serializable {
     this.maxPages = maxPages;
   }
 
-  public Search getSearch() {
-    return search;
+  public Sort getSort() {
+    return sort;
   }
   
-  public String getFilterLabel() {
-    return filterLabel;
+  public String getSortLabel() {
+    return sortLabel;
   }
 }

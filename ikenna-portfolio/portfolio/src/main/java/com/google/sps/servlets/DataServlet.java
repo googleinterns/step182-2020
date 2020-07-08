@@ -24,7 +24,7 @@ import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.Metadata;
-import com.google.sps.data.Metadata.Search;
+import com.google.sps.data.Metadata.Sort;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.lang.*;
@@ -49,7 +49,7 @@ public class DataServlet extends HttpServlet {
       metadata = new Metadata();
     }
 
-    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSearch(), metadata.getCount(), metadata.getPage());  
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSort(), metadata.getCount(), metadata.getPage());  
     Iterator r = results.iterator();
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
@@ -78,8 +78,8 @@ public class DataServlet extends HttpServlet {
       HttpSession session = request.getSession();
       int count = Integer.parseInt(request.getParameter("count"));
       int page = Integer.parseInt(request.getParameter("page"));
-      String filterLabel = request.getParameter("filterLabel");
-      session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), Search.valueOf(filterLabel)));
+      String sortLabel = request.getParameter("sortLabel");
+      session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), Sort.valueOf(sortLabel)));
     } 
     else {
       Comment comment = generateComment(request);

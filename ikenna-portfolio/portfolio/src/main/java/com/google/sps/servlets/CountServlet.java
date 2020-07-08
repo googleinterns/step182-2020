@@ -16,7 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import com.google.sps.data.Metadata;
-import com.google.sps.data.Metadata.Search;
+import com.google.sps.data.Metadata.Sort;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
@@ -62,7 +62,7 @@ public class CountServlet extends HttpServlet {
     
     int count = metadata.getCount();
     int page = metadata.getPage();
-    Search search = metadata.getSearch();
+    Sort sortData = metadata.getSort();
 
     String countString = request.getParameter("count");
     if(!countString.equals("")) {
@@ -80,16 +80,16 @@ public class CountServlet extends HttpServlet {
       }
     }
     
-    String filter = request.getParameter("filter");
-    if(filter != null) {
-      for(Search s : Search.values()) {
-        if(s.name().equalsIgnoreCase(filter)) {
-          search = s;
+    String sorting = request.getParameter("sorting");
+    if(sorting != null) {
+      for(Sort s : Sort.values()) {
+        if(s.name().equalsIgnoreCase(sorting)) {
+          sortData = s;
         }
       }
     }
     
-    session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), search));
+    session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), sortData));
     response.sendRedirect("/index.html#comments-sect");
   }
 

@@ -17,7 +17,7 @@ package com.google.sps.database;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
-import com.google.sps.data.Metadata.Search;
+import com.google.sps.data.Metadata.Sort;
 import java.lang.*;
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class MockDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(Search search, int batchSize, int page) {
+  public List<Entity> getContents(Sort sort, int batchSize, int page) {
     List<Entity> results = new ArrayList<>();
     for(Entity e : comments) {
       if(e != null) {

@@ -26,7 +26,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.sps.data.Comment;
-import com.google.sps.data.Metadata.Search;
+import com.google.sps.data.Metadata.Sort;
 import java.lang.*;
 import java.util.List;
 
@@ -55,14 +55,14 @@ public class CommentDatabase implements DatabaseInterface {
   }
   
   @Override
-  public List<Entity> getContents(Search search, int batchSize, int page) {
+  public List<Entity> getContents(Sort sort, int batchSize, int page) {
     Query query = new Query(COMMENT_TAG);
     
-    if(search.getAscending()) {
-      query.addSort(search.getAttribute(), Query.SortDirection.ASCENDING);
+    if(sort.getAscending()) {
+      query.addSort(sort.getAttribute(), Query.SortDirection.ASCENDING);
     }
     else {
-      query.addSort(search.getAttribute(), Query.SortDirection.DESCENDING);
+      query.addSort(sort.getAttribute(), Query.SortDirection.DESCENDING);
     }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

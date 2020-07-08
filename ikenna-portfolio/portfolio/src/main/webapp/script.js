@@ -20,7 +20,7 @@ const current = "Current Ability: -";
 const comment_item = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"pull-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"pull-right\">timestamp</small><strong class=\"pull-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
 
 const comment_count = "Comments Per Page: -";
-const current_filter = "Current Filter: -"
+const currentSort = "Sorting By: -"
 const page_count = "Page: page_num of page_max";
 
 /**
@@ -64,7 +64,7 @@ async function loadCommentsContainer(metadata) {
   const comments = await dresponse.json(); 
   let msg = "";
   document.getElementById("comment-count").innerText = comment_count.replace("-", metadata.count);
-  document.getElementById("filter-label").innerText = current_filter.replace("-", metadata.filterLabel).replace("_", " ").replace("_", "-");
+  document.getElementById("sort-label").innerText = currentSort.replace("-", metadata.sortLabel).replace("_", " ").replace("_", "-");
   document.getElementById("page-count").innerText = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.maxPages); 
   for(comment of comments) {
     if(comment.name === "") continue;
@@ -77,7 +77,7 @@ async function addMetadata(metadata) {
   const params = new URLSearchParams();
   params.append("count", metadata.count);
   params.append("page", metadata.page);
-  params.append("filterLabel", metadata.filterLabel);
+  params.append("sortLabel", metadata.sortLabel);
   await fetch("/data", {method: "POST", body: params});
 }
 
