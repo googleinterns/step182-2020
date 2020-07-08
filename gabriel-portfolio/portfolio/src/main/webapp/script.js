@@ -25,7 +25,7 @@ function addRandomFact() {
   // Pick a random greeting.
   const randomFact = randomFacts[Math.floor(Math.random() * randomFacts.length)];
 
-  // Show the hide-message button
+  // Show the hide-message button.
   const hide = document.getElementById("hide-random-fact");
   hide.style.visibility = "visible";
 
@@ -35,20 +35,20 @@ function addRandomFact() {
 }
 
 /*
-  hides the random fact
+  Hides the random fact
 */
 function hideRandomFact() {
-  // Set the message to an empty string
+  // Set the message to an empty string.
   const randomFactContainer = document.getElementById('random-fact-container');
   randomFactContainer.innerText = "";
 
-  // Hide the hide-message button
+  // Hide the hide-message button.
   const button = document.getElementById("hide-random-fact");
   button.style.visibility = "hidden";
 }
 
 /*
-  uses the fetch() function to get the greeting text from /get-greeting
+  Uses the fetch() function to get the greeting text from /get-greeting.
 */
 async function getGreeting() {
   const response = await fetch('/get-greeting');
@@ -57,7 +57,7 @@ async function getGreeting() {
 }
 
 /* 
-  Creates an <li> element containing text 
+  Creates an <li> element containing text .
 */
 function createListElement(text) {
   const liElement = document.createElement('li');
@@ -66,7 +66,7 @@ function createListElement(text) {
 }
 
 /*
-  uses fetch() to get comments from /data
+  Uses fetch() to get comments from /data.
 */
 async function getComments() {
   const response = await fetch('/data');
@@ -77,9 +77,16 @@ async function getComments() {
   // loop through the strings in the json object
   const maxNumberOfComments = document.getElementById("maxNumberOfComments").value;
   console.log(maxNumberOfComments);
-  var i=0;
-  while(comments[i] && i < maxNumberOfComments) {
-    commentList.appendChild(createListElement(comments[i]));
-    i++;
+  
+  var i;
+  commentLoop:
+  for(i=0; i < maxNumberOfComments; i++) {
+    if(comments[i]) {
+      commentList.appendChild(createListElement(comments[i]));    
+    }
+    else {
+      console.log("Ran out of comments");
+      break commentLoop;
+    }
   }
 }

@@ -39,6 +39,7 @@ public class DataServlet extends HttpServlet {
 
   static Gson gson;
 
+
   @Override
   public void init() {
     gson = new Gson();
@@ -51,22 +52,19 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    // loop through the query to get the text from each comment
+    // Loop through the query to get information from each comment.
     List<String> comments = new ArrayList<String>();
-    int commentCounter = 0;
-    
     loopThroughComments: 
     for(Entity e : results.asIterable()) {
         String text = (String) e.getProperty(textProperty);
         if(!(text == null)) {
           comments.add(text);
-          commentCounter++;
         }
     }
     
-    // convert string to json and output
+    // Convert string to json and output.
     String json = gson.toJson(comments);
-    response.setContentType("application/json;");
+    response.setContentType("text/html;");
     response.getWriter().println(json);
   }
 
@@ -76,6 +74,7 @@ public class DataServlet extends HttpServlet {
     String text = getParameter(request, "text-input", "");
     long timestamp = System.currentTimeMillis();
     
+    // Create a new comment entity and allocate the necessary information.
     Entity comment = new Entity(commentEntity);
     comment.setProperty(textProperty, text);
     comment.setProperty(timestampProperty, timestamp);
@@ -87,14 +86,11 @@ public class DataServlet extends HttpServlet {
 
   /*
     Returns a certain parameter from a post requests
-    if it doesn't exist, it returns the a default value 
+    if it doesn't exist, it returns the a default value. 
   */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+    return value == null ? defaultValue : value;
   }
 
 }
