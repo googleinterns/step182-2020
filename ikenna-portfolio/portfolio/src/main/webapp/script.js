@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let currentUser = {userid:"", admin:false};
 const project_name = "<small>Project Showing: -</small>";
 
 const goal = "Goal: -";
@@ -29,9 +30,22 @@ const paginationButton = "<div class=\"col-sm pagination-buttons\"><button name=
 * Initializes the page with containers and server requests
 */
 async function initializePage() {
+  loadLogin();
   loadProjectsContainer();
   loadCalisthenicsContainer();
   loadCommentsContainer();
+}
+
+async function loadLogin() {
+  const response = await fetch("/login");
+  const user = await response.json();
+  currentUser = user;
+  if(user.userid === "") {
+    document.getElementById("log").innerText = "Login";
+  }
+  else {
+    document.getElementById("log").innerText = "Logout";
+  }
 }
 
 async function loadProjectsContainer() {
@@ -67,8 +81,15 @@ async function loadCommentsContainer() {
   document.getElementById("page-buttons").innerHTML = paginationButtons; 
   document.getElementById("page-count").innerText = pageCount.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.maxPages); 
   for(comment of comments) {
-    if(comment.id === -1) continue;
-    msg += commentItem.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
+    if(comment.id === -1) {
+      continue;
+    }
+    if(currentUser.admin || (typeof comment.userid !== "undefined" && currentUser.userid === comment.userid)) {
+      msg += commentItem.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);    
+    }
+    else {
+      msg += commentItemNoButton.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
+    }
   }
   document.getElementById("comments").innerHTML = msg;
 }

@@ -17,7 +17,7 @@ package com.google.sps.data;
 import java.io.Serializable;
 
 /**
-* The User class stores information that holds user information
+* The User class stores user information
 */
 public class User implements Serializable {
   private final String userid;

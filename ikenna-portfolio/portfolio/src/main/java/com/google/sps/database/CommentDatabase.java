@@ -94,7 +94,7 @@ public class CommentDatabase implements DatabaseInterface {
     commentEntity.setProperty("name", c.getName());
     commentEntity.setProperty("text", c.getText());
     commentEntity.setProperty("timestamp", c.getTimestamp());
-    commentEntity.setProperty("userif", c.getUserId());
+    commentEntity.setProperty("userid", c.getUserId());
     return datastore.put(commentEntity).getId();
   }
 
