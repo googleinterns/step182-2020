@@ -28,5 +28,14 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
     response.getWriter().println("Hello Pierce!");
+    
   }
+  ArrayList<String> myArrayList= new ArrayList<String>();
+  myArrayList.add("String 1");
+  myArrayList.add("String 2)");
+  myArrayList.add("String 3");
+
+  
+
+
 }
