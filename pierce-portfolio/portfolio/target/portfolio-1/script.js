@@ -33,7 +33,7 @@ function getHelloWorld() {
   console.log('Fetching a hello world.');
 
   // The fetch() function returns a Promise because the request is asynchronous.
-  const responsePromise = fetch('/hello-world');
+  const responsePromise = fetch('/data');
 
   // When the request is complete, pass the response into handleResponse().
   responsePromise.then(handleResponse);
