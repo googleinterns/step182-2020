@@ -14,35 +14,81 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.QueryResultList;
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata;
+import com.google.sps.data.Metadata.Sort;
+import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.*;
+import java.util.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns JSON content. */
+/** Servlet that creates comments from form data. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private List<String> msgs;
-
-  @Override
-  public void init() {
-    msgs = new ArrayList<>();
-    msgs.add("Ur doing great!");
-    msgs.add("U da best!");
-    msgs.add("Sunshine is u, prolly!");
-    msgs = Collections.unmodifiableList(msgs);
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Gson gson = new Gson();
-    String json = gson.toJson(msgs);
+    CommentDatabase database = new CommentDatabase();
+    List<Comment> comments = new ArrayList<>();
+    HttpSession session = request.getSession();
+    Metadata metadata = (Metadata) session.getAttribute("metadata");
+    if(metadata == null) {
+      metadata = new Metadata();
+    }
+
+    QueryResultList<Entity> results = (QueryResultList<Entity>) database.getContents(metadata.getSort(), metadata.getCount(), metadata.getPage());  
+    Iterator r = results.iterator();
+    while(r.hasNext()) {
+      Entity entity = (Entity) r.next();
+      long id = entity.getKey().getId();
+      String name = (String) entity.getProperty("name");
+      String text = (String) entity.getProperty("text");
+      long timestamp = (long) entity.getProperty("timestamp");
+      Comment comment = new Comment(name, text, timestamp);
+      comment.setId(id);
+      comments.add(comment);
+    }
+    
+    if(comments.isEmpty()) {
+      comments.add(new Comment("", "", 0));
+    }
+    
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    response.getWriter().println(getJson(comments));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    CommentDatabase database = new CommentDatabase();
+    Comment comment = generateComment(request);
+    comment.setId(database.storeEntity(comment));
+    response.sendRedirect("/index.html#comments-sect");
+  }
+
+  private Comment generateComment(HttpServletRequest request) {
+    String name = request.getParameter("name-box");
+    String text = request.getParameter("text-box");
+    long timestamp = System.currentTimeMillis();
+    Comment comment = new Comment(name, text, timestamp);
+    return comment;
+  }
+  
+  private String getJson(List<Comment> comments) {
+    Gson gson = new Gson();
+    String json = gson.toJson(comments);
+    return json;
   }
 }

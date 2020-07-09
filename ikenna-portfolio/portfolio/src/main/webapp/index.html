@@ -24,21 +24,21 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>                         
         </button>
-        <a class="navbar-brand" href="#">'kenna</a>
+        <a class="navbar-brand" href="#intro-sect">'kenna</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">INTRO</a></li>
-            <li><a href="#">STEP</a></li>
-            <li><a href="#">PROJECTS</a></li>
-            <li><a href="#">CALISTHENICS</a></li>
+            <li><a href="#random-sect">RANDOM</a></li>
+            <li><a href="#projects-sect">PROJECTS</a></li>
+            <li><a href="#calisthenics-sect">CALISTHENICS</a></li>
+            <li><a href="#comments-sect">COMMENTS</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <!-- First Container -->
-    <div class="container-fluid bg-1 text-center">
+    <!-- Intro Container -->
+    <div id="intro-sect" class="container-fluid bg-1 text-center">
       <h3 class="margin">Ikenna's Portfolio</h3>
       <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
       <h3>I'm a Googler!!</h3>
@@ -47,97 +47,138 @@
       based industries such as JCC Apachi Camp (Jewish Community Center) and ASM (After School Matters). 
       My favorite food is Nigerian jollof rice. I enjoy doing calisthenic based exercises, combination 
       jump roping, and dancing. One non physical activity I enjoy is watching comedy animes or cartoons.
-      </p>
-      <br>
+      </p><br>
       <p class="desc">Here's a link to my LinkedIn <a href="https://www.linkedin.com/in/ikenna-elue-a28798166/">page</a></p>
       <p class="desc">Here's a link to my GitHub <a href="https://github.com/ike-elue">page</a></p>
     </div>
 
-    <!-- Second Container -->
-    <div class="container-fluid bg-2 text-center">
+    <!-- Random Container -->
+    <div id="random-sect" class="container-fluid bg-2 text-center">
       <h3 class="margin">Enjoy This Random Button...If You Dare</h3>
       <h3 class="margin">>:)</h3>
-      <button onclick="addRandomQuote()">Try It!</button>
+      <button type="button" onclick="addRandomQuote()">Try It!</button>
       <div id="quote-container"></div>
     </div>
 
-    <!-- Third Container -->
-    <div class="container-fluid bg-3 text-center">
+    <!-- Projects Container -->
+    <div id="projects-sect" class="container-fluid bg-3 text-center">
       <h3 class="margin">Cool Projects</h3>
-      <div class="row">
-        <div class="column">
-          <button onclick="changeCycleGAN()">CycleGAN</button>
-        </div>
-        <div class="column">
-          <button onclick="changeDeepPhoto()">Deep Photo Style Transfer</button>
-        </div>
-        <div class="column">
-          <button onclick="changeMsgSys()">Message System</button>
-        </div>
-      </div>
-      <hr>
-      <br>
-      <div class="row">
-        <div class="column">
-          <img id="pro-image1" class="image-format" src="" alt="">
-        </div>
-        <div class="column">
-          <img id="pro-image2" class="image-format" src="" alt="">
-        </div>
-        <div class="column">
-          <img id="pro-image3" class="image-format" src="" alt="">
-        </div>
-      </div>
+      <form action="/projects" method="POST">
+        <label id="project-name" for="pro"></label><br>
+        <button class="btn btn-info">Go!</button>
+        <select name="pro" id="pro" class="btn btn-secondary dropdown-toggle">
+          <option value="">--Please choose a project--</option>  
+          <option value="cyclegan">CycleGAN</option>
+          <option value="deep-photo">Deep Photo Style Transfer</option>
+          <option value="msg-sys">Message System</option>
+        </select>
+      </form><hr><br>
+      <div id="projects-pics" class="row"></div>
       <br>
       <div class="row">
         <div class="col-sm-8">
-          <p id="pro-desc" class="desc"> </p>
+          <p id="pro-desc" class="desc"></p>
         </div>
         <div class="col-sm-4">
-          <p id="pro-links" class="desc"> </p>
+          <p id="pro-links" class="desc"></p>
         </div>
       </div>
     </div>
 
-    <!-- Fourth Container-->
-    <div class="container-fluid bg-4 text-center">    
-      <h3 class="margin">Calisthenics Goals</h3><br>
+    <!-- Calisthenics Container-->
+    <div id="calisthenics-sect" class="container-fluid bg-4 text-center">
+      <h3 class="margin">Calisthenics Goals</h3>      
+      <form action="/calisthenics" method="POST">
+        <button class="btn btn-info">Go!</button>
+        <select name="cal" id="cal" class="btn btn-secondary dropdown-toggle">
+          <option value="">--Please choose an exercise--</option>  
+          <option value="vs">V Sit</option>
+          <option value="bl">Back Lever</option>
+          <option value="ps">Pistol Squat</option>
+          <option value="fl">Front Lever</option>
+          <option value="hspu">Freestanding Handstand Push Up</option>
+        </select>
+      </form><br>
       <div class="row">
-        <div class="column">
-          <button onclick="changeVSit()">V Sit</button>
-        </div>
-        <div class="column">
-          <button onclick="changeBackLever()">Back Lever</button>
-        </div>
-        <div class="column">
-          <button onclick="changePistolSquat()">Pistol Squat</button>
-        </div>
-        <div class="column">
-          <button onclick="changeFrontLever()">Front Lever</button>
-        </div>
-        <div class="column">
-          <button onclick="changeHSPU()">Freestanding Handstand Push Up</button>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="column">
+        <div class="col-sm-6">
           <img src="" id="cal-image1" class="img-responsive margin image-format" alt="">
           <h3 id="goal"></h3>
         </div>
-        <div class="column"> 
+        <div class="col-sm-6"> 
           <img src="" id="cal-image2" class="img-responsive margin image-format" alt="">
           <h3 id="current"></h3>
         </div>
       </div>
     </div>
 
+    <!--Comments Container-->
+    <div id="comments-sect" class="container-fluid bg-5 text-center">
+      <h3 class="margin">Any Questions, Comments, and Concerns? Post Them Below!</h3>
+      <h4 class="margin">We promise to take your posts seriously >:)</h4>
+      <form action="/data" method="POST" class="desc">
+        <div class="comment-wrapper panel-info panel-body">
+          <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
+          <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
+          <input type="submit" class="btn btn-info pull-right">
+          <div class="clearfix"></div><hr>
+        </div>
+      </form>
+      <form action="/count" method="POST" class="desc">
+        <div class="comment-wrapper panel-info panel-body">
+          <div class="row">
+            <div class="col-sm-4 pull-left">
+              <div class="pull-left">
+                <label for="count">
+                  <small id="comment-count"></small>
+                </label><br>
+                <button class="btn btn-info">Go!</button>
+                <input type="number" id="count" name="count" min="1" max="10">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <label for="sorting">
+                <small id="sort-label"></small>    
+              </label><br>
+              <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
+              <select name="sorting" id="sorting" class="btn btn-secondary dropdown-toggle">
+                <option value="">--Please choose a sorting method--</option>  
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+                <option value="name_a_z">Name A-Z</option>
+                <option value="name_z_a">Name Z-A</option>
+              </select>
+            </div>
+            <div class="col-sm-4"> 
+              <div class="row pull-right">
+                <div class="col-sm-4">
+                  <button name="move-page" value="left"><i class="arrow left"></i></button>
+                </div>
+                <div class="col-sm-4">
+                  <p class="desc">
+                    <small id="page-count"></small>
+                  </p>
+                </div>
+                <div class="col-sm-4">
+                  <button name="move-page" value="right"><i class="arrow right"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><hr><br>
+      </form>
+      <form action="/delete-comments" method="POST" class="desc">
+        <div class="comment-wrapper panel-info panel-body">     
+          <ul id="comments" class="media-list">
+                <!--Comments Go Here-->
+          </ul>
+        </div>
+      </form>
+    </div>
+
     <!-- Footer -->
-    <footer class="container-fluid bg-5 text-center">
+    <footer class="container-fluid bg-6 text-center">
       <p class="desc">Thanks for reading!</p>
       <p class="desc">Made with a lot of help from <a href="https://www.w3schools.com">www.w3schools.com</a></p>
-      <br>
-      <p id="hello-world" class="desc"></p>
     </footer>
 
   </div>

@@ -1,11 +1,11 @@
 #!/bin/bash
 echo -n "Please Enter a Commit Message > "
 read commit
+cd ..
 git add .
 git commit -m "$commit"
 git checkout -b "ike-deploy"
 git pull origin master
-cd ..
 mvn package appengine:deploy
 git add .
 git commit -m "Deploy Site"
