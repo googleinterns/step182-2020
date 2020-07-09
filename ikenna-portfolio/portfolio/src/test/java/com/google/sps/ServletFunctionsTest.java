@@ -16,6 +16,7 @@ package com.google.sps;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.data.User;
 import com.google.sps.servlets.DataServlet;
 import java.io.*;
 import javax.servlet.http.*;
@@ -42,12 +43,16 @@ public class ServletFunctionsTest extends Mockito {
   public void testDataServletPost() throws Exception {
     HttpServletRequest request = mock(HttpServletRequest.class);       
     HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
 
     String name = "kenna";
     String text = "this some text";
+    User user = new User("example@google.com", false);
 
     when(request.getParameter("name-box")).thenReturn(name);
     when(request.getParameter("text-box")).thenReturn(text);
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("user")).thenReturn(user);
     
     DataServlet ds = new DataServlet();
     ds.init();

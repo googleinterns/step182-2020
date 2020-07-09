@@ -24,12 +24,13 @@ public class Comment {
   protected final String name;
   protected final String text;
   protected final long timestamp;
+  protected final String userid;
 
-  public Comment(String text, long timestamp) {
-    this("Anonymous", text, timestamp);
+  public Comment(String text, long timestamp, String userid) {
+    this("Anonymous", text, timestamp, userid);
   }
 
-  public Comment(String name, String text, long timestamp) {
+  public Comment(String name, String text, long timestamp, String userid) {
     this.id = -1;
     if(name == null || name.equals("")) {
         this.name = "Anonymous";
@@ -39,6 +40,7 @@ public class Comment {
     }
     this.text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     this.timestamp = timestamp;
+    this.userid = userid;
   }
 
   public Comment(Comment c) {
@@ -46,6 +48,7 @@ public class Comment {
     this.name = c.name;
     this.text = c.text;
     this.timestamp = c.timestamp;  
+    this.userid = c.userid;
   }
 
   public String getName() {
@@ -64,8 +67,7 @@ public class Comment {
     this.id = id;
   }
 
-  @Override
-  public String toString() {
-    return String.format("Name: %s, Text: %s, Timestamp: %d", name, text, timestamp); 
+  public String getUserId() {
+    return userid;
   }
 }

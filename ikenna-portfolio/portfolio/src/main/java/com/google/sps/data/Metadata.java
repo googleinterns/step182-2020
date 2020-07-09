@@ -48,7 +48,7 @@ public class Metadata implements Serializable {
       return attribute;
     }
 
-    public boolean getAscending() {
+    public boolean isAscending() {
       return ascending;
     }
   }

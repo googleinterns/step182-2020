@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.Metadata;
 import com.google.sps.data.Metadata.Sort;
+import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.lang.*;
@@ -57,13 +58,14 @@ public class DataServlet extends HttpServlet {
       String name = (String) entity.getProperty("name");
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
-      Comment comment = new Comment(name, text, timestamp);
+      String userid = (String) entity.getProperty("userid");
+      Comment comment = new Comment(name, text, timestamp, userid);
       comment.setId(id);
       comments.add(comment);
     }
     
     if(comments.isEmpty()) {
-      comments.add(new Comment("", "", 0));
+      comments.add(new Comment("", "", 0, ""));
     }
     
     response.setContentType("application/json;");
@@ -72,17 +74,21 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    CommentDatabase database = new CommentDatabase();
-    Comment comment = generateComment(request);
-    comment.setId(database.storeEntity(comment));
+    HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("user");
+    if(user != null) {
+      CommentDatabase database = new CommentDatabase();
+      Comment comment = generateComment(request, user);
+      comment.setId(database.storeEntity(comment));
+    }
     response.sendRedirect("/index.html#comments-sect");
   }
 
-  private Comment generateComment(HttpServletRequest request) {
+  private Comment generateComment(HttpServletRequest request, User user) {
     String name = request.getParameter("name-box");
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(name, text, timestamp);
+    Comment comment = new Comment(name, text, timestamp, user.getUserId());
     return comment;
   }
   
