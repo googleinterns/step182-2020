@@ -20,33 +20,26 @@ import java.io.Serializable;
 * will look like.
 */
 public class Project implements Serializable {
-  
-  private static final int MAX_IMAGE_COUNT = 3;
-  private static final int BOOTSTRAP_COL_TOTAL = 12;
 
   private final String name;
   private final String imageHTML;
   private final String desc;
   private final String links;
-  
-  public Project(String name, String img1, String img2, String img3, String desc, String links) {
-    this(name, img1, img2, img3, desc, links, 3);
-  }
 
-  public Project(String name, String img1, String img2, String img3, String desc, String links, int sections) {
+  public Project(String name, String img1, String img2, String img3, String desc, String links) {
     this.name = name;
-    this.imageHTML = getImageHTML(sections, new String[] {img1, img2, img3});
+    this.imageHTML = getImageHTML(new String[] {img1, img2, img3});
     this.desc = desc;
     this.links = links;
   }
 
-  private String getImageHTML(int sections, String[] src) {
+  private String getImageHTML(String[] src) {
     String html = "";
-    if(sections <= MAX_IMAGE_COUNT && sections > 0) {
-      String ratio = "" + (BOOTSTRAP_COL_TOTAL/sections); 
-      for(int i = 0; i < sections; i++) {
-        html += String.format("<div class=\"col-sm-%s\"><img class=\"image-format\" src=\"%s\"></div>", ratio, src[i]);
+    for(int i = 0; i < src.length; i++) {
+      if(src[i].equals("")) {
+        continue;
       }
+      html += String.format("<div class=\"col-sm\"><img class=\"image-format\" src=\"%s\"></div>", src[i]);
     }
     return html;
   }

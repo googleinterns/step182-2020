@@ -81,11 +81,18 @@ public class CountServlet extends HttpServlet {
 
     String movePage = request.getParameter("move-page");
     if(movePage != null) {
-      if(movePage.equals("left") && page != 0) {
-        page--;
+      if(movePage.equals("left")) {
+        if(page != 0) {
+          page--;
+        }
       }
-      else if(movePage.equals("right") && page < database.getMaxPages(count) - 1) {
-        page++;
+      else if(movePage.equals("right")) {
+        if(page < database.getMaxPages(count) - 1) {
+          page++;
+        }
+      }
+      else {
+        page = Integer.parseInt(movePage);
       }
     }
     

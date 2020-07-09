@@ -4,7 +4,7 @@
   <title>Ikenna's Portfolio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -40,7 +40,7 @@
     <!-- Intro Container -->
     <div id="intro-sect" class="container-fluid bg-1 text-center">
       <h3 class="margin">Ikenna's Portfolio</h3>
-      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
+      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna"><br>
       <h3>I'm a Googler!!</h3>
       <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American 
       from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago 
@@ -119,15 +119,15 @@
         <div class="comment-wrapper panel-info panel-body">
           <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
           <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
-          <input type="submit" class="btn btn-info pull-right">
+          <input type="submit" class="btn btn-info float-right">
           <div class="clearfix"></div><hr>
         </div>
       </form>
       <form action="/count" method="POST" class="desc">
         <div class="comment-wrapper panel-info panel-body">
           <div class="row">
-            <div class="col-sm-4 pull-left">
-              <div class="pull-left">
+            <div class="col-sm-4 float-left">
+              <div class="float-left">
                 <label for="count">
                   <small id="comment-count"></small>
                 </label><br>
@@ -149,13 +149,17 @@
               </select>
             </div>
             <div class="col-sm-4"> 
-              <div class="row pull-right">
+              <div class="row">
                 <div class="col-sm-4">
                   <button name="move-page" value="left"><i class="arrow left"></i></button>
                 </div>
                 <div class="col-sm-4">
-                  <p class="desc">
+                  <p>
                     <small id="page-count"></small>
+                    <small>
+                      <div id="page-buttons" class="row">
+                      </div>
+                    </small>
                   </p>
                 </div>
                 <div class="col-sm-4">

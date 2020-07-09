@@ -80,6 +80,10 @@
   color: #1abc9c !important; /*Color gets lost on hover, need priority for constrast*/
 }
 
+.pagination-buttons {
+  width: 100%;
+}
+
 .right {
   transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
