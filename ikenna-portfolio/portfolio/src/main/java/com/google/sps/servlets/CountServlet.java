@@ -44,20 +44,27 @@ public class CountServlet extends HttpServlet {
     response.getWriter().println(getJson(metadata));
   }
 
-  
-  /**
-   * This method creates metadata from the comments container
-   * that describes how the comments in the comments container
-   * should be displayed.
-   * @param request 
-   * @param response 
-  */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    CommentDatabase database = new CommentDatabase();
     HttpSession session = request.getSession();
-    
     Metadata metadata = (Metadata) session.getAttribute("metadata");
+    session.setAttribute("metadata", updateMetadata(metadata, request));
+    response.sendRedirect("/index.html#comments-sect");
+  }
+
+  private String getJson(Metadata metadata) {
+    Gson gson = new Gson();
+    String json = gson.toJson(metadata);
+    return json;
+  }
+  
+  /**
+  * Creates an updated instance of the comments container metadata given the request parameters
+  * @param metadata metadata to update
+  * @param request holds request parameters for specific http request
+  */
+  private Metadata updateMetadata(Metadata metadata, HttpServletRequest request) {
+    CommentDatabase database = new CommentDatabase();
     if(metadata == null) {
       metadata = new Metadata();
     }
@@ -77,7 +84,7 @@ public class CountServlet extends HttpServlet {
       if(movePage.equals("left") && page != 0) {
         page--;
       }
-      else if(movePage.equals("right") && page != database.getMaxPages(count) - 1) {
+      else if(movePage.equals("right") && page < database.getMaxPages(count) - 1) {
         page++;
       }
     }
@@ -90,14 +97,7 @@ public class CountServlet extends HttpServlet {
         }
       }
     }
-    
-    session.setAttribute("metadata", new Metadata(count, page, database.getMaxPages(count), sortData));
-    response.sendRedirect("/index.html#comments-sect");
-  }
 
-  private String getJson(Metadata metadata) {
-    Gson gson = new Gson();
-    String json = gson.toJson(metadata);
-    return json;
+    return new Metadata(count, page, database.getMaxPages(count), sortData);
   }
 }

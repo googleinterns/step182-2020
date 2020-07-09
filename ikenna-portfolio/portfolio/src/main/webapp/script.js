@@ -60,7 +60,7 @@ async function loadCommentsContainer() {
   document.getElementById("sort-label").innerText = currentSort.replace("-", metadata.sortLabel).replace("_", " ").replace("_", "-");
   document.getElementById("page-count").innerText = page_count.replace("page_num", (metadata.page + 1)).replace("page_max", metadata.maxPages); 
   for(comment of comments) {
-    if(comment.name === "") continue;
+    if(comment.id === -1) continue;
     msg += comment_item.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
   }
   document.getElementById("comments").innerHTML = msg;

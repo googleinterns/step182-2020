@@ -70,6 +70,8 @@ public class MockDatabase implements DatabaseInterface {
   public int getMaxPages(int batchSize) {
     int remainder = size % batchSize != 0 ? 1 : 0;
     int pageCount = (int)Math.floor((float)size/batchSize);
-    return pageCount + remainder;
+    int maxPages = pageCount + remainder;
+    maxPages = maxPages == 0 ? 1 : maxPages;
+    return maxPages;
   }
 }

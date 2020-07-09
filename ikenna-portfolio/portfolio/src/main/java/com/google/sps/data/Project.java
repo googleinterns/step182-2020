@@ -20,6 +20,10 @@ import java.io.Serializable;
 * will look like.
 */
 public class Project implements Serializable {
+  
+  private static final int MAX_IMAGE_COUNT = 3;
+  private static final int BOOTSTRAP_COL_TOTAL = 12;
+
   private final String name;
   private final String imageHTML;
   private final String desc;
@@ -38,14 +42,11 @@ public class Project implements Serializable {
 
   private String getImageHTML(int sections, String[] src) {
     String html = "";
-
-    /*Different formats because 3 sections requires "col-sm-4 whereas 1 section doesn't"*/
-    if (sections == 3) {
-      for(int i = 0; i < sections; i++)
-        html += "<div class=\"col-sm-4\"><img class=\"image-format\" src=\"" + src[i] + "\"></div>";
-    }
-    else {
-      html = "<img class=\"image-format\" src=\"" + src[0] + "\">";
+    if(sections <= MAX_IMAGE_COUNT && sections > 0) {
+      String ratio = "" + (BOOTSTRAP_COL_TOTAL/sections); 
+      for(int i = 0; i < sections; i++) {
+        html += String.format("<div class=\"col-sm-%s\"><img class=\"image-format\" src=\"%s\"></div>", ratio, src[i]);
+      }
     }
     return html;
   }
