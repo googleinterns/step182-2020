@@ -17,7 +17,7 @@ const project_name = "<small>Project Showing: -</small>";
 const goal = "Goal: -";
 const current = "Current Ability: -";
 
-const commentItem = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"float-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"float-right\">timestamp</small><strong class=\"float-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li>";
+const commentItem = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"float-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"float-right\">timestamp</small><strong class=\"float-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li><br>";
 
 const commentCount = "Comments Per Page: -";
 const currentSort = "Sorting By: -"
@@ -52,7 +52,7 @@ async function loadCalisthenicsContainer() {
 }
 
 async function loadCommentsContainer() {
-  const mresponse = await fetch("/count")
+  const mresponse = await fetch("/count");
   const metadata = await mresponse.json();
   const dresponse = await fetch("/data");
   const comments = await dresponse.json(); 

@@ -38,8 +38,9 @@ public class CountServlet extends HttpServlet {
     Metadata metadata = (Metadata) session.getAttribute("metadata");
     if(metadata == null) {
       metadata = new Metadata();
-      metadata.setMaxPages(database.getMaxPages(metadata.getCount()));
     }
+    /* Necessary for when only comments are posted */
+    metadata.setMaxPages(database.getMaxPages(metadata.getCount()));
     response.setContentType("application/json;");
     response.getWriter().println(getJson(metadata));
   }
@@ -74,7 +75,7 @@ public class CountServlet extends HttpServlet {
     Sort sortData = metadata.getSort();
 
     String countString = request.getParameter("count");
-    if(!countString.equals("")) {
+    if(countString != null && !countString.equals("")) {
       count = Integer.parseInt(countString);
       page = 0;
     }

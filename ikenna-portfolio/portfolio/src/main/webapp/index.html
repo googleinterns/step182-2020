@@ -4,34 +4,31 @@
   <title>Ikenna's Portfolio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <script src="script.js"></script>
 </head>
 <body onload="initializePage()">
   <div class="theme">
-
+    
     <!-- Navbar -->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                         
-        </button>
         <a class="navbar-brand" href="#intro-sect">'kenna</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#random-sect">RANDOM</a></li>
-            <li><a href="#projects-sect">PROJECTS</a></li>
-            <li><a href="#calisthenics-sect">CALISTHENICS</a></li>
-            <li><a href="#comments-sect">COMMENTS</a></li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="#random-sect">RANDOM</a></li>
+            <li class="nav-item"><a class="nav-link" href="#projects-sect">PROJECTS</a></li>
+            <li class="nav-item"><a class="nav-link" href="#calisthenics-sect">CALISTHENICS</a></li>
+            <li class="nav-item"><a class="nav-link" href="#comments-sect">COMMENTS</a></li>
           </ul>
         </div>
       </div>
@@ -40,7 +37,7 @@
     <!-- Intro Container -->
     <div id="intro-sect" class="container-fluid bg-1 text-center">
       <h3 class="margin">Ikenna's Portfolio</h3>
-      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna"><br>
+      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna"><br><br>
       <h3>I'm a Googler!!</h3>
       <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American 
       from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago 
@@ -139,7 +136,7 @@
               <label for="sorting">
                 <small id="sort-label"></small>    
               </label><br>
-              <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
+              <button class="btn btn-info">Go!</i></button>
               <select name="sorting" id="sorting" class="btn btn-secondary dropdown-toggle">
                 <option value="">--Please choose a sorting method--</option>  
                 <option value="oldest">Oldest</option>
