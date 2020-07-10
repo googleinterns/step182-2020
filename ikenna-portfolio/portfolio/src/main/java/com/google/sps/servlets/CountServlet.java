@@ -75,7 +75,7 @@ public class CountServlet extends HttpServlet {
     Sort sortData = metadata.getSort();
 
     String countString = request.getParameter("count");
-    if(countString != null && !countString.equals("")) {
+    if(countString != null && !countString.isEmpty()) {
       count = Integer.parseInt(countString);
       page = 0;
     }
