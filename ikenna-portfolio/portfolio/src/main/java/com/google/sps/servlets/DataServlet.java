@@ -85,9 +85,11 @@ public class DataServlet extends HttpServlet {
   }
 
   private Comment generateComment(HttpServletRequest request, User user) {
+    String anonymous = request.getParameter("anonymous");
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(user.getNickname(), text, timestamp, user.getEmail());
+    String nickname = anonymous == null ? user.getNickname() : "";
+    Comment comment = new Comment(nickname, text, timestamp, user.getEmail());
     return comment;
   }
   

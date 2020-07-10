@@ -42,7 +42,8 @@ public class LoginServlet extends HttpServlet {
     User user = (User) session.getAttribute("user");
     if(userService.isUserLoggedIn()) {
       if(user == null) {
-        user = new User(userService.getCurrentUser().getEmail(), isAdmin(userService.getCurrentUser().getEmail()));
+        String userEmail = userService.getCurrentUser().getEmail();
+        user = new User(userEmail, isAdmin(userEmail));
         session.setAttribute("user", user);
       }
     }

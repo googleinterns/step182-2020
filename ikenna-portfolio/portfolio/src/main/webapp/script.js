@@ -47,6 +47,7 @@ async function loadLogin() {
     document.getElementById("hello-msg").innerText = "";
     document.getElementById("text-box").placeholder = "Sign In To Comment!";
     document.getElementById("text-box").disabled = true;
+    document.getElementById("anonymous").disabled = true;
     document.getElementById("comment-submit").disabled = true;
   }
   else {
@@ -54,6 +55,7 @@ async function loadLogin() {
     document.getElementById("hello-msg").innerText = helloMsg.replace("-", user.nickname);
     document.getElementById("text-box").placeholder = "Questions?, Comments., Concerns!";
     document.getElementById("text-box").disabled = false;
+    document.getElementById("anonymous").disabled = false;
     document.getElementById("comment-submit").disabled = false;
   }
 }
