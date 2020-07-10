@@ -17,6 +17,7 @@ package com.google.sps;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata.Sort;
 import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
 import com.google.sps.database.DatabaseInterface;
@@ -63,6 +64,33 @@ public class ServletFunctionsTest extends Mockito {
 
     verify(request, atLeast(1)).getParameter("text-box");
     assertTrue(database.size() == 1);
+    assertTrue(((String)(database.getContents(Sort.OLDEST, 10, 0).get(0).getProperty("nickname"))).equals(user.getEmail()));
+  }
+
+  @Test
+  public void testDataServletAnonymousPost() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    DatabaseInterface database = new CommentDatabase();
+    String text = "this some text";
+    User user = new User("example@google.com", false);
+    
+    when(request.getParameter("anonymous")).thenReturn("");    /* Value shouldn't matter */
+    when(request.getParameter("text-box")).thenReturn(text);
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("user")).thenReturn(user);
+
+    DataServlet ds = new DataServlet();
+    assertTrue(database.size() == 0);
+
+    ds.doPost(request, response);
+
+    verify(request, atLeast(1)).getParameter("anonymous");
+    verify(request, atLeast(1)).getParameter("text-box");
+    assertTrue(database.size() == 1);
+    assertTrue(((String)(database.getContents(Sort.OLDEST, 10, 0).get(0).getProperty("nickname"))).equals("Anonymous"));
   }
 
   @Test
