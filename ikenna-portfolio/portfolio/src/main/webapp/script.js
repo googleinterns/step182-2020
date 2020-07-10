@@ -13,7 +13,7 @@
 // limitations under the License.
 
 let currentUser = {email:"", admin:false, nickname:""};
-const helloMsg = "Hello - !";
+const helloMsg = "Hello -!";
 
 const project_name = "<small>Project Showing: -</small>";
 
