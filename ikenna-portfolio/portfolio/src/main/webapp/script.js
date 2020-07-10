@@ -13,6 +13,8 @@
 // limitations under the License.
 
 let currentUser = {email:"", admin:false, nickname:""};
+const helloMsg = "Hello - !";
+
 const project_name = "<small>Project Showing: -</small>";
 
 const goal = "Goal: -";
@@ -43,15 +45,17 @@ async function loadLogin() {
   if(user.email === "") {
     document.getElementById("log").innerText = "Login";
     document.getElementById("hello-msg").innerText = "";
+    document.getElementById("text-box").placeholder = "Sign In To Comment!";
+    document.getElementById("text-box").disabled = true;
     document.getElementById("comment-submit").disabled = true;
   }
   else {
     document.getElementById("log").innerText = "Logout";
-    document.getElementById("hello-msg").innerText = "Hello - !".replace("-", user.nickname);
+    document.getElementById("hello-msg").innerText = helloMsg.replace("-", user.nickname);
+    document.getElementById("text-box").placeholder = "Questions?, Comments., Concerns!";
+    document.getElementById("text-box").disabled = false;
     document.getElementById("comment-submit").disabled = false;
   }
-  console.log("fetched: ", user);
-  console.log("current: ", currentUser);
 }
 
 async function loadProjectsContainer() {

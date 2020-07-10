@@ -33,8 +33,8 @@ public class Metadata implements Serializable {
   public enum Sort {
     OLDEST("timestamp", true),
     NEWEST("timestamp", false),
-    NAME_A_Z("name", true),
-    NAME_Z_A("name", false);
+    NAME_A_Z("nickname", true),
+    NAME_Z_A("nickname", false);
 
     String attribute;
     boolean ascending;
