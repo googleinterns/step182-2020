@@ -71,18 +71,33 @@ function createListElement(text) {
 async function getComments() {
   const response = await fetch('/data');
   const comments = await response.json();
-  console.log(comments);
+  
   const commentList = document.getElementById('comments-container');
   commentList.innerHTML = '';
-  // loop through the strings in the json object
-  const maxNumberOfComments = document.getElementById("maxNumberOfComments").value;
+
+  const maxNumberOfComments = document.getElementById("enter-max-comments").value;
   console.log(maxNumberOfComments);
+  const languageCode = document.getElementsByName("language")[0].value;
+  console.log(languageCode);
+
   
+
+  // loop through the strings in the json object
   var i;
   commentLoop:
   for(i=0; i < maxNumberOfComments; i++) {
     if(comments[i]) {
-      commentList.appendChild(createListElement(comments[i]));    
+      var comment = comments[i];
+      const params = languageCode+comment;
+      
+      const response = await fetch('/translate', {
+                                                  method: "POST",
+                                                  body: params
+      });
+      const translated = await response.text();
+      console.log(translated);
+
+      commentList.appendChild(createListElement(translated));    
     }
     else {
       console.log("Ran out of comments");

@@ -78,6 +78,41 @@
   height: auto;
 }
 
+.comment-divs {
+  margin-top: 5px;
+  marker-end: 5px;
+}
+
+#max-comments {
+  display: inline-block;
+  margin-top: 5px;
+  marker-end: 5px;
+}
+
+#enter-max-comments {
+  width: 20px;
+}
+
+#name-box {
+  height: 15px;
+}
+
+#enter-name {
+  align-items: center;
+}
+
+
+
+
+/* #enter-name {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+#nameBox {
+    height: 15px;
+} */
+
 /*****************************/
 /* Styling for photo album */
 /*****************************/
