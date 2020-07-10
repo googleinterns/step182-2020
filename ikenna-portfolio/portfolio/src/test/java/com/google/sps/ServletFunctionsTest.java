@@ -20,7 +20,7 @@ import com.google.sps.data.Comment;
 import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
 import com.google.sps.database.DatabaseInterface;
-import com.google.sps.servlets.DataServlet;
+import com.google.sps.servlets.*;
 import java.io.*;
 import javax.servlet.http.*;
 import org.junit.*;
@@ -145,5 +145,31 @@ public class ServletFunctionsTest extends Mockito {
     assertTrue(stringWriter.toString().contains(textParameter));
     assertTrue(stringWriter.toString().contains(defaultTimestamp));
     assertTrue(stringWriter.toString().contains(emailParameter));
+  }
+
+  @Test
+  public void testDeleteCommentsServletPost() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+
+    CommentDatabase database = new CommentDatabase();
+    
+    String nickname = "kenna";
+    String text = "this some text"; 
+    long timestamp = 0;
+    String email = "example@google.com";
+
+    Comment comment = new Comment(nickname, text, timestamp, email);
+    
+    assertTrue(database.size() == 0);
+    long id = database.storeEntity(comment);
+    assertTrue(database.size() == 1);
+    
+    when(request.getParameter("delete-comment")).thenReturn("" + id);
+    
+    DeleteCommentsServlet dcs = new DeleteCommentsServlet();
+    dcs.doPost(request, response);
+    
+    assertTrue(database.size() == 0);
   }
 }
