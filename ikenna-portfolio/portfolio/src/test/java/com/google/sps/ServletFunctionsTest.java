@@ -16,6 +16,7 @@ package com.google.sps;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.data.Comment;
 import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
 import com.google.sps.database.DatabaseInterface;
@@ -56,7 +57,6 @@ public class ServletFunctionsTest extends Mockito {
     when(session.getAttribute("user")).thenReturn(user);
 
     DataServlet ds = new DataServlet();
-    ds.init();
     assertTrue(database.size() == 0);
 
     ds.doPost(request, response);
@@ -79,11 +79,71 @@ public class ServletFunctionsTest extends Mockito {
     when(session.getAttribute("user")).thenReturn(null);
     
     DataServlet ds = new DataServlet();
-    ds.init();
     assertTrue(database.size() == 0);
 
     ds.doPost(request, response);
 
     assertTrue(database.size() == 0);
+  }
+
+  @Test
+  public void testDataServletGet() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    CommentDatabase database = new CommentDatabase();
+    
+    String nickname = "kenna";
+    String text = "this some text"; 
+    long timestamp = 0;
+    String email = "example@google.com";
+
+    Comment comment = new Comment(nickname, text, timestamp, email);
+    database.storeEntity(comment);
+
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("metadata")).thenReturn(null);
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
+
+    DataServlet ds = new DataServlet();
+    ds.doGet(request, response);
+        
+    writer.flush(); 
+    assertTrue(stringWriter.toString().contains(nickname));
+    assertTrue(stringWriter.toString().contains(text));
+    assertTrue(stringWriter.toString().contains("" + timestamp));
+    assertTrue(stringWriter.toString().contains(email));
+  }
+
+  @Test
+  public void testDataServletEmptyGet() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("metadata")).thenReturn(null);
+
+    String nicknameParameter = "nickname";
+    String textParameter = "text";
+    String defaultTimestamp = "0";
+    String emailParameter = "email";  
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
+
+    DataServlet ds = new DataServlet();
+    ds.doGet(request, response);
+        
+    writer.flush(); 
+    assertTrue(stringWriter.toString().contains(nicknameParameter));
+    assertTrue(stringWriter.toString().contains(textParameter));
+    assertTrue(stringWriter.toString().contains(defaultTimestamp));
+    assertTrue(stringWriter.toString().contains(emailParameter));
   }
 }
