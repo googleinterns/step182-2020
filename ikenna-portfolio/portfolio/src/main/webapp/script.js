@@ -58,6 +58,8 @@ async function loadLogin() {
     document.getElementById("anonymous").disabled = false;
     document.getElementById("comment-submit").disabled = false;
   }
+  console.log("fetched", user);
+  console.log("current", currentUser);
 }
 
 async function loadProjectsContainer() {

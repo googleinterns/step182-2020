@@ -14,10 +14,9 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.User;
+import com.google.sps.login.WebLogin;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.util.*;
@@ -37,28 +36,32 @@ public class LoginServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
+    WebLogin login = new WebLogin();
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute("user");
-    if(userService.isUserLoggedIn()) {
-      if(user == null) {
-        String userEmail = userService.getCurrentUser().getEmail();
-        user = new User(userEmail, isAdmin(userEmail));
-        session.setAttribute("user", user);
+    
+    String userEmail = login.getEmail();
+    if(user != null) {
+      if(userEmail.equals("")) {
+        session.setAttribute("user", null);
+        user = new User("", false);
       }
     }
     else {
-      session.setAttribute("user", null);
-      user = new User("", false);
+      user = new User(userEmail, isAdmin(userEmail));
+      if(!user.getEmail().equals("")) {
+        session.setAttribute("user", user);
+      }
     }
+
     response.setContentType("application/json;");
     response.getWriter().println(getJson(user));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    String url = userService.isUserLoggedIn() ? userService.createLogoutURL(redirect) : userService.createLoginURL(redirect);
+    WebLogin login = new WebLogin();
+    String url = login.getLoginRedirect(redirect);
     response.sendRedirect(url);
   }
 
