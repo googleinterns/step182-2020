@@ -25,13 +25,18 @@ public class User implements Serializable {
   private final String nickname;
   
   public User(String email, boolean admin) {
-    this(email, admin, email);
+    this(email, admin, getLdap(email));
   }
 
   public User(String email, boolean admin, String nickname) {
     this.email = email;
     this.admin = admin;
     this.nickname = nickname;
+  }
+
+  private static String getLdap(String email) {
+    int upto = email.indexOf("@"); 
+    return upto != -1 ? email.substring(0 , upto) : "";
   }
 
   public boolean isAdmin() {
