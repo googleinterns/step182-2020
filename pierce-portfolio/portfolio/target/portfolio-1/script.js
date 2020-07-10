@@ -31,7 +31,6 @@ function addRandomGreeting() {
 
 function getHelloWorld() {
   console.log('Fetching a hello world.');
-
   // The fetch() function returns a Promise because the request is asynchronous.
   const responsePromise = fetch('/data');
 
