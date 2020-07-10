@@ -19,7 +19,7 @@ const goal = "Goal: -";
 const current = "Current Ability: -";
 
 const commentItemNoButton = "<li class=\"media\"><div class=\"media-body\"><small class=\"float-right\">timestamp</small><strong class=\"float-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li><br>";
-const commentItem = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"float-right btn btn-secondary\" value=\"comment_id\">x</button><small class=\"float-right\">timestamp</small><strong class=\"float-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li><br>";
+const commentItem = "<li class=\"media\"><div class=\"media-body\"><button name=\"delete-comment\" class=\"float-right btn btn-secondary btn-sm\" value=\"comment_id\">x</button><small class=\"float-right\">timestamp</small><strong class=\"float-left\">comment_name</strong><br><br><p class=\"desc\" align=\"left\">comment_text</p></div></li><br>";
 
 const commentCount = "Comments Per Page: -";
 const currentSort = "Sorting By: -"
@@ -42,10 +42,16 @@ async function loadLogin() {
   currentUser = user;
   if(user.email === "") {
     document.getElementById("log").innerText = "Login";
+    document.getElementById("hello-msg").innerText = "";
+    document.getElementById("comment-submit").disabled = true;
   }
   else {
     document.getElementById("log").innerText = "Logout";
+    document.getElementById("hello-msg").innerText = "Hello - !".replace("-", user.nickname);
+    document.getElementById("comment-submit").disabled = false;
   }
+  console.log("fetched: ", user);
+  console.log("current: ", currentUser);
 }
 
 async function loadProjectsContainer() {
@@ -85,10 +91,10 @@ async function loadCommentsContainer() {
       continue;
     }
     if(currentUser.admin || (typeof comment.email !== "undefined" && currentUser.email === comment.email)) {
-      msg += commentItem.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);    
+      msg += commentItem.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.nickname).replace("comment_text", comment.text);    
     }
     else {
-      msg += commentItemNoButton.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);
+      msg += commentItemNoButton.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.nickname).replace("comment_text", comment.text);
     }
   }
   document.getElementById("comments").innerHTML = msg;

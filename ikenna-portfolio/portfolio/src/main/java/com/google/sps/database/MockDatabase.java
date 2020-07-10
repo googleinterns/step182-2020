@@ -53,9 +53,10 @@ public class MockDatabase implements DatabaseInterface {
   @Override
   public long storeEntity(Comment c) {
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", c.getName());
+    commentEntity.setProperty("nickname", c.getNickname());
     commentEntity.setProperty("text", c.getText());
     commentEntity.setProperty("timestamp", c.getTimestamp());
+    commentEntity.setProperty("email", c.getEmail());
     comments.add(commentEntity);
     size++;     
     return comments.size() - 1;

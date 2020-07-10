@@ -55,11 +55,11 @@ public class DataServlet extends HttpServlet {
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
       long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
+      String nickname = (String) entity.getProperty("nickname");
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
       String email = (String) entity.getProperty("email");
-      Comment comment = new Comment(name, text, timestamp, email);
+      Comment comment = new Comment(nickname, text, timestamp, email);
       comment.setId(id);
       comments.add(comment);
     }
@@ -85,10 +85,9 @@ public class DataServlet extends HttpServlet {
   }
 
   private Comment generateComment(HttpServletRequest request, User user) {
-    String name = request.getParameter("name-box");
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(name, text, timestamp, user.getEmail());
+    Comment comment = new Comment(user.getNickname(), text, timestamp, user.getEmail());
     return comment;
   }
   

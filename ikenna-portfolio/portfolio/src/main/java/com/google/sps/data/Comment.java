@@ -21,38 +21,33 @@ import java.util.List;
 
 public class Comment {
   public long id;
-  protected final String name;
+  protected final String nickname;
   protected final String text;
   protected final long timestamp;
-  protected final String userid;
+  protected final String email;
 
-  public Comment(String text, long timestamp, String userid) {
-    this("Anonymous", text, timestamp, userid);
+  public Comment(String text, long timestamp, String email) {
+    this("Anonymous", text, timestamp, email);
   }
 
-  public Comment(String name, String text, long timestamp, String userid) {
+  public Comment(String nickname, String text, long timestamp, String email) {
     this.id = -1;
-    if(name == null || name.equals("")) {
-        this.name = "Anonymous";
-    }
-    else {
-        this.name = name.replaceAll("<[^>]*>", "Please Don't Inject HTML");
-    }
+    this.nickname = nickname == null || nickname.equals("") ? "Anonymous" : nickname.replaceAll("<[^>]*>", "Please Don't Inject HTML");;
     this.text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     this.timestamp = timestamp;
-    this.userid = userid;
+    this.email = email;
   }
 
   public Comment(Comment c) {
     this.id = c.id;
-    this.name = c.name;
+    this.nickname = c.nickname;
     this.text = c.text;
     this.timestamp = c.timestamp;  
-    this.userid = c.userid;
+    this.email = c.email;
   }
 
-  public String getName() {
-    return name;
+  public String getNickname() {
+    return nickname;
   }
   
   public String getText() {
@@ -67,7 +62,7 @@ public class Comment {
     this.id = id;
   }
 
-  public String getUserId() {
-    return userid;
+  public String getEmail() {
+    return email;
   }
 }

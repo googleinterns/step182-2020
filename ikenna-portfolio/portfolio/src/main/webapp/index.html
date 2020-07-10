@@ -17,13 +17,14 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="#intro-sect">'kenna</a>
+        <a class="navbar-brand" href="" id="hello-msg"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
       </div>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="#intro-sect">INTRO</a></li>
           <li class="nav-item"><a class="nav-link" href="#random-sect">RANDOM</a></li>
           <li class="nav-item"><a class="nav-link" href="#projects-sect">PROJECTS</a></li>
           <li class="nav-item"><a class="nav-link" href="#calisthenics-sect">CALISTHENICS</a></li>
@@ -31,7 +32,7 @@
         </ul>
       </div>
       <form action="/login" method="POST">
-        <button id="log" class="btn btn-outline-success my-2 my-sm-0" type="submit"></button>
+        <button name="log" id="log" class="btn btn-outline-success my-2 my-sm-0" type="submit"></button>
       </form>
     </nav>
 
@@ -115,43 +116,29 @@
       <h4 class="margin">We promise to take your posts seriously >:)</h4>
       <form action="/data" method="POST" class="desc">
         <div class="comment-wrapper panel-info panel-body">
-          <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
           <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
-          <input type="submit" class="btn btn-info float-right">
+          <input id="comment-submit" type="submit" class="btn btn-info float-right">
           <div class="clearfix"></div><hr>
         </div>
       </form>
       <form action="/count" method="POST" class="desc">
         <div class="comment-wrapper panel-info panel-body">
           <div class="row">
-            <div class="col-sm-4 float-left">
+            <div class="col-sm-3 float-left">
               <div class="float-left">
                 <label for="count">
                   <small id="comment-count"></small>
                 </label><br>
-                <button class="btn btn-info">Go!</button>
+                <button class="btn btn-info btn-sm">Go!</button>
                 <input type="number" id="count" name="count" min="1" max="10">
               </div>
             </div>
-            <div class="col-sm-4">
-              <label for="sorting">
-                <small id="sort-label"></small>    
-              </label><br>
-              <button class="btn btn-info">Go!</i></button>
-              <select name="sorting" id="sorting" class="btn btn-secondary dropdown-toggle">
-                <option value="">--Please choose a sorting method--</option>  
-                <option value="oldest">Oldest</option>
-                <option value="newest">Newest</option>
-                <option value="name_a_z">Name A-Z</option>
-                <option value="name_z_a">Name Z-A</option>
-              </select>
-            </div>
-            <div class="col-sm-4"> 
+            <div class="col-sm-6"> 
               <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <button name="move-page" value="left"><i class="arrow left"></i></button>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm">
                   <p>
                     <small id="page-count"></small>
                     <small>
@@ -160,10 +147,23 @@
                     </small>
                   </p>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                   <button name="move-page" value="right"><i class="arrow right"></i></button>
                 </div>
               </div>
+            </div>
+            <div class="col-sm-3">
+              <label for="sorting">
+                <small id="sort-label"></small>    
+              </label><br>
+              <button class="btn btn-info btn-sm">Go!</i></button>
+              <select name="sorting" id="sorting" class="btn btn-secondary btn-sm dropdown-toggle">
+                <option value="">--Please choose a sorting method--</option>  
+                <option value="oldest">Oldest</option>
+                <option value="newest">Newest</option>
+                <option value="name_a_z">Name A-Z</option>
+                <option value="name_z_a">Name Z-A</option>
+              </select>
             </div>
           </div>
         </div><hr><br>
