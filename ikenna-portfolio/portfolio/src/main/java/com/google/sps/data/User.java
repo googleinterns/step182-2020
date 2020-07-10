@@ -17,19 +17,19 @@ package com.google.sps.data;
 import java.io.Serializable;
 
 /**
-* The User class stores user information
+* The User class stores user information.
 */
 public class User implements Serializable {
-  private final String userid;
+  private final String email;
   private final boolean admin;
   private final String nickname;
   
-  public User(String userid, boolean admin) {
-    this(userid, admin, userid);
+  public User(String email, boolean admin) {
+    this(email, admin, email);
   }
 
-  public User(String userid, boolean admin, String nickname) {
-    this.userid = userid;
+  public User(String email, boolean admin, String nickname) {
+    this.email = email;
     this.admin = admin;
     this.nickname = nickname;
   }
@@ -42,7 +42,7 @@ public class User implements Serializable {
     return nickname;
   }
 
-  public String getUserId() {
-    return userid;
+  public String getEmail() {
+    return email;
   }
 }

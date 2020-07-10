@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.*; 
 
-/** Servlet that returns JSON content. */
+/** Servlet that returns metadata JSON content. */
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
 

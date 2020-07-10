@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.*; 
 
-/** Servlet that deletes comments from database. */
+/** Servlet that handles login information. */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
   

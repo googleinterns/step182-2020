@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-let currentUser = {userid:"", admin:false};
+let currentUser = {email:"", admin:false, nickname:""};
 const project_name = "<small>Project Showing: -</small>";
 
 const goal = "Goal: -";
@@ -40,7 +40,7 @@ async function loadLogin() {
   const response = await fetch("/login");
   const user = await response.json();
   currentUser = user;
-  if(user.userid === "") {
+  if(user.email === "") {
     document.getElementById("log").innerText = "Login";
   }
   else {
@@ -84,7 +84,7 @@ async function loadCommentsContainer() {
     if(comment.id === -1) {
       continue;
     }
-    if(currentUser.admin || (typeof comment.userid !== "undefined" && currentUser.userid === comment.userid)) {
+    if(currentUser.admin || (typeof comment.email !== "undefined" && currentUser.email === comment.email)) {
       msg += commentItem.replace("timestamp", new Date(comment.timestamp)).replace("comment_id", comment.id).replace("comment_name", comment.name).replace("comment_text", comment.text);    
     }
     else {
