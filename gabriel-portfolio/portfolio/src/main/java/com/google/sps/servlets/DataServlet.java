@@ -20,23 +20,18 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.HashMap;
-
 import com.google.gson.Gson;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;

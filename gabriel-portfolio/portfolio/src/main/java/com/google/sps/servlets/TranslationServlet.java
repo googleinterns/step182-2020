@@ -13,41 +13,36 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
-
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-
 import java.util.HashMap;
 
 @WebServlet("/translate")
 public class TranslationServlet extends HttpServlet {
 
-  String languageCode;
-  String commentKey;
-  String commentText;
+  static String languageCode;
+  static String commentKey;
+  static String commentText;
 
-  final String commentEntity = "Comment";
-  final String textProperty = "text";
-  final String timestampProperty = "timestamp";
-  final String nameProperty = "name";
-  final String languageProperty = "language";
+  final static String commentEntity = "Comment";
+  final static String textProperty = "text";
+  final static String timestampProperty = "timestamp";
+  final static String nameProperty = "name";
+  final static String languageProperty = "language";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
