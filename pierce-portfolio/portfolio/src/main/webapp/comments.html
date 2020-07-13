@@ -14,7 +14,7 @@
     <a class="active" href="/comments.html">Leave a comment!</a>
 
   </div>
-  <body>
+  <body onload="getMessage();">
     <div id="content">
     <br><br>
 
@@ -40,8 +40,8 @@
 
       <input type="submit"/>
     </form>
-    <div onload="getComments()" id = "comments-container">
 
-    </div>
+    <h2>Comments:</h2>
+    <div id = "comments-container"> </div>
   </body>
 </html>

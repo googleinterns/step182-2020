@@ -35,7 +35,7 @@ function addRandomGreeting() {
 }
 
 function getMessage() {
-  console.log('Fetching a hello world.');
+  console.log('Fetching comments');
   // The fetch() function returns a Promise because the request is asynchronous.
   const responsePromise = fetch('/data');
 
@@ -52,18 +52,35 @@ function handleResponse(response) {
 
   // response.text() returns a Promise, because the response is a stream of
   // content and not a simple variable.
-  const textPromise = response.text();
+  const jsonPromise = response.json();
 
   // When the response is converted to text, pass the result into the
   // addMessageToDom() function.
-  textPromise.then(addMessageToDom);
+  jsonPromise.then(addMessageToDom);
 }
 
 /** Adds the hello world message to the DOM. */
-function addMessageToDom(message) {
-  console.log('Adding message to dom: ' + message);
+function addMessageToDom(comments) {
+  console.log('Adding message to dom: ' + comments);
 
-  const messageContainer = document.getElementById('comment-container');
-  messageContainer.innerText = message;
+  const commentContainer = document.getElementById('comments-container');
+  commentContainer.innerHTML = '';
+  var i;
+  commentLoop:
+  for(i=0; i < comments.length; i++) {
+    if(comments[i]) {
+      commentContainer.appendChild(newComment(comments[i].name+ " said: " + comments[i].text + " | " + comments[i].timestamp));    
+    }
+    else {
+      console.log("no more comments");
+      break commentLoop;
+    }
+}}
+
+
+function newComment(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
 

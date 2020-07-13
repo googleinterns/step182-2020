@@ -19,46 +19,71 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Date;
+import java.util.Calendar;
+
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   static Gson gson;
-  private List<String> myArrayList = new ArrayList<String>();
-  private List <String> myComments = new ArrayList<String>();
+
+
   
-  private class Comment {
+
+  private List <Comment> theComments = new ArrayList<Comment>();
+  
+  public class Comment {
+    //   private final Date commentTime = new Date();
       String name;
       String text;
       String timestamp;
-      String date;
-    
-  }
-  public void makeArray(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        response.getWriter().println(myArrayList);
+
+      public Comment(String tName, String tText){
+          this.name=tName;
+          this.text=tText;
+          this.timestamp= new Date().toString();
+
+      }
+      public String toString(){
+          return this.name + " said " + "\n" + this.text + "\n" + " (" + this.timestamp + ")";
+      }
   }
 
-  
+//   @Override
+//   public void init() {
+//     gson = new Gson();
+//   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("Hello Pierce!");
-
-
+    response.setContentType("application/json;");
+    String jsonText =  new Gson().toJson(theComments);
+    response.getWriter().println(jsonText);
   }
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      myComments.add(request.getParameter("comment-input")); 
-      response.setContentType("text/html;");
-      for (String myComment: myComments){
-        response.getWriter().println(myComment);}
+    response.setContentType("text/html;");
+
+    theComments.add(new Comment(request.getParameter("name-input"), request.getParameter("comment-input")));
+    //   for (Comment comment: theComments){
+    //     response.getWriter().println(comment);}
+
+
+    // Send the JSON as the response
+
+
+    response.sendRedirect("/comments.html");
+
   }
-
-
+//   private String convertToJsonUsingGson(Comment comment) {
+//     Gson gson = new Gson();
+//     String json = gson.toJson(comment);
+//     return json;
+//     }
 }
