@@ -16,6 +16,9 @@ package com.google.sps;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.data.User;
+import com.google.sps.database.CommentDatabase;
+import com.google.sps.database.DatabaseInterface;
 import com.google.sps.servlets.DataServlet;
 import java.io.*;
 import javax.servlet.http.*;
@@ -42,18 +45,45 @@ public class ServletFunctionsTest extends Mockito {
   public void testDataServletPost() throws Exception {
     HttpServletRequest request = mock(HttpServletRequest.class);       
     HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
 
-    String name = "kenna";
+    DatabaseInterface database = new CommentDatabase();
     String text = "this some text";
+    User user = new User("example@google.com", false);
 
-    when(request.getParameter("name-box")).thenReturn(name);
     when(request.getParameter("text-box")).thenReturn(text);
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("user")).thenReturn(user);
+
+    DataServlet ds = new DataServlet();
+    ds.init();
+    assertTrue(database.size() == 0);
+
+    ds.doPost(request, response);
+
+    verify(request, atLeast(1)).getParameter("text-box");
+    assertTrue(database.size() == 1);
+  }
+
+  @Test
+  public void testDataServletNoUserPost() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    DatabaseInterface database = new CommentDatabase();
+    String text = "this some text";
+    
+    when(request.getParameter("text-box")).thenReturn(text);
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("user")).thenReturn(null);
     
     DataServlet ds = new DataServlet();
     ds.init();
+    assertTrue(database.size() == 0);
+
     ds.doPost(request, response);
 
-    verify(request, atLeast(1)).getParameter("name-box");
-    verify(request, atLeast(1)).getParameter("text-box");
+    assertTrue(database.size() == 0);
   }
 }

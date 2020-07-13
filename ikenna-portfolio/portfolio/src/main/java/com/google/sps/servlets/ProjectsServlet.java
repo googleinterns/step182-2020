@@ -92,7 +92,7 @@ public final class ProjectsServlet extends HttpServlet {
           session.setAttribute("project", new Project("Deep Photo Style Transfer", "/images/dancing.jpg", "/images/picasso.jpg", "/images/Figure_1.png", project_desc[1], links[1]));
           break;
         case "msg-sys":
-          session.setAttribute("project",  new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2], 1));
+          session.setAttribute("project",  new Project("Message System", "/images/Message Bus.png", "", "", project_desc[2], links[2]));
           break;
       }
     }

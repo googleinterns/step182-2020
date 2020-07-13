@@ -43,8 +43,8 @@ public class DatabaseFunctionsTest extends Mockito {
   @Test
   public void testDatabaseDeleteEntity() throws Exception {
     DatabaseInterface database = new CommentDatabase();
-    Comment comment = new Comment("Comment Name", "Comment Text", 0);
-    Comment comment2 = new Comment("Comment Name2", "Comment Text2", 2);
+    Comment comment = new Comment("Comment Name", "Comment Text", 0, "example@google.com");
+    Comment comment2 = new Comment("Comment Name2", "Comment Text2", 2, "example@google.com");
     assertTrue(database.size() == 0);
     long id1 = database.storeEntity(comment);
     long id2 = database.storeEntity(comment2);
@@ -57,7 +57,7 @@ public class DatabaseFunctionsTest extends Mockito {
   @Test
   public void testDatabaseDeleteAllEntities() throws Exception {
     DatabaseInterface database = new CommentDatabase();
-    Comment comment = new Comment("Comment Name", "Comment Text", 0);
+    Comment comment = new Comment("Comment Name", "Comment Text", 0, "example@google.com");
     assertTrue(database.size() == 0);
     database.storeEntity(comment);
     database.storeEntity(comment);
@@ -71,7 +71,7 @@ public class DatabaseFunctionsTest extends Mockito {
   @Test
   public void testDatabaseStoreEntityAndGetContents() throws Exception {
     DatabaseInterface database = new CommentDatabase();
-    Comment comment = new Comment("Comment Name", "Comment Text", 0);
+    Comment comment = new Comment("Comment Name", "Comment Text", 0, "example@google.com");
     assertTrue(database.size() == 0);
     assertTrue(database.storeEntity(comment) != -1);
     assertTrue(database.size() == 1);

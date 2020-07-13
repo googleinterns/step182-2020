@@ -58,7 +58,7 @@ public class CommentDatabase implements DatabaseInterface {
   public List<Entity> getContents(Sort sort, int batchSize, int page) {
     Query query = new Query(COMMENT_TAG);
     
-    if(sort.getAscending()) {
+    if(sort.isAscending()) {
       query.addSort(sort.getAttribute(), Query.SortDirection.ASCENDING);
     }
     else {
@@ -91,9 +91,10 @@ public class CommentDatabase implements DatabaseInterface {
   public long storeEntity(Comment c) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity commentEntity = new Entity(COMMENT_TAG);
-    commentEntity.setProperty("name", c.getName());
+    commentEntity.setProperty("nickname", c.getNickname());
     commentEntity.setProperty("text", c.getText());
     commentEntity.setProperty("timestamp", c.getTimestamp());
+    commentEntity.setProperty("email", c.getEmail());
     return datastore.put(commentEntity).getId();
   }
 

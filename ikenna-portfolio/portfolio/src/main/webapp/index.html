@@ -4,43 +4,42 @@
   <title>Ikenna's Portfolio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <script src="script.js"></script>
 </head>
 <body onload="initializePage()">
   <div class="theme">
-
+    
     <!-- Navbar -->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <div class="container">
-        <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>                         
+        <a class="navbar-brand" href="" id="hello-msg"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#intro-sect">'kenna</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#random-sect">RANDOM</a></li>
-            <li><a href="#projects-sect">PROJECTS</a></li>
-            <li><a href="#calisthenics-sect">CALISTHENICS</a></li>
-            <li><a href="#comments-sect">COMMENTS</a></li>
-          </ul>
-        </div>
       </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="#intro-sect">INTRO</a></li>
+          <li class="nav-item"><a class="nav-link" href="#random-sect">RANDOM</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projects-sect">PROJECTS</a></li>
+          <li class="nav-item"><a class="nav-link" href="#calisthenics-sect">CALISTHENICS</a></li>
+          <li class="nav-item"><a class="nav-link" href="#comments-sect">COMMENTS</a></li>
+        </ul>
+      </div>
+      <form action="/login" method="POST">
+        <button name="log" id="log" class="btn btn-outline-success my-2 my-sm-0" type="submit"></button>
+      </form>
     </nav>
 
     <!-- Intro Container -->
     <div id="intro-sect" class="container-fluid bg-1 text-center">
       <h3 class="margin">Ikenna's Portfolio</h3>
-      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna">
+      <img class="image-format" src="/images/img_baby.jpeg" alt="Youngin 'kenna"><br><br>
       <h3>I'm a Googler!!</h3>
       <p class="desc">My name is <b>Ikenna Jonathan Elue</b>. I am a male identifying Nigerian American 
       from Chicago who currently attends Northwestern University. In the past, I've worked with Chicago 
@@ -117,51 +116,58 @@
       <h4 class="margin">We promise to take your posts seriously >:)</h4>
       <form action="/data" method="POST" class="desc">
         <div class="comment-wrapper panel-info panel-body">
-          <textarea name="name-box" class="form-control" placeholder="Name (Not Required)" rows="1"></textarea><br>
-          <textarea name="text-box" class="form-control" placeholder="Questions?, Comments., Concerns!" rows="3"></textarea><br>
-          <input type="submit" class="btn btn-info pull-right">
+          <textarea id="text-box" name="text-box" class="form-control" rows="3"></textarea><br>
+          <div class="form-check float-left">
+            <input class="form-check-input" type="checkbox" name="anonymous" value="anonymous" id="anonymous">
+            <label class="form-check-label" for="anonymous">Anonymous</label>
+          </div>
+          <input id="comment-submit" type="submit" class="btn btn-info float-right">
           <div class="clearfix"></div><hr>
         </div>
       </form>
       <form action="/count" method="POST" class="desc">
         <div class="comment-wrapper panel-info panel-body">
           <div class="row">
-            <div class="col-sm-4 pull-left">
-              <div class="pull-left">
+            <div class="col-sm-3 float-left">
+              <div class="float-left">
                 <label for="count">
                   <small id="comment-count"></small>
                 </label><br>
-                <button class="btn btn-info">Go!</button>
+                <button class="btn btn-info btn-sm">Go!</button>
                 <input type="number" id="count" name="count" min="1" max="10">
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6"> 
+              <div class="row">
+                <div class="col-sm-3">
+                  <button name="move-page" value="left"><i class="arrow left"></i></button>
+                </div>
+                <div class="col-sm">
+                  <p>
+                    <small id="page-count"></small>
+                    <small>
+                      <div id="page-buttons" class="row">
+                      </div>
+                    </small>
+                  </p>
+                </div>
+                <div class="col-sm-3">
+                  <button name="move-page" value="right"><i class="arrow right"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
               <label for="sorting">
                 <small id="sort-label"></small>    
               </label><br>
-              <button class="btn btn-info"><i class="glyphicon glyphicon-filter"></i></button>
-              <select name="sorting" id="sorting" class="btn btn-secondary dropdown-toggle">
+              <button class="btn btn-info btn-sm">Go!</i></button>
+              <select name="sorting" id="sorting" class="btn btn-secondary btn-sm dropdown-toggle">
                 <option value="">--Please choose a sorting method--</option>  
                 <option value="oldest">Oldest</option>
                 <option value="newest">Newest</option>
                 <option value="name_a_z">Name A-Z</option>
                 <option value="name_z_a">Name Z-A</option>
               </select>
-            </div>
-            <div class="col-sm-4"> 
-              <div class="row pull-right">
-                <div class="col-sm-4">
-                  <button name="move-page" value="left"><i class="arrow left"></i></button>
-                </div>
-                <div class="col-sm-4">
-                  <p class="desc">
-                    <small id="page-count"></small>
-                  </p>
-                </div>
-                <div class="col-sm-4">
-                  <button name="move-page" value="right"><i class="arrow right"></i></button>
-                </div>
-              </div>
             </div>
           </div>
         </div><hr><br>

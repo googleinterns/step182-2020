@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.*; 
 
-/** Servlet that returns JSON content. */
+/** Servlet that returns metadata JSON content. */
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
 
@@ -38,8 +38,9 @@ public class CountServlet extends HttpServlet {
     Metadata metadata = (Metadata) session.getAttribute("metadata");
     if(metadata == null) {
       metadata = new Metadata();
-      metadata.setMaxPages(database.getMaxPages(metadata.getCount()));
     }
+    /* Necessary for when only comments are posted */
+    metadata.setMaxPages(database.getMaxPages(metadata.getCount()));
     response.setContentType("application/json;");
     response.getWriter().println(getJson(metadata));
   }
@@ -74,18 +75,25 @@ public class CountServlet extends HttpServlet {
     Sort sortData = metadata.getSort();
 
     String countString = request.getParameter("count");
-    if(!countString.equals("")) {
+    if(countString != null && !countString.isEmpty()) {
       count = Integer.parseInt(countString);
       page = 0;
     }
 
     String movePage = request.getParameter("move-page");
     if(movePage != null) {
-      if(movePage.equals("left") && page != 0) {
-        page--;
+      if(movePage.equals("left")) {
+        if(page != 0) {
+          page--;
+        }
       }
-      else if(movePage.equals("right") && page < database.getMaxPages(count) - 1) {
-        page++;
+      else if(movePage.equals("right")) {
+        if(page < database.getMaxPages(count) - 1) {
+          page++;
+        }
+      }
+      else {
+        page = Integer.parseInt(movePage);
       }
     }
     

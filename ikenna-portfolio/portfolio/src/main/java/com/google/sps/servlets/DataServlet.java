@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.Metadata;
 import com.google.sps.data.Metadata.Sort;
+import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
 import java.io.IOException;
 import java.lang.*;
@@ -54,16 +55,17 @@ public class DataServlet extends HttpServlet {
     while(r.hasNext()) {
       Entity entity = (Entity) r.next();
       long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
+      String nickname = (String) entity.getProperty("nickname");
       String text = (String) entity.getProperty("text");
       long timestamp = (long) entity.getProperty("timestamp");
-      Comment comment = new Comment(name, text, timestamp);
+      String email = (String) entity.getProperty("email");
+      Comment comment = new Comment(nickname, text, timestamp, email);
       comment.setId(id);
       comments.add(comment);
     }
     
     if(comments.isEmpty()) {
-      comments.add(new Comment("", "", 0));
+      comments.add(new Comment("", "", 0, ""));
     }
     
     response.setContentType("application/json;");
@@ -72,17 +74,22 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    CommentDatabase database = new CommentDatabase();
-    Comment comment = generateComment(request);
-    comment.setId(database.storeEntity(comment));
+    HttpSession session = request.getSession();
+    User user = (User) session.getAttribute("user");
+    if(user != null) {
+      CommentDatabase database = new CommentDatabase();
+      Comment comment = generateComment(request, user);
+      comment.setId(database.storeEntity(comment));
+    }
     response.sendRedirect("/index.html#comments-sect");
   }
 
-  private Comment generateComment(HttpServletRequest request) {
-    String name = request.getParameter("name-box");
+  private Comment generateComment(HttpServletRequest request, User user) {
+    String anonymous = request.getParameter("anonymous");
     String text = request.getParameter("text-box");
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(name, text, timestamp);
+    String nickname = anonymous == null ? user.getNickname() : "";
+    Comment comment = new Comment(nickname, text, timestamp, user.getEmail());
     return comment;
   }
   
