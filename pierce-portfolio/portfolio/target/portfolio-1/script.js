@@ -15,11 +15,16 @@
 
 
 /**
- * Adds a random greeting to the page.
+ * Adds a random greeting to the page. Divided array into multiple lines
  */
 function addRandomGreeting() {
   const greetings =
-      ['tomatoes are my favorite food', 'I ate an apple every day in 2019', 'I am a middle child', 'I am learning to drive right now', 'I went to boarding school for high school', 'I play the saxophone and piano'];
+      ['tomatoes are my favorite food', 
+      'I ate an apple every day in 2019'
+      ,'I am a middle child', 
+      'I am learning to drive right now', 
+      'I went to boarding school for high school', 
+      'I play the saxophone and piano'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -29,7 +34,7 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function getHelloWorld() {
+function getMessage() {
   console.log('Fetching a hello world.');
   // The fetch() function returns a Promise because the request is asynchronous.
   const responsePromise = fetch('/data');
@@ -58,6 +63,7 @@ function handleResponse(response) {
 function addMessageToDom(message) {
   console.log('Adding message to dom: ' + message);
 
-  const messageContainer = document.getElementById('message-container');
+  const messageContainer = document.getElementById('comment-container');
   messageContainer.innerText = message;
 }
+

@@ -34,7 +34,7 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function getHelloWorld() {
+function getMessage() {
   console.log('Fetching a hello world.');
   // The fetch() function returns a Promise because the request is asynchronous.
   const responsePromise = fetch('/data');
@@ -63,6 +63,7 @@ function handleResponse(response) {
 function addMessageToDom(message) {
   console.log('Adding message to dom: ' + message);
 
-  const messageContainer = document.getElementById('message-container');
+  const messageContainer = document.getElementById('comment-container');
   messageContainer.innerText = message;
 }
+

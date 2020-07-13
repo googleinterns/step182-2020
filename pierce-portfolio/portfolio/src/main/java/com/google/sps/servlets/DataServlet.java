@@ -26,27 +26,38 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   static Gson gson;
-  List<String> myArrayList = new ArrayList<String>();
+  private List<String> myArrayList = new ArrayList<String>();
+  private List <String> myComments = new ArrayList<String>();
   
-  @Override
-  public void init() {
-    gson = new Gson();
+  private class Comment {
+      String name;
+      String text;
+      String timestamp;
+      String date;
+    
   }
-  
   public void makeArray(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.getWriter().println(myArrayList);
   }
 
-
+  
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
     response.getWriter().println("Hello Pierce!");
+
+
+  }
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      myComments.add(request.getParameter("comment-input")); 
+      response.setContentType("text/html;");
+      for (String myComment: myComments){
+        response.getWriter().println(myComment);}
   }
 
 
