@@ -228,8 +228,8 @@ public class ServletFunctionsTest extends Mockito {
     writer.flush(); 
 
     /* Not sure as to why the assertion is false */
-    // assertTrue(stringWriter.toString().contains(email));
-    
+    assertTrue(stringWriter.toString().contains(email));
+
     assertTrue(stringWriter.toString().contains(admin));
   }
 }

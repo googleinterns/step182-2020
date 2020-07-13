@@ -42,14 +42,14 @@ public class LoginServlet extends HttpServlet {
     
     String userEmail = login.getEmail();
     if(user != null) {
-      if(userEmail.isEmpty() {
+      if(userEmail.isEmpty()) {
         session.setAttribute("user", null);
         user = new User("", false);
       }
     }
     else {
       user = new User(userEmail, isAdmin(userEmail));
-      if(!user.getEmail().isEmpty() {
+      if(!user.getEmail().isEmpty()) {
         session.setAttribute("user", user);
       }
     }
