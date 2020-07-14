@@ -59,9 +59,17 @@ async function getGreeting() {
 /* 
   Creates an <li> element containing text .
 */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
+function createListElement(text, name, lang) {
+  const liElement = document.createElement('div');
+  
+  const title = document.createElement('h3');
+  title.innerText =name + "["+lang+"]";
+  const comment = document.createElement('p');
+  comment.innerText = text;
+
+  liElement.append(title);
+  liElement.append(comment);
+  //liElement.append(comment);
   return liElement;
 }
 
@@ -95,13 +103,58 @@ async function getComments() {
                                                   body: params
       });
       const translated = await response.text();
-      console.log(translated);
+      var splitComment = translated.split("\n");
+      
+      const commentJson = {
+          text: splitComment[0],
+          name: splitComment[1],
+          language: splitComment[2],
+      }
 
-      commentList.appendChild(createListElement(translated));    
+      const template = `
+        <div class="comment">
+        <h3>${commentJson.name}</h3>
+        <p><${commentJson.text}</p>
+        </div>
+      `;
+
+      commentList.appendChild(createListElement(splitComment[0], 
+                                                splitComment[1], 
+                                                splitComment[2]));      
     }
     else {
       console.log("Ran out of comments");
       break commentLoop;
     }
   }
+}
+
+function loadMaps() {
+  const birthdayMap = new google.maps.Map(
+    document.getElementById('birthday-map'),
+    {center: {lat: 25.76, lng: -80.19}, zoom: 16});
+
+  const stetsonMap = new google.maps.Map(
+    document.getElementById('stetson-map'),
+    {center: {lat: 29.0350, lng: -81.3032}, zoom: 16});
+  
+  const cubaMap = new google.maps.Map(
+    document.getElementById('cuba-map'),
+    {center: {lat: 21.9328, lng: -79.4366}, zoom: 16});
+
+  const cssiMap = new google.maps.Map(
+    document.getElementById('cssi-map'),
+    {center: {lat: 40.4406, lng: -79.9959}, zoom: 16}); 
+
+  const keyWestMap = new google.maps.Map(
+    document.getElementById('key-west-map'),
+    {center: {lat: 24.5551, lng: -81.7800}, zoom: 16});
+
+  const newYorkMap = new google.maps.Map(
+    document.getElementById('new-york-map'),
+    {center: {lat: 40.7128, lng: -74.0060}, zoom: 16});
+
+  const chicagoMap = new google.maps.Map(
+    document.getElementById('chicago-map'),
+    {center: {lat: 41.8781, lng: -87.6298}, zoom: 16});  
 }

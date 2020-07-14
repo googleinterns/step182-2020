@@ -36,7 +36,6 @@ public class TranslationServlet extends HttpServlet {
 
   static String languageCode;
   static String commentKey;
-  static String commentText;
 
   final static String commentEntity = "Comment";
   final static String textProperty = "text";
@@ -62,9 +61,10 @@ public class TranslationServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     // Data that we are getting for each comment
-    String comment=null;
-    String name=null;
-    long timestamp;
+    String comment = null;
+    String name = null;
+    String language = null;
+    long timestamp = 0;
 
     // Get the data from datastore
     loopThroughComments: 
@@ -74,20 +74,28 @@ public class TranslationServlet extends HttpServlet {
           comment = (String) e.getProperty(textProperty);
           name = (String) e.getProperty(nameProperty);
           timestamp = (long) e.getProperty(timestampProperty);
+          language = (String) e.getProperty(languageProperty);
           break loopThroughComments;
         }
     }
+    
 
     // Do the translation.
+    System.out.println("Started translation");
+    System.out.println("Tranlating to :" + languageCode);
     // Translate translate = TranslateOptions.getDefaultInstance().getService();
     // Translation translation =
     //     translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
     // String translatedText = translation.getTranslatedText();
+    System.out.println("ended translation");
 
     // Output the translation.
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().println(comment);
+    response.getWriter().println(name);
+    response.getWriter().println(language);
+    response.getWriter().println(timestamp);
   }
 }
 

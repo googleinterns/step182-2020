@@ -101,8 +101,17 @@
   align-items: center;
 }
 
+.photo-and-map {
+  display: inline-flex;
+  align-items: center
+}
 
-
+.map {
+  border: thin solid black;
+  height: 300px;
+  width: 300px;
+  margin-left: 20px;
+}
 
 
 /* #enter-name {
@@ -132,8 +141,9 @@
 }
 
 .photo {
-  width: 300px;
-  height: auto;
+  margin-left: 20px;
+  height: 300px;
+  width: auto;
 }
 
 
