@@ -80,7 +80,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
     String text = getParameter(request, "commentBox", "");
-    String language = getParameter(request, "languageSelectionForComment", "en");
+    String language = getParameter(request, "languageBox", "en");
     String name = getParameter(request, "nameBox", "");
 
     long timestamp = System.currentTimeMillis();

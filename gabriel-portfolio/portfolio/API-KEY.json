@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "gabrieldg-step-2020",
+  "private_key_id": "a9e2fa9b8d03421ad2569a5a1637697c01489e8f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7C/D2x773n6QI\nbGtPb0sUyjoNL2OF4mPpmXNnFOwVWy5tEeJauxOxD+c1OLuUsWP8leybN3HdfPMP\n/nq/QFCOkFzYNmRDWda/fk+0+go23fBtQP41IAgQYW5Av6RuJmFo04mrSr2EIrlT\n6d6jF/YC1frtylS3/NZXISYlNbO8lIR2F8UlMbIwB5DmyBouNCD67jax6ZkxkwJH\nRiXUQQbwU8g8LZggmbuTANGaCin9TIig3JhoaxE0wkOtuQqeH9gmq6piX+BHEC5M\niLKqZ8FyBTkuvn9RUhfKWb1lIIk37OFKOihevyte6m/xDZIjLf6BouaJmBgd8cj1\nuhiQmstxAgMBAAECggEAAicGMVjQGO+53AJKDoJ0heXj2stST7PwvBCbft1YmtBP\nTaBYj1G6zXKmPFBi/Dg5syo91vVsNoUdvkU1QBErPCYWI24mI45GRd2GvkmS/Nml\n+Xk3flYC3GllSD0hqnDU9cywDLa8opIhuYD7TRDVWxKqTg/iKgcwp5UGktlg2vPX\nhw17T/ERWdLSKCT4J05+spoQOI0GKNsK9UTCV6tqyxUEW3Be/eZsCELpHAFOjzj4\nH5chQsWp9Yrx89KdDk2Q7JjU4IcyTGTIX0RpPbYh+yqGq59ZYnjV39hs2Z/cZpJb\njAG6AQO7UPBY9x+NCLUIiiyMe7xiBZUOVtQLRLi9JwKBgQDpdd0eVaW/gCS1CNFd\nBBo02G99N07wloMbI3GL6iI0etxeZwhQFUQK0ZTNuJXmMMBfI5XR4WKiHJZ5t40X\n4uhx4Otg0tJ423hE53PtRv63iWqOMNKKJj2kteEnn5w/0EUQcgu13xsaWQJEZoYg\nNdrpf9Y7Q1t2sCODeFRzD73zQwKBgQDNGu3egZIvXzWFYFNOlKMrv5ITnrqNQ7Lm\no2OVhqF3JdE3x28FiJ7ATtI7lCUm0qXXuAct+qPvgVGyDYO8j6tM3yayNvz4rFgB\nXZLfe/MvX2iKsacMJEXVr0VDGWbcAzRdBpfJFsjlvgBqobgaNJXtDTKQIpVr+k+D\ntF7hm8opOwKBgGIVYLbz6NUR81oTwFJB/PiizgRfjkzKD38BXx0XWxONYrROuVFb\n/eBFuSzNFj1F0iymeLVa6eON+zJcCW01qc7eXkWpjT+1hUv9qdjQcQePNjNTE8Fy\n24ct2tCY4D53M+z63Syl9W8WYjt2j3dM6RIc4Va4r96nleQQU/qbbISdAoGAfaD2\n/gkDT3zTvYRIwqMMZumKQfZBcfF7jQWbI6U5FU/WnIHNoOgTxNsCrneJYgQ4jK8t\nxp309+iP762TeVXOqOEuRI6l2HNH3F5Cbhzv0Z5w3DMAjNFS7RXUKMtQU4aq9ifp\npMQN/ZqpiqbPq012X6JrzBlCyMajGZrLWwkfhK0CgYEAgfj3veUWcEe+j0rldpc4\nmxYFPrejeCNOvq2qSbLhs5A2lgVJIWAFyFJH8iE7mBBepJGjaA0FfztfiUqOmkWt\nE6t59JI5q6IVVyDEJgtMtacvyCLwfI+8SNEeuB8PeAitWs2MllA6sn2Nq9rhAKgc\nTbbHI7lqvtm90cWe+z3ahfA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "gabrieldg@gabrieldg-step-2020.iam.gserviceaccount.com",
+  "client_id": "117618736117047882940",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gabrieldg%40gabrieldg-step-2020.iam.gserviceaccount.com"
+}

@@ -5,9 +5,13 @@
     <title>Gabriel's Photo Album</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIoLn-9PPQW_-2XfJogY1qwtu1C3joVkQ"></script>
+    <!--<script src="script.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIoLn-9PPQW_-2XfJogY1qwtu1C3joVkQ&callback=initMap"
+      type="text/javascript"></script> -->
   </head>
 
-  <body id="photo-album">
+  <body id="photo-album" onload="loadMaps();">
     <div id="content">
 
       <div class="topnav">
@@ -21,7 +25,10 @@
         <p> 
           This is me, my high school CS teacher, and my best friend at his 18th birthday party.
         </p>
-        <img class="photo" src="/photos/birthday-pic.png" alt="This is me">
+        <div class=photo-and-map>
+          <img class="photo" src="/photos/birthday-pic.png" alt="This is me">
+          <div id="birthday-pic-map" class="map"></div>
+        </div>
         <br>
         <br>
       </div>
@@ -31,8 +38,11 @@
           These are some pictures I took in DeLand, FL during a computer science competition trip. <br>
           Pictured in order: The DeLand court house, and the DeLand house where the founder of the town lived.
         </p>
-        <img class="photo" src="/photos/stetson-court.png" alt="This is me" >
-        <img class="photo" src="/photos/deland-house.png" alt="This is me" >
+        <div class="photo-and-map">
+          <img class="photo" src="/photos/stetson-court.png" alt="Stetson Court">
+          <img class="photo" src="/photos/deland-house.png" alt="Deland House">
+          <div id="stetson-map" class=map></div>
+        </div>
         <br>
         <br>
       </div>
@@ -41,7 +51,10 @@
         <p>
           This picture was taken at Los Lagos, Cuba while I was visiting my family there.
         </p>
-        <img class="photo" src="/photos/Cuba.png" alt="This is me" >
+        <div class="photo-and-map">
+          <img class="photo" src="/photos/Cuba.png" alt="Cuba">
+          <div id="cuba-map" class="map"></div>
+        </div>
         <br>
         <br>
       </div>
@@ -52,18 +65,24 @@
           It was really cool to get to experience this city and I definitirely want to go back to visit the friends I made there. <br>
           Pictued in order: Pittsburgh's downtown, the University of Pittsburgh, and a picture of me at the office.
         </p>
-        <img class="photo" src="/photos/DT Pitt.png" alt="This is me" >
-        <img class="photo" src="/photos/UPitt.png" alt="This is me" >      
-        <img class="photo" src="/photos/Pitt Office.png" alt="This is me" >
+        <div class="photo-and-map">
+          <img class="photo" src="/photos/DT Pitt.png" alt="Downtown Pitt">
+          <img class="photo" src="/photos/UPitt.png" alt="UPitt">      
+          <img class="photo" src="/photos/Pitt Office.png" alt="Pitt Office">
+          <div id="cssi-map" class="map"></div>
+        </div>
         <br>
         <br>
       </div>
 
-      <div id="key-biscayne">
+      <div id="key-west">
         <p>
-          Before leaving for college, my family and I took a trip to Key Biscayne. I took this picture a few miles of the shore. The waves were caused by the tour boat we were on.
+          Before leaving for college, my family and I took a trip to Key West. I took this picture a few miles of the shore. The waves were caused by the tour boat we were on.
         </p>
-        <img class="photo" src="/photos/KeyBiscayne.png" alt="This is me" >
+        <div class="photo-and-map">
+          <img class="photo" src="/photos/KeyBiscayne.png" alt="Key West">
+          <div id="key-west-map" class="map"></div>
+        </div>
         <br>
         <br>
       </div>
@@ -72,19 +91,24 @@
         <p> 
           A few days before leaving for college, I got invited to NYC for a job interview. I used the opportunity to visit one of my CSSI friends who goes to Columbia.
         </p>
-        <img class="photo" src="/photos/Columbia.png" alt="This is me" >
+        <div class="photo-and-map">
+          <img class="photo" src="/photos/Columbia.png" alt="Columbia">
+          <div id="new-york-map" class="map"></div>
+        </div>
         <br>
         <br>
       </div>
 
       <div id="chicago">
-      <p>
-        These are some of the pictures I took during my first days in Chicago. <br>
-        Pictured in order: The Chicago river, The UChicago Quad, and Saieh Hall of Economics.
-      </p>   
-        <img class="photo" src="/photos/Chicago River.png" alt="This is me" >
-        <img class="photo" src="/photos/UChicago Buildings.png" alt="This is me" >
-        <img class="photo" src="/photos/UChicago Tower.png" alt="This is me" >
+        <p>
+          These are some of the pictures I took during my first days in Chicago. <br>
+          Pictured in order: The Chicago river and The UChicago Quad.
+        </p>
+        <div class="photo-and-map">   
+          <img class="photo" src="/photos/Chicago River.png" alt="Chicago River">
+          <img class="photo" src="/photos/UChicago Buildings.png" alt="UChicago Buildings">
+          <div id="chicago-map" class="map"></div>
+        </div>
       </div>
 
     </div>
