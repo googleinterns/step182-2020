@@ -83,16 +83,16 @@ public class TranslationServlet extends HttpServlet {
     // Do the translation.
     System.out.println("Started translation");
     System.out.println("Tranlating to :" + languageCode);
-    Translate translate = TranslateOptions.getDefaultInstance().getService();
-    Translation translation =
-        translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
-    String translatedText = translation.getTranslatedText();
+    // Translate translate = TranslateOptions.getDefaultInstance().getService();
+    // Translation translation =
+    //     translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+    // String translatedText = translation.getTranslatedText();
     System.out.println("ended translation");
 
     // Output the translation.
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
-    response.getWriter().println(translatedText);
+    response.getWriter().println(comment);
     response.getWriter().println(name);
     response.getWriter().println(language);
     response.getWriter().println(timestamp);
