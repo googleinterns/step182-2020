@@ -78,6 +78,51 @@
   height: auto;
 }
 
+.comment-divs {
+  margin-top: 5px;
+  marker-end: 5px;
+}
+
+#max-comments {
+  display: inline-block;
+  margin-top: 5px;
+  marker-end: 5px;
+}
+
+#enter-max-comments {
+  width: 20px;
+}
+
+#name-box {
+  height: 15px;
+}
+
+#enter-name {
+  align-items: center;
+}
+
+.photo-and-map {
+  display: inline-flex;
+  align-items: center
+}
+
+.map {
+  border: thin solid black;
+  height: 300px;
+  width: 300px;
+  margin-left: 20px;
+}
+
+
+/* #enter-name {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+#nameBox {
+    height: 15px;
+} */
+
 /*****************************/
 /* Styling for photo album */
 /*****************************/
@@ -96,8 +141,9 @@
 }
 
 .photo {
-  width: 300px;
-  height: auto;
+  margin-left: 20px;
+  height: 300px;
+  width: auto;
 }
 
 

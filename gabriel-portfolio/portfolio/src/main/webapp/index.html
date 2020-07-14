@@ -2,9 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
-      <title>Gabriel's Portfolio</title>
-      <link rel="stylesheet" href="style.css">
-      <script src="script.js"></script>
+    <title>Gabriel's Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIoLn-9PPQW_-2XfJogY1qwtu1C3joVkQ&callback=initMap"
+      type="text/javascript"></script>
   </head>
 
   <body id="home">
@@ -69,26 +71,61 @@
       <button id="hide-random-fact" onclick="hideRandomFact()">Hide random fact</button>
       <div id="random-fact-container"></div>
 
-      <a href="/pictures.html">
+      <a href="/photo-album.html">
         <h2 class="h2-index">Check Out some pictures I've taken!</h2>
       </a>
 
       <h2 class="h2-index">Comments</h2>
-
+      
+      <!-- Form to request comments from the database -->
       <form action="javascript:getComments();">
-        <label for="maxNumberOfComments">Enter the number of comments to wish to see:</label>
-        <input type="number" id="maxNumberOfComments" name="maxNumberOfComments" min="1" max="1000">
+        <div class="comment-divs">
+          <label for="language">Choose a language for the comments:</label>
+          <select name="language" class="select-language">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="zh">Chinese</option>
+            <option value="ar">Arabic</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+
+        <div id="max-comments">
+          <label for="maxComments">Enter the number of comments to wish to see:</label>
+          <input type="number" name="maxComments" id="enter-max-comments" min="1">
+        </div>
+
         <input type="submit">
       </form>
 
       <div id="comments-container"></div>
 
       <br>
-
+      
+      <!-- Form to submit a comment to the database -->
       <form action="/data" method="POST">
-        <label for="commentBox">enter a new comment</p>
-        <textarea id="commentBox" name="text-input">type here</textarea>
-        <br>
+        <div class="comment-divs">
+          <label for="languageBox">Choose a language for your comment:</label>
+          <select name="languageBox" class="select-language">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="zh">Chinese</option>
+            <option value="ar">Arabic</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+
+        <div class="comment-divs">
+          <label for="commentBox">Enter a new comment</label>
+          <br>
+          <textarea id="comment-box" name="commentBox" required>type your comment here</textarea>
+        </div>
+
+        <div id="enter-name">
+          <label for="nameBox">Enter your name (Optional)</label>
+          <textarea id="name-box" name="nameBox">type your name here</textarea>
+        </div>
+
         <input type="submit">
       </form>
 
