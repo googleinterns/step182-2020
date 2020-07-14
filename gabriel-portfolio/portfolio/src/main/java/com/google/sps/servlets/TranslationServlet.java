@@ -46,27 +46,27 @@ public class TranslationServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    // Return a buffered reader with the body of a request
+    // Return a buffered reader with the body of a request.
     BufferedReader br = request.getReader();
     String body = br.readLine();
 
     // LanguageCode will always be 2 characters 
-    //and at the beginning of the string
+    // and at the beginning of the string.
     languageCode = body.substring(0,2);
     commentKey = body.substring(2);
     
-    // Set up datastore
+    // Set up datastore.
     Query query = new Query(commentEntity).addSort(timestampProperty, SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    // Data that we are getting for each comment
+    // Data that we are getting for each comment.
     String comment = null;
     String name = null;
     String language = null;
     long timestamp = 0;
 
-    // Get the data from datastore
+    // Get the data from datastore.
     loopThroughComments: 
     for(Entity e : results.asIterable()) {
         String key = e.getKey().toString();
