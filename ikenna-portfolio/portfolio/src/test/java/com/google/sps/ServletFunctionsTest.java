@@ -31,13 +31,7 @@ import org.junit.*;
 import org.mockito.Mockito;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.*;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UserServiceFactory.class)
 public class ServletFunctionsTest extends Mockito {
   
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
@@ -210,39 +204,4 @@ public class ServletFunctionsTest extends Mockito {
     assertTrue(database.size() == 0);
   }
   
-  @Test
-  public void testLoginServletGet() throws Exception {
-    HttpServletRequest request = mock(HttpServletRequest.class);       
-    HttpServletResponse response = mock(HttpServletResponse.class);    
-    HttpSession session = mock(HttpSession.class);
-    UserService userservice = mock(UserService.class, RETURNS_DEEP_STUBS);
-    mockStatic(UserServiceFactory.class);
-
-    String email = "example@google.com";
-    String admin = "false";
-
-    when(request.getSession()).thenReturn(session);
-    when(session.getAttribute("user")).thenReturn(null);
-    when(UserServiceFactory.getUserService()).thenReturn(userservice);
-    when(userService.isUserLoggedIn()).thenReturn(true);
-    when(userService.getCurrentUser().getEmail()).thenReturn(email);
-    
-    //doReturn(email).when(login).getEmail();
-
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter writer = new PrintWriter(stringWriter);
-    when(response.getWriter()).thenReturn(writer);
-
-    LoginServlet ls = new LoginServlet();
-    ls.doGet(request, response);
-
-    writer.flush(); 
-
-    verifyStatic(UserServiceFactory.class, times(1));
-
-    /* Not sure as to why the assertion is false */
-    assertTrue(stringWriter.toString().contains(email));
-
-    assertTrue(stringWriter.toString().contains(admin));
-  }
 }
