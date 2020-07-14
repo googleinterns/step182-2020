@@ -59,9 +59,17 @@ async function getGreeting() {
 /* 
   Creates an <li> element containing text .
 */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
+function createListElement(text, name, lang) {
+  const liElement = document.createElement('div');
+  
+  const title = document.createElement('h3');
+  title.innerText =name + "["+lang+"]";
+  const comment = document.createElement('p');
+  comment.innerText = text;
+
+  liElement.append(title);
+  liElement.append(comment);
+  //liElement.append(comment);
   return liElement;
 }
 
@@ -96,8 +104,23 @@ async function getComments() {
       });
       const translated = await response.text();
       var splitComment = translated.split("\n");
+      
+      const commentJson = {
+          text: splitComment[0],
+          name: splitComment[1],
+          language: splitComment[2],
+      }
 
-      commentList.appendChild(createListElement(splitComment[0]));      
+      const template = `
+        <div class="comment">
+        <h3>${commentJson.name}</h3>
+        <p><${commentJson.text}</p>
+        </div>
+      `;
+
+      commentList.appendChild(createListElement(splitComment[0], 
+                                                splitComment[1], 
+                                                splitComment[2]));      
     }
     else {
       console.log("Ran out of comments");
@@ -107,8 +130,8 @@ async function getComments() {
 }
 
 function loadMaps() {
-  const birthdayPicMap = new google.maps.Map(
-    document.getElementById('birthday-pic-map'),
+  const birthdayMap = new google.maps.Map(
+    document.getElementById('birthday-map'),
     {center: {lat: 25.76, lng: -80.19}, zoom: 16});
 
   const stetsonMap = new google.maps.Map(
