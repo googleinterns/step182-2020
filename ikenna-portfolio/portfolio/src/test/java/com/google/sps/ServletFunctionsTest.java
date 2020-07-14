@@ -67,7 +67,7 @@ public class ServletFunctionsTest extends Mockito {
 
     verify(request, atLeast(1)).getParameter("text-box");
     assertTrue(database.size() == 1);
-    assertTrue(((String)(database.getContents(Sort.OLDEST, 10, 0).get(0).getProperty("nickname"))).equals(user.getEmail()));
+    assertTrue(((String)(database.getContents(Sort.OLDEST, 10, 0).get(0).getProperty("email"))).equals(user.getEmail()));
   }
 
   @Test

@@ -41,19 +41,20 @@ public class LoginServlet extends HttpServlet {
     User user = (User) session.getAttribute("user");
     
     String userEmail = login.getEmail();
-    if(user != null) {
-      if(userEmail.isEmpty()) {
-        session.setAttribute("user", null);
+    if(user != null && !user.getEmail().isEmpty()) {
+      if(userEmail.isEmpty()) {                           /* For the case when the user has logged out*/
         user = new User("", false);
       }
     }
     else {
       user = new User(userEmail, isAdmin(userEmail));
-      if(!user.getEmail().isEmpty()) {
-        session.setAttribute("user", user);
-      }
     }
 
+    if(!user.getEmail().equals(userEmail)) {
+      user = new User(userEmail, isAdmin(userEmail));
+    }
+
+    session.setAttribute("user", user);
     response.setContentType("application/json;");
     response.getWriter().println(getJson(user));
   }
