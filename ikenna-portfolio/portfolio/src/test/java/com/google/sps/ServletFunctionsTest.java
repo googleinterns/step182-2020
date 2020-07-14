@@ -19,6 +19,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Metadata;
 import com.google.sps.data.Metadata.Sort;
 import com.google.sps.data.User;
 import com.google.sps.database.CommentDatabase;
@@ -203,5 +204,88 @@ public class ServletFunctionsTest extends Mockito {
     
     assertTrue(database.size() == 0);
   }
+
+  /*No accompanying empty post because there's nothing to return (internal session save). */
+  @Test
+  public void testCountServletPost() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    String count = "2";
+    String movePage = "right";
+    String sorting = "newest";
+    
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("metadata")).thenReturn(null);
+    when(request.getParameter("count")).thenReturn(count);
+    when(request.getParameter("move-page")).thenReturn(movePage);
+    when(request.getParameter("sorting")).thenReturn(sorting);
+
+    CountServlet cs = new CountServlet();
+    cs.doPost(request, response);
+
+    verify(request, atLeast(1)).getParameter("count");
+    verify(request, atLeast(1)).getParameter("move-page");
+    verify(request, atLeast(1)).getParameter("sorting");
+  }
+
   
+  @Test
+  public void testCountServletGet() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+
+    String defaultCount = "10";
+    String defaultPage = "0";
+    String defaultSorting = "OLDEST";
+    String defaultMaxPages = "1";
+    
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("metadata")).thenReturn(null);
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
+
+    CountServlet cs = new CountServlet();
+    cs.doGet(request, response);
+        
+    writer.flush(); 
+    assertTrue(stringWriter.toString().contains(defaultCount));
+    assertTrue(stringWriter.toString().contains(defaultPage));
+    assertTrue(stringWriter.toString().contains(defaultSorting));
+    assertTrue(stringWriter.toString().contains(defaultMaxPages));
+  }
+
+  public void testCountServletSpecifiedGet() throws Exception {
+    HttpServletRequest request = mock(HttpServletRequest.class);       
+    HttpServletResponse response = mock(HttpServletResponse.class);    
+    HttpSession session = mock(HttpSession.class);
+    
+    int count = 5;
+    int page = 2;
+    Sort sorting = Sort.NEWEST;
+    int defaultMaxPages = 1;                         /* Empty database forces this to 1 */
+
+    Metadata metadata = new Metadata(count, page, defaultMaxPages, sorting);
+
+    when(request.getSession()).thenReturn(session);
+    when(session.getAttribute("metadata")).thenReturn(metadata);
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter writer = new PrintWriter(stringWriter);
+    when(response.getWriter()).thenReturn(writer);
+
+    CountServlet cs = new CountServlet();
+    cs.doGet(request, response);
+        
+    writer.flush(); 
+    assertTrue(stringWriter.toString().contains("" + count));
+    assertTrue(stringWriter.toString().contains("" + page));
+    assertTrue(stringWriter.toString().contains("" + sorting.name()));
+    assertTrue(stringWriter.toString().contains("" + defaultMaxPages));
+  }
+
 }
