@@ -83,7 +83,6 @@ public class TranslationServlet extends HttpServlet {
         }
     }
     
-
     // Do the translation.
     Translate translate = TranslateOptions.getDefaultInstance().getService();
     Translation translation =

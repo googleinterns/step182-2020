@@ -124,6 +124,8 @@
 .text-comments {
   margin-bottom:5px;
   margin-top:5px;
+  width: 70%;
+  word-wrap: break-word;
 }
 
 .date-comments {
