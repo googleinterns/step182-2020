@@ -28,7 +28,7 @@ public class Comment {
 
   public Comment(String nickname, String text, long timestamp, String email) {
     this.id = -1;
-    this.nickname = nickname == null || nickname.equals("") ? "Anonymous" : nickname.replaceAll("<[^>]*>", "Please Don't Inject HTML");
+    this.nickname = nickname == null || nickname.isEmpty() ? "Anonymous" : nickname.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     this.text = text.replaceAll("<[^>]*>", "Please Don't Inject HTML");
     this.timestamp = timestamp;
     this.email = email;
