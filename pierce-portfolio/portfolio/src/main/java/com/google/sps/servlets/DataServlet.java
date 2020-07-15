@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
 import java.util.Calendar;
-import Comment; 
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private static final Gson gson = new Gson();

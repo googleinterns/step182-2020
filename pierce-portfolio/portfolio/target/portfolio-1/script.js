@@ -61,6 +61,7 @@ function addMessageToDom(comments) {
   commentLoop:
   for(i=0; i < comments.length; i++) {
     if(comments[i]) {
+    // tried using the getters here, but I don't think the functions can be passed through a JSON object?
       commentContainer.appendChild(newComment(comments[i].name+ " said: " + comments[i].text + " | " + comments[i].timestamp));    
     }
 }}
