@@ -101,6 +101,7 @@
       <div id="comments-container"></div>
 
       <br>
+      <br>
       
       <!-- Form to submit a comment to the database -->
       <form action="/data" method="POST">
@@ -116,14 +117,14 @@
         </div>
 
         <div class="comment-divs">
-          <label for="commentBox">Enter a new comment</label>
+          <label id="comment-box-label" for="commentBox">Enter a new comment:</label>
           <br>
-          <textarea id="comment-box" name="commentBox" required>type your comment here</textarea>
+          <textarea id="comment-box" name="commentBox" rows="4" cols="50" placeholder="Your comment goes here" required></textarea>
         </div>
 
         <div id="enter-name">
-          <label for="nameBox">Enter your name (Optional)</label>
-          <textarea id="name-box" name="nameBox">type your name here</textarea>
+          <label for="nameBox">Enter your name (Optional): </label>
+          <textarea id="name-box" name="nameBox" rows="1" cols="20" placeholder="Your name goes here."></textarea>
         </div>
 
         <input type="submit">

@@ -60,18 +60,18 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    // Loop through the query to get information from each comment.
-    List<String> comments = new ArrayList<String>();
+    // Loop through the query to get each comment's key.
+    List<String> commentKeys = new ArrayList<String>();
     loopThroughComments: 
     for(Entity e : results.asIterable()) {
-        String text = e.getKey().toString();
-        if(!(text == null)) {
-          comments.add(text);
+        String key = e.getKey().toString();
+        if(!(key == null)) {
+          commentKeys.add(key);
         }
     }
     
     // Convert string to json and output.
-    String json = gson.toJson(comments);
+    String json = gson.toJson(commentKeys);
     response.setContentType("text/html;");
     response.getWriter().println(json);
   }

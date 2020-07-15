@@ -98,7 +98,7 @@
 }
 
 #enter-name {
-  align-items: center;
+  display: inline-flex;
 }
 
 .photo-and-map {
@@ -113,15 +113,25 @@
   margin-left: 20px;
 }
 
-
-/* #enter-name {
-  display: inline-block;
-  margin-top: 20px;
+#name-box {
+  margin-left: 5px;
 }
 
-#nameBox {
-    height: 15px;
-} */
+#comment-box-label {
+  font-size: 20px;
+}
+
+.text-comments {
+  margin-bottom:5px;
+  margin-top:5px;
+}
+
+.date-comments {
+  margin-bottom:5px;
+  margin-top:5px;
+  margin-right: 5px;
+  text-align:end;
+}
 
 /*****************************/
 /* Styling for photo album */
@@ -144,6 +154,11 @@
   margin-left: 20px;
   height: 300px;
   width: auto;
+}
+
+.comment {
+  display: flex;
+  justify-content: space-between;
 }
 
 

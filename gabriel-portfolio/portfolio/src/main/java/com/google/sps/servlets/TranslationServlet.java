@@ -19,6 +19,9 @@ import com.google.cloud.translate.Translation;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +32,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import java.util.HashMap;
+
+
 
 @WebServlet("/translate")
 public class TranslationServlet extends HttpServlet {
@@ -61,7 +65,7 @@ public class TranslationServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     // Data that we are getting for each comment.
-    String comment = null;
+    String text = null;
     String name = null;
     String language = null;
     long timestamp = 0;
@@ -71,7 +75,7 @@ public class TranslationServlet extends HttpServlet {
     for(Entity e : results.asIterable()) {
         String key = e.getKey().toString();
         if(!(key == null) && key.equals(commentKey)) {
-          comment = (String) e.getProperty(textProperty);
+          text = (String) e.getProperty(textProperty);
           name = (String) e.getProperty(nameProperty);
           timestamp = (long) e.getProperty(timestampProperty);
           language = (String) e.getProperty(languageProperty);
@@ -81,21 +85,22 @@ public class TranslationServlet extends HttpServlet {
     
 
     // Do the translation.
-    System.out.println("Started translation");
-    System.out.println("Tranlating to :" + languageCode);
-    // Translate translate = TranslateOptions.getDefaultInstance().getService();
-    // Translation translation =
-    //     translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
-    // String translatedText = translation.getTranslatedText();
-    System.out.println("ended translation");
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    Translation translation =
+        translate.translate(text, Translate.TranslateOption.targetLanguage(languageCode));
+    String translatedText = translation.getTranslatedText();
+
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+    String date = formatter.format(new Date(timestamp));
 
     // Output the translation.
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
-    response.getWriter().println(comment);
+    response.getWriter().println(translatedText);
+    //response.getWriter().println(text);
     response.getWriter().println(name);
     response.getWriter().println(language);
-    response.getWriter().println(timestamp);
+    response.getWriter().println(date);
   }
 }
 
