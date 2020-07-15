@@ -26,10 +26,6 @@ public class Comment {
   protected final long timestamp;
   protected final String email;
 
-  public Comment(String text, long timestamp, String email) {
-    this("Anonymous", text, timestamp, email);
-  }
-
   public Comment(String nickname, String text, long timestamp, String email) {
     this.id = -1;
     this.nickname = nickname == null || nickname.equals("") ? "Anonymous" : nickname.replaceAll("<[^>]*>", "Please Don't Inject HTML");

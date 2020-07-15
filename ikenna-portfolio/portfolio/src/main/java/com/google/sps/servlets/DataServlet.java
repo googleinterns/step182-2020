@@ -76,7 +76,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute("user");
-    if(user != null) {
+    if(user != null && !user.getEmail().isEmpty()) {
       CommentDatabase database = new CommentDatabase();
       Comment comment = generateComment(request, user);
       comment.setId(database.storeEntity(comment));
