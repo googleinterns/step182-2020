@@ -11,9 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-
-
 /**
  * Adds a random greeting to the page. Divided array into multiple lines
  */
@@ -25,24 +22,20 @@ function addRandomGreeting() {
       'I am learning to drive right now', 
       'I went to boarding school for high school', 
       'I play the saxophone and piano'];
-
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
   // Add it to the page.
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
-
-function getHelloWorld() {
-  console.log('Fetching a hello world.');
+function getMessage() {
+  console.log('Fetching comments');
   // The fetch() function returns a Promise because the request is asynchronous.
   const responsePromise = fetch('/data');
 
   // When the request is complete, pass the response into handleResponse().
   responsePromise.then(handleResponse);
 }
-
 /**
  * Handles response by converting it to text and passing the result to
  * addQuoteToDom().
@@ -52,17 +45,28 @@ function handleResponse(response) {
 
   // response.text() returns a Promise, because the response is a stream of
   // content and not a simple variable.
-  const textPromise = response.text();
+  const jsonPromise = response.json();
 
   // When the response is converted to text, pass the result into the
   // addMessageToDom() function.
-  textPromise.then(addMessageToDom);
+  jsonPromise.then(addMessageToDom);
 }
 
 /** Adds the hello world message to the DOM. */
-function addMessageToDom(message) {
-  console.log('Adding message to dom: ' + message);
-
-  const messageContainer = document.getElementById('message-container');
-  messageContainer.innerText = message;
+function addMessageToDom(comments) {
+  console.log('Adding message to dom: ' + comments);
+  const commentContainer = document.getElementById('comments-container');
+  commentContainer.innerHTML = '';
+  var i;
+  commentLoop:
+  for(i=0; i < comments.length; i++) {
+    if(comments[i]) {
+    // tried using the getters here, but I don't think the functions can be passed through a JSON object?
+      commentContainer.appendChild(newComment(comments[i].name+ " said: " + comments[i].text + " | " + comments[i].timestamp));    
+    }
+}}
+function newComment(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
