@@ -11,9 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-
-
 /**
  * Adds a random greeting to the page. Divided array into multiple lines
  */
@@ -25,15 +22,12 @@ function addRandomGreeting() {
       'I am learning to drive right now', 
       'I went to boarding school for high school', 
       'I play the saxophone and piano'];
-
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
   // Add it to the page.
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
-
 function getMessage() {
   console.log('Fetching comments');
   // The fetch() function returns a Promise because the request is asynchronous.
@@ -42,7 +36,6 @@ function getMessage() {
   // When the request is complete, pass the response into handleResponse().
   responsePromise.then(handleResponse);
 }
-
 /**
  * Handles response by converting it to text and passing the result to
  * addQuoteToDom().
@@ -62,7 +55,6 @@ function handleResponse(response) {
 /** Adds the hello world message to the DOM. */
 function addMessageToDom(comments) {
   console.log('Adding message to dom: ' + comments);
-
   const commentContainer = document.getElementById('comments-container');
   commentContainer.innerHTML = '';
   var i;
@@ -71,16 +63,9 @@ function addMessageToDom(comments) {
     if(comments[i]) {
       commentContainer.appendChild(newComment(comments[i].name+ " said: " + comments[i].text + " | " + comments[i].timestamp));    
     }
-    else {
-      console.log("no more comments");
-      break commentLoop;
-    }
 }}
-
-
 function newComment(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
 }
-
