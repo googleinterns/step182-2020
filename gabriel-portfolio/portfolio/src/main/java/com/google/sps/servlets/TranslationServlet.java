@@ -89,6 +89,7 @@ public class TranslationServlet extends HttpServlet {
         translate.translate(text, Translate.TranslateOption.targetLanguage(languageCode));
     String translatedText = translation.getTranslatedText();
 
+    // Get the date.
     SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
     String date = formatter.format(new Date(timestamp));
 
@@ -96,7 +97,6 @@ public class TranslationServlet extends HttpServlet {
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().println(translatedText);
-    //response.getWriter().println(text);
     response.getWriter().println(name);
     response.getWriter().println(language);
     response.getWriter().println(date);

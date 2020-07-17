@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random fact to the page.
- */
+/*
+  Adds a random fact to the page.
+*/
 function addRandomFact() {
   const randomFacts =
       ['I can solve a rubiks cube in less than a minute',
@@ -56,17 +56,19 @@ async function getGreeting() {
   document.getElementById('greeting-container').innerText = quote;
 }
 
+/*
+   Uses template literal strings to create a template for displaying the comments.
+*/
 function createCommentTemplate(text, name, language, date) {
-        var template = 
-        `
-        <h3 class="text-comments">${name} [${language}]</h3>
-        <div class="comment">
-          <p class="text-comments">${text}</p>
-          <p class="date-comments">${date}</p>
-        </div>
-        `;
-    return template;
- 
+  var template = 
+  `
+  <h3 class="text-comments">${name} [${language}]</h3>
+  <div class="comment">
+    <p class="text-comments">${text}</p>
+    <p class="date-comments">${date}</p>
+  </div>
+  `;
+  return template;
 }
 
 /*
@@ -86,7 +88,7 @@ async function getComments() {
 
   
 
-  // loop through the strings in the json object
+  // Loop through the strings in the json object.
   var i;
   commentLoop:
   for(i=0; i < maxNumberOfComments; i++) {
@@ -100,7 +102,7 @@ async function getComments() {
       });
       // Gets the dat from response.
       const translated = await response.text();
-      // Splits the output by each line
+      // Splits the output by each line.
       var splitOutput = translated.split("\n");
       const text = splitOutput[0];
       const name = splitOutput[1];
@@ -120,6 +122,9 @@ async function getComments() {
   }
 }
 
+/*
+  Uses the maps library to generate maps for the photo album.
+*/
 function loadMaps() {
   const birthdayMap = new google.maps.Map(
     document.getElementById('birthday-map'),
