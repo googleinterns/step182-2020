@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random fact to the page.
- */
+/*
+  Adds a random fact to the page.
+*/
 function addRandomFact() {
   const randomFacts =
       ['I can solve a rubiks cube in less than a minute',
@@ -56,21 +56,19 @@ async function getGreeting() {
   document.getElementById('greeting-container').innerText = quote;
 }
 
-/* 
-  Creates an <li> element containing text .
+/*
+   Uses template literal strings to create a template for displaying the comments.
 */
-function createListElement(text, name, lang) {
-  const liElement = document.createElement('div');
-  
-  const title = document.createElement('h3');
-  title.innerText =name + "["+lang+"]";
-  const comment = document.createElement('p');
-  comment.innerText = text;
-
-  liElement.append(title);
-  liElement.append(comment);
-  //liElement.append(comment);
-  return liElement;
+function createCommentTemplate(text, name, language, date) {
+  var template = 
+  `
+  <h3 class="text-comments">${name} [${language}]</h3>
+  <div class="comment">
+    <p class="text-comments">${text}</p>
+    <p class="date-comments">${date}</p>
+  </div>
+  `;
+  return template;
 }
 
 /*
@@ -78,10 +76,10 @@ function createListElement(text, name, lang) {
 */
 async function getComments() {
   const response = await fetch('/data');
-  const comments = await response.json();
+  const commentKeys = await response.json();
   
-  const commentList = document.getElementById('comments-container');
-  commentList.innerHTML = '';
+  const commentsContainer = document.getElementById('comments-container');
+  commentsContainer.innerHTML = '';
 
   const maxNumberOfComments = document.getElementById("enter-max-comments").value;
   console.log(maxNumberOfComments);
@@ -90,37 +88,32 @@ async function getComments() {
 
   
 
-  // loop through the strings in the json object
+  // Loop through the strings in the json object.
   var i;
   commentLoop:
   for(i=0; i < maxNumberOfComments; i++) {
-    if(comments[i]) {
-      var comment = comments[i];
-      const params = languageCode+comment;
+    if(commentKeys[i]) {
+      var commentKey = commentKeys[i];
+      const params = languageCode+commentKey;
       
       const response = await fetch('/translate', {
                                                   method: "POST",
                                                   body: params
       });
+      // Gets the dat from response.
       const translated = await response.text();
-      var splitComment = translated.split("\n");
-      
-      const commentJson = {
-          text: splitComment[0],
-          name: splitComment[1],
-          language: splitComment[2],
-      }
-
-      const template = `
-        <div class="comment">
-        <h3>${commentJson.name}</h3>
-        <p><${commentJson.text}</p>
-        </div>
-      `;
-
-      commentList.appendChild(createListElement(splitComment[0], 
-                                                splitComment[1], 
-                                                splitComment[2]));      
+      // Splits the output by each line.
+      var splitOutput = translated.split("\n");
+      const text = splitOutput[0];
+      const name = splitOutput[1];
+      const language = splitOutput[2];
+      const date = splitOutput[3];
+      const commentTemplate = createCommentTemplate(text, name, language, date);
+      const commentHTML = document.createElement("div");
+      commentHTML.style = "border: 2px solid #c3c3c3;";
+      commentHTML.innerHTML = commentTemplate;
+      commentsContainer.append(commentHTML);
+      commentsContainer.append(document.createElement("br"));      
     }
     else {
       console.log("Ran out of comments");
@@ -129,6 +122,9 @@ async function getComments() {
   }
 }
 
+/*
+  Uses the maps library to generate maps for the photo album.
+*/
 function loadMaps() {
   const birthdayMap = new google.maps.Map(
     document.getElementById('birthday-map'),
