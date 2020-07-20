@@ -12,9 +12,9 @@
     <a href="/resume.html">Resume</a>
     <a href="/fotos.html">Photos!</a>
     <a class="active" href="/comments.html">Leave a comment!</a>
-
   </div>
-  <body onload="getMessage();">
+
+  <body onload="getMessage(); checkLoginStatus();">
     <div id="content">
     <br><br>
 
@@ -29,8 +29,12 @@
     <a href="https://github.com/piercedwilson" class="fa fa-github"></a>
   
 
-    <p>Welcome back! Leave a comment if you feel like it! -Pierce </p>
-    <form action="/data" method="POST">
+    <p id = "p1">  Welcome back! Leave a comment if you feel like it! -Pierce </p>
+    
+    <a id = "login-link">Login.</a>
+    <br/><br/>
+
+    <form id = "comments-form" action="/data" method="POST" >
 
       <input type="text" name="name-input" placeholder="Your Name"/>
       <br/><br/>

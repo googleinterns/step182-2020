@@ -2,4 +2,4 @@
 *.log
 
 # ignore auto-generated files in target directory
-target/*	
+target/	
