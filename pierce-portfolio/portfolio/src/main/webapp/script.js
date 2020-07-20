@@ -78,12 +78,10 @@ function checkLoginStatus(){
   const loginPromise = fetch('/login-status');
   loginPromise.then(handleLogin);
   }
-
 function handleLogin(loginResponse){
   const loginJson = loginResponse.json();
   loginJson.then(updateDisplay);
   }
-
 function updateDisplay(login){
     console.log("login status is:" + login + login.length);
     const commentsForm = document.getElementById("comments-form");
@@ -92,7 +90,6 @@ function updateDisplay(login){
         commentsForm.style.display = "none";
         loginLink.href= login[0];
     }
-
     else{
         commentsForm.style.display = "initial";
         para = document.getElementById("p1");
@@ -102,11 +99,3 @@ function updateDisplay(login){
 
     }
 }
-
-
-//   if (x.style.display === "none") {
-//     x.style.display = "block";
-//   } else {
-//     x.style.display = "none";
-//   }
-
