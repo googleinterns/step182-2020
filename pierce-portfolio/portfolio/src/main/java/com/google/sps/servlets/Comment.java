@@ -24,19 +24,23 @@ public class Comment {
       String name;
       String text;
       String timestamp;
+
       public Comment(String tName, String tText){
           this.name=tName;
           this.text=tText;
           this.timestamp= new Date().toString();
       }
+
       public Comment(String tName, String tText, String tTimestamp){
           this.name=tName;
           this.text=tText;
           this.timestamp= tTimestamp;
       }
+
       public String toString(){
           return this.name + " said " + "\n" + this.text + "\n" + " (" + this.timestamp + ")";
       }
+
       public String getName(){
           return this.name;
       }
@@ -52,9 +56,11 @@ public class Comment {
       public void setName(String newName){
           this.name = newName;
       }
+
       public void setText(String newText){
           this.text = newText;
       }
+      
       public void setTimestamp(String newTimestamp){
           this.timestamp = newTimestamp;
       }

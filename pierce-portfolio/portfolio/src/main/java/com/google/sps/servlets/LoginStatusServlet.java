@@ -27,6 +27,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class LoginStatusServlet extends HttpServlet {
   private static final Gson gson = new Gson();
     @Override
+
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
 
