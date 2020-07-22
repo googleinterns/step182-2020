@@ -22,28 +22,26 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-// servlet that returns whether or not the user is logged in and prompts them to login if they are not
+// This servlet  returns whether or not the user is logged in and prompts them to login if they are not.
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
   private static final Gson gson = new Gson();
-    @Override
-
+  private static final String redirectUrl = "/";
+  
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
-
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String userEmail = userService.getCurrentUser().getEmail();
-      String urlToRedirectToAfterUserLogsOut = "/";
-      String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-    ArrayList<String> userEmailArray = new ArrayList<String>();
-    userEmailArray.add(userEmail);
-    userEmailArray.add(logoutUrl);
-    String jsonEmailArray = gson.toJson(userEmailArray);
-    response.getWriter().println(jsonEmailArray);
+      String logoutUrl = userService.createLogoutURL(redirectUrl);
+      ArrayList<String> userInfo = new ArrayList<String>();
+      userInfo.add(userEmail);
+      userInfo.add(logoutUrl);
+      String jsonInfo = gson.toJson(userInfo);
+      response.getWriter().println(jsonInfo);
     } else {
-      String urlToRedirectToAfterUserLogsIn = "/";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+      String loginUrl = userService.createLoginURL(redirectUrl);
       ArrayList<String> urlArray = new ArrayList<String>();
       urlArray.add(loginUrl);
       String jsonArray = gson.toJson(urlArray);

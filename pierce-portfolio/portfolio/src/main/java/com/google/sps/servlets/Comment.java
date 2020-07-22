@@ -21,47 +21,47 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Comment {
-      String name;
-      String text;
-      String timestamp;
+  String name;
+  String text;
+  String timestamp;
 
-      public Comment(String tName, String tText){
-          this.name=tName;
-          this.text=tText;
-          this.timestamp= new Date().toString();
-      }
+  public Comment(String name, String text){
+    this.name=name;
+    this.text=text;
+    this.timestamp= new Date().toString();
+  }
 
-      public Comment(String tName, String tText, String tTimestamp){
-          this.name=tName;
-          this.text=tText;
-          this.timestamp= tTimestamp;
-      }
+  public Comment(String name, String text, String timestamp){
+    this.name=name;
+    this.text=text;
+    this.timestamp= timestamp;
+  }
 
-      public String toString(){
-          return this.name + " said " + "\n" + this.text + "\n" + " (" + this.timestamp + ")";
-      }
+  public String toString(){
+    return this.name + " said " + "\n" + this.text + "\n" + " (" + this.timestamp + ")";
+  }
 
-      public String getName(){
-          return this.name;
-      }
-      
-      public String getText(){
-          return this.text;
-      }
-    
-      public String getTimestamp(){
-          return this.timestamp;
-      }
+  public String getName(){
+    return this.name;
+  }
 
-      public void setName(String newName){
-          this.name = newName;
-      }
+  public String getText(){  
+    return this.text;
+  }
 
-      public void setText(String newText){
-          this.text = newText;
-      }
-      
-      public void setTimestamp(String newTimestamp){
-          this.timestamp = newTimestamp;
-      }
-    }
+  public String getTimestamp(){
+    return this.timestamp;
+  }
+
+  public void setName(String newName){
+    this.name = newName;
+  }
+
+public void setText(String newText){
+    this.text = newText;
+}
+
+public void setTimestamp(String newTimestamp){
+    this.timestamp = newTimestamp;
+}
+}
