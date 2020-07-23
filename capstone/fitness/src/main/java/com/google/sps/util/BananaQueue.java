@@ -103,13 +103,8 @@ public class BananaQueue {
     if(head == null) {
       head = banana;
     }
-    else if(foot == null) {
-      foot = banana;
-      head.setNext(foot);
-      foot.setPrev(head);
-    }
-    else {
-      BananaNode temp = foot;
+    else { 
+      BananaNode temp = foot != null ? foot : head;
       foot = banana;
       temp.setNext(foot);
       foot.setPrev(temp);

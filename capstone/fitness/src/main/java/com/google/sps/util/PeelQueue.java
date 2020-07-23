@@ -39,13 +39,8 @@ public class PeelQueue {
     if(head == null) {
       head = peel;
     }
-    else if(foot == null) {
-      foot = peel;
-      head.setNext(foot);
-      foot.setPrev(head);
-    }
-    else {
-      PeelNode temp = foot;
+    else { 
+      PeelNode temp = foot != null ? foot : head;
       foot = peel;
       temp.setNext(foot);
       foot.setPrev(temp);
