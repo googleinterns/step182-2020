@@ -16,9 +16,13 @@ package com.google.sps.util;
 
 import java.util.*;
 
+/* Nodes in the BananaQueue. Holds references to PeelQueues. */
 public class BananaNode {
   private boolean complete;
+  
+  /* Uses Linked List model. */
   private BananaNode prevNode, nextNode;
+
   private HashMap<String, PeelQueue> peels;
 
   public BananaNode() {
@@ -28,6 +32,11 @@ public class BananaNode {
     peels = new HashMap<>();
   }
 
+  /*
+  * addPeels - Adds PeelQueues to BananaNode. Overwrites existing mappings.
+  *
+  * @param peels - String mapping of PeelQueues to be added to current BananaNode.
+  */
   public void addPeels(HashMap<String, PeelQueue> peels) {
     this.peels.putAll(peels);
   }
@@ -36,22 +45,46 @@ public class BananaNode {
     return peels;
   }
 
+  /*
+  * removePeels - Clears the PeelQueue String mappings.
+  */
   public void removePeels() {
     peels.clear();
   }
 
+  /*
+  * addPeelQueue - Adds String mapping to given PeelQueue. Converts tag to lowercase.
+  * 
+  * @param peelQueueTag - Tag to access PeelQueue.
+  * @param peelQueue - PeelQueue to add.
+  */
   public void addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     peels.put(peelQueueTag.toLowerCase(), peelQueue);
   }
 
+  /*
+  * removePeelQueue - Removes String mapping to stored PeelQueue given a tag. Converts tag to lowercase.
+  * 
+  * @param peelQueueTag - Tag to associated PeelQueue.
+  */
   public void removePeelQueue(String peelQueueTag) {
-    peels.remove(peelQueueTag);
+    peels.remove(peelQueueTag.toLowerCase());
   }
 
+  /*
+  * peelQueueExists - Returns true if String mapping for PeelQueue exists.
+  * 
+  * @param peelQueueTag - Tag to associated PeelQueue.
+  */
   public boolean peelQueueExists(String peelQueueTag) {
     return peels.containsKey(peelQueueTag);
   }
 
+  /*
+  * getPeelQueue - Returns PeelQueue given its tag.
+  * 
+  * @param peelQueueTag - Tag to associated PeelQueue.
+  */
   public PeelQueue getPeelQueue(String peelQueueTag) {
     return peels.get(peelQueueTag);
   }

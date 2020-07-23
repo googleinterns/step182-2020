@@ -14,8 +14,11 @@
 
 package com.google.sps.util;
 
+/* Nodes in the PeelQueue. */
 public class PeelNode {
   private boolean complete;
+
+  /* Uses Linked List model. */
   private PeelNode prevNode, nextNode;
 
   public PeelNode() {
