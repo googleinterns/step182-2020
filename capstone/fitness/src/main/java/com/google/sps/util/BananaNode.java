@@ -16,7 +16,7 @@ package com.google.sps.util;
 
 import java.util.*;
 
-public abstract class BananaNode {
+public class BananaNode {
   private boolean complete;
   private BananaNode prevNode, nextNode;
   private HashMap<String, PeelQueue> peels;

@@ -14,7 +14,7 @@
 
 package com.google.sps.util;
 
-public abstract class PeelQueue {
+public class PeelQueue {
 
   private PeelNode head, foot;
   private int size;

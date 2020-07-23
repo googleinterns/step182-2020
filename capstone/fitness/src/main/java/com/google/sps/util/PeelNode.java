@@ -14,7 +14,7 @@
 
 package com.google.sps.util;
 
-public abstract class PeelNode {
+public class PeelNode {
   private boolean complete;
   private PeelNode prevNode, nextNode;
 

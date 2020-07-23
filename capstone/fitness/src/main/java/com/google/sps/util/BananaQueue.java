@@ -14,7 +14,7 @@
 
 package com.google.sps.util;
 
-public abstract class BananaQueue {
+public class BananaQueue {
 
   private BananaNode head, foot;
   private int size;
@@ -39,6 +39,10 @@ public abstract class BananaQueue {
     }
 
     head.getPeelQueue(peelQueueTag).dequeue();
+  }
+
+  public void addPeelQueue(String peelQueueTag) {
+    addPeelQueue(peelQueueTag, new PeelQueue());
   }
 
   public void addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
@@ -86,7 +90,9 @@ public abstract class BananaQueue {
     }
 
     head.setComplete(true);
-    head.getNext().addPeels(head.getPeels());
+    if(head.getNext() != null) {
+      head.getNext().addPeels(head.getPeels());
+    }
     head.removePeels();
     head = head.getNext();
     size--;
@@ -97,7 +103,7 @@ public abstract class BananaQueue {
   }
 
   public PeelNode peekPeel(String peelQueueTag) {
-    if(!head.peelQueueExists(peelQueueTag)) {
+    if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return null;
     }
     return head.getPeelQueue(peelQueueTag).peek(); 
@@ -107,8 +113,8 @@ public abstract class BananaQueue {
     return size;
   }
 
-  public int peelSize(String peelQueueTag) {
-    if(!head.peelQueueExists(peelQueueTag)) {
+  public int getPeelSize(String peelQueueTag) {
+    if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return -1;
     }
     return head.getPeelQueue(peelQueueTag).getSize();
