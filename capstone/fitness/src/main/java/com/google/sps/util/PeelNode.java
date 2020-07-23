@@ -17,4 +17,34 @@ package com.google.sps.util;
 public abstract class PeelNode {
   private boolean complete;
   private PeelNode prevNode, nextNode;
+
+  public PeelNode() {
+    complete = false;
+    prevNode = null;
+    nextNode = null;
+  }
+
+  public boolean isComplete() {
+    return complete;
+  }
+  
+  public void setComplete(boolean complete) {
+    this.complete = complete;
+  }
+
+  public PeelNode getPrev() {
+    return prevNode;
+  }
+
+  public void setPrev(PeelNode prevNode) {
+    this.prevNode = prevNode;
+  }
+  
+  public PeelNode getNext() {
+    return nextNode;
+  }
+  
+  public void setNext(PeelNode nextNode) {
+    this.nextNode = nextNode;
+  }
 }
