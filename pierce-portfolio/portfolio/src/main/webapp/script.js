@@ -64,9 +64,42 @@ function addMessageToDom(comments) {
     // tried using the getters here, but I don't think the functions can be passed through a JSON object?
       commentContainer.appendChild(newComment(comments[i].name+ " said: " + comments[i].text + " | " + comments[i].timestamp));    
     }
-}}
+  }
+}
 function newComment(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+function checkLoginStatus() {
+  var x = document.getElementById("comments-form");
+  console.log("fetching login status");
+  const loginPromise = fetch('/login-status');
+  loginPromise.then(handleLogin);
+}
+function handleLogin(loginResponse) {
+  const loginJson = loginResponse.json();
+  loginJson.then(updateDisplay);
+}
+
+function updateDisplay(login) {
+    // If the length of the JSON array is 1, then it only contains the logout link, and not an email.
+    // So, the user is not logged in, and the only thing to do is supply the logout link.
+    console.log("login status is:" + login + login.length);
+    const commentsForm = document.getElementById("comments-form");
+    const loginLink = document.getElementById("login-link")
+    if (login.length==1){
+      commentsForm.style.display = "none";
+      loginLink.href= login[0];
+    }
+    // Otherwise, the length is >1, which means the user is logged in and there is an email to supply.
+    else{
+      commentsForm.style.display = "initial";
+      para = document.getElementById("p1");
+      node = document.createTextNode("You are logged in. Email: " + login[0] );
+      loginLink.innerHTML="Logout.";
+      loginLink.href=login[1];
+
+}
 }
