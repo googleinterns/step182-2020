@@ -26,11 +26,11 @@ public class PeelQueue {
     size = 0;
   }
 
-  /*
-  * enqueue - Adds PeelNode to the end of the queue and increments the size.
-  * 
-  * @param peel - PeelNode to add
-  */
+  /**
+   * Adds PeelNode to the end of the queue and increments the size.
+   * 
+   * @param peel PeelNode to add
+   */
   public void enqueue(PeelNode peel) {
     if(peel == null) {
       return;
@@ -49,10 +49,10 @@ public class PeelQueue {
     size++;
   }
   
-  /*
-  * dequeue - Marks the front PeelNode in the queue as complete, decrements the size, 
-  *           and moves the front of the queue to the next element (can be null).
-  */
+  /**
+   * Marks the front PeelNode in the queue as complete, decrements the size, and moves the front of 
+   * the queue to the next element (can be null).
+   */
   public void dequeue() {
     if(head == null) {
       return;
@@ -63,9 +63,11 @@ public class PeelQueue {
     size--;
   }
 
-  /*
-  * peek - Returns the front PeelNode of the queue (can be null).
-  */
+  /**
+   * Returns the front PeelNode of the queue (can be null).
+   *
+   * @return front PeelNode of the queue
+   */
   public PeelNode peek() {
     return head;
   }
@@ -74,9 +76,11 @@ public class PeelQueue {
     return size;
   }
   
-  /*
-  * toArray - Returns array representation of queue. [Currently deciding best approach]
-  */
+  /**
+   * Returns array representation of queue. [Currently deciding best approach]
+   *
+   * @return array representation of queue.
+   */
   public PeelNode[] toArray() {
     return null;
   }

@@ -25,13 +25,13 @@ public class BananaQueue {
     size = 0;
   }
   
-  /*
-  * enqueuePeel - Enqueues given PeelNode to PeelQueue associated with tag if PeelNode has a value and the BananaQueue's front element
-  *               has a PeelQueue with the same associated name.
-  *
-  * @param peelQueueTag - Tag to associated PeelQueue.
-  * @param peel - PeelNode to add.
-  */
+  /**
+   * Enqueues given PeelNode to PeelQueue associated with tag if PeelNode has a value and the BananaQueue's front element
+   * has a PeelQueue with the same associated name.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @param peel PeelNode to add.
+   */
   public void enqueuePeel(String peelQueueTag, PeelNode peel) {
     if(peel == null || head == null || !head.peelQueueExists(peelQueueTag)) {
       return;
@@ -40,12 +40,11 @@ public class BananaQueue {
     head.getPeelQueue(peelQueueTag).enqueue(peel);
   }
 
-  /*
-  * dequeuePeel - Dequeues PeelQueue associated with the tag if the BananaQueue's front element
-  *               has a PeelQueue with the same associated name.
-  *
-  * @param peelQueueTag - Tag to associated PeelQueue.
-  */
+  /**
+   * Dequeues PeelQueue associated with the tag if the BananaQueue's front element has a PeelQueue with the same associated name.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   */
   public void dequeuePeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return;
@@ -54,21 +53,21 @@ public class BananaQueue {
     head.getPeelQueue(peelQueueTag).dequeue();
   }
 
-  /*
-  * addPeelQueue - Adds generic PeelQueue to the front element of the BananaQueue with the given tag. 
-  *
-  * @param peelQueueTag - Tag to associated PeelQueue.
-  */
+  /**
+   * Adds generic PeelQueue to the front element of the BananaQueue with the given tag. 
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   */
   public void addPeelQueue(String peelQueueTag) {
     addPeelQueue(peelQueueTag, new PeelQueue());
   }
   
-  /*
-  * addPeelQueue - Adds given PeelQueue to the front element of the BananaQueue with the given tag. 
-  *
-  * @param peelQueueTag - Tag to access PeelQueue.
-  * @param peelQueue - PeelQueue to add.
-  */
+  /**
+   * Adds given PeelQueue to the front element of the BananaQueue with the given tag. 
+   *
+   * @param peelQueueTag Tag to access PeelQueue.
+   * @param peelQueue PeelQueue to add.
+   */
   public void addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     if(head == null || head.peelQueueExists(peelQueueTag)) {
       return;
@@ -77,11 +76,11 @@ public class BananaQueue {
     head.addPeelQueue(peelQueueTag, peelQueue);
   }
 
-  /*
-  * removePeelQueue - Removes PeelQueue from the front element of the BananaQueue with the given tag. 
-  *
-  * @param peelQueueTag - Tag to access PeelQueue.
-  */
+  /**
+   * Removes PeelQueue from the front element of the BananaQueue with the given tag. 
+   *
+   * @param peelQueueTag Tag to access PeelQueue.
+   */
   public void removePeelQueue(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return;
@@ -90,11 +89,11 @@ public class BananaQueue {
     head.removePeelQueue(peelQueueTag);
   }
 
-  /*
-  * enqueue - Adds BananaNode to the end of the queue and increments the size.
-  * 
-  * @param banana - BananaNode to add
-  */
+  /**
+   * Adds BananaNode to the end of the queue and increments the size.
+   * 
+   * @param banana BananaNode to add
+   */
   public void enqueueBanana(BananaNode banana) {
     if(banana == null) {
       return;
@@ -113,11 +112,11 @@ public class BananaQueue {
     size++;
   }
   
-  /*
-  * dequeue - Marks the front BananaNode in the queue as complete, decrements the size, 
-  *           moves the front of the queue to the next element (can be null), and copies
-  *           all the PeelQueues in the old front to the new front (if not null).
-  */
+  /**
+   * Marks the front BananaNode in the queue as complete, decrements the size, moves the 
+   * front of the queue to the next element (can be null), and copies all the PeelQueues 
+   * in the old front to the new front (if not null).
+   */
   public void dequeueBanana() {
     if(head == null) {
       return;
@@ -132,18 +131,21 @@ public class BananaQueue {
     size--;
   }
 
-  /*
-  * peekBanana - Returns the front BananaNode of the queue (can be null).
-  */
+  /**
+   * Returns the front BananaNode of the queue (can be null).
+   * 
+   * @return front of BananaQueue.
+   */
   public BananaNode peekBanana() {
     return head;
   }
 
-  /*
-  * peekPeel - Returns the front PeelNode of the queue (can be null) given an associated tag.
-  *
-  * @param peelQueueTag - Tag to associated PeelQueue.
-  */
+  /**
+   * Returns the front PeelNode of the queue (can be null) given an associated tag.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return front of PeelQueue mapped to tag
+   */
   public PeelNode peekPeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return null;
@@ -151,19 +153,22 @@ public class BananaQueue {
     return head.getPeelQueue(peelQueueTag).peek(); 
   }
   
-  /*
-  * getSize - Returns the number of BananaNodes in the BananaQueue.
-  */
+  /**
+   * Returns the number of BananaNodes in the BananaQueue.
+   * 
+   * @return number of BananaNodes in the BananaQueue.
+   */
   public int getSize() {
     return size;
   }
 
-  /*
-  * getPeelSize - Returns the number of PeelNodes in the PeelQueue of the associated tag. If not
-  *               found, then it returns "-1".
-  *
-  * @param peelQueueTag - Tag to associated PeelQueue.
-  */
+  /**
+   * Returns the number of PeelNodes in the PeelQueue of the associated tag. If not found, 
+   * then it returns "-1".
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return number of PeelNodes in the PeelQueue mapped to tag.
+   */
   public int getPeelSize(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
       return -1;
@@ -175,9 +180,11 @@ public class BananaQueue {
     this.size = size;
   }
 
-  /*
-  * toArray - Returns array representation of queue. [Currently deciding best approach]
-  */
+  /**
+   * Returns array representation of queue. [Currently deciding best approach]
+   *
+   * @return array representation of queue.
+   */
   public BananaNode[] toArray() {
     return null;
   }
