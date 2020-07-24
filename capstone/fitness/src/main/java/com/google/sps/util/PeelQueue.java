@@ -31,9 +31,9 @@ public class PeelQueue {
    * 
    * @param peel PeelNode to add
    */
-  public void enqueue(PeelNode peel) {
+  public boolean enqueue(PeelNode peel) {
     if(peel == null) {
-      return;
+      return false;
     }
 
     if(head == null) {
@@ -47,20 +47,23 @@ public class PeelQueue {
     }
 
     size++;
+    return true;
   }
   
   /**
    * Marks the front PeelNode in the queue as complete, decrements the size, and moves the front of 
    * the queue to the next element (can be null).
    */
-  public void dequeue() {
+  public PeelNode dequeue() {
     if(head == null) {
-      return;
+      return null;
     }
 
     head.setComplete(true);
+    PeelNode temp = head;
     head = head.getNext();
     size--;
+    return temp;
   }
 
   /**

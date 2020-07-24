@@ -23,6 +23,7 @@ public class BananaNode {
   /* Uses Linked List model. */
   private BananaNode prevNode, nextNode;
 
+  /* String tag mappings for PeelQueue's. */
   private HashMap<String, PeelQueue> peels;
 
   public BananaNode() {
@@ -67,28 +68,28 @@ public class BananaNode {
    * 
    * @param peelQueueTag Tag to associated PeelQueue.
    */
-  public void removePeelQueue(String peelQueueTag) {
-    peels.remove(peelQueueTag.toLowerCase());
+  public PeelQueue removePeelQueue(String peelQueueTag) {
+    return peels.remove(peelQueueTag.toLowerCase());
   }
 
   /**
-   * Returns true if String mapping for PeelQueue exists.
+   * Returns true if String mapping for PeelQueue exists. Converts tag to lowercase.
    * 
    * @param peelQueueTag Tag to associated PeelQueue.
    * @return if String mapping for PeelQueue exists.
    */
   public boolean peelQueueExists(String peelQueueTag) {
-    return peels.containsKey(peelQueueTag);
+    return peels.containsKey(peelQueueTag.toLowerCase());
   }
 
   /**
-   * Returns PeelQueue given its tag.
+   * Returns PeelQueue given its tag. Converts tag to lowercase.
    * 
    * @param peelQueueTag Tag to associated PeelQueue.
    * @return PeelQueue mapped to tag
    */
   public PeelQueue getPeelQueue(String peelQueueTag) {
-    return peels.get(peelQueueTag);
+    return peels.get(peelQueueTag.toLowerCase());
   }
 
   public boolean isComplete() {

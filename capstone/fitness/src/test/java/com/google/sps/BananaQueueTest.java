@@ -17,6 +17,7 @@ package com.google.sps;
 import org.junit.*;
 import static org.junit.Assert.*;
 import com.google.sps.util.*;
+import java.util.Objects;
 
 public class BananaQueueTest {
   
@@ -131,8 +132,9 @@ public class BananaQueueTest {
     String peelQueueTag1 = "test";
     String peelQueueTag2 = "test2";
     BananaQueue bq = new BananaQueue();
-    
-    bq.enqueueBanana(new BananaNode());
+    BananaNode bn = new BananaNode();
+
+    bq.enqueueBanana(bn);
     bq.addPeelQueue(peelQueueTag1);
     bq.enqueuePeel(peelQueueTag1, new PeelNode());
     bq.addPeelQueue(peelQueueTag2);
@@ -146,7 +148,7 @@ public class BananaQueueTest {
     bq.addPeelQueue(peelQueueTag1);
     assertTrue(bq.getSize() == 2);
 
-    bq.dequeueBanana();
+    assertTrue(Objects.deepEquals(bq.dequeueBanana(), bn));
     assertTrue(bq.getPeelSize(peelQueueTag1) == 1);
     assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);

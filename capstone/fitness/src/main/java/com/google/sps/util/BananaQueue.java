@@ -32,12 +32,12 @@ public class BananaQueue {
    * @param peelQueueTag Tag to associated PeelQueue.
    * @param peel PeelNode to add.
    */
-  public void enqueuePeel(String peelQueueTag, PeelNode peel) {
+  public boolean enqueuePeel(String peelQueueTag, PeelNode peel) {
     if(peel == null || head == null || !head.peelQueueExists(peelQueueTag)) {
-      return;
+      return false;
     }
 
-    head.getPeelQueue(peelQueueTag).enqueue(peel);
+    return head.getPeelQueue(peelQueueTag).enqueue(peel);
   }
 
   /**
@@ -45,12 +45,12 @@ public class BananaQueue {
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    */
-  public void dequeuePeel(String peelQueueTag) {
+  public PeelNode dequeuePeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
-      return;
+      return null;
     }
 
-    head.getPeelQueue(peelQueueTag).dequeue();
+    return head.getPeelQueue(peelQueueTag).dequeue();
   }
 
   /**
@@ -58,8 +58,8 @@ public class BananaQueue {
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    */
-  public void addPeelQueue(String peelQueueTag) {
-    addPeelQueue(peelQueueTag, new PeelQueue());
+  public boolean addPeelQueue(String peelQueueTag) {
+    return addPeelQueue(peelQueueTag, new PeelQueue());
   }
   
   /**
@@ -68,12 +68,13 @@ public class BananaQueue {
    * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
    */
-  public void addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
+  public boolean addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     if(head == null || head.peelQueueExists(peelQueueTag)) {
-      return;
+      return false;
     }
 
     head.addPeelQueue(peelQueueTag, peelQueue);
+    return true;
   }
 
   /**
@@ -81,12 +82,12 @@ public class BananaQueue {
    *
    * @param peelQueueTag Tag to access PeelQueue.
    */
-  public void removePeelQueue(String peelQueueTag) {
+  public PeelQueue removePeelQueue(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
-      return;
+      return null;
     }
 
-    head.removePeelQueue(peelQueueTag);
+    return head.removePeelQueue(peelQueueTag);
   }
 
   /**
@@ -94,9 +95,9 @@ public class BananaQueue {
    * 
    * @param banana BananaNode to add
    */
-  public void enqueueBanana(BananaNode banana) {
+  public boolean enqueueBanana(BananaNode banana) {
     if(banana == null) {
-      return;
+      return false;
     }
 
     if(head == null) {
@@ -110,6 +111,7 @@ public class BananaQueue {
     }
 
     size++;
+    return true;
   }
   
   /**
@@ -117,9 +119,9 @@ public class BananaQueue {
    * front of the queue to the next element (can be null), and copies all the PeelQueues 
    * in the old front to the new front (if not null).
    */
-  public void dequeueBanana() {
+  public BananaNode dequeueBanana() {
     if(head == null) {
-      return;
+      return null;
     }
 
     head.setComplete(true);
@@ -127,8 +129,10 @@ public class BananaQueue {
       head.getNext().addPeels(head.getPeels());
     }
     head.removePeels();
+    BananaNode temp = head;
     head = head.getNext();
     size--;
+    return temp;
   }
 
   /**
