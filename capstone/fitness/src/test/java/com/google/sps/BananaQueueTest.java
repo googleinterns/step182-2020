@@ -25,15 +25,15 @@ public class BananaQueueTest {
   public void testEnqueuePeel() {
     String peelQueueTag = "test";
     BananaQueue bq = new BananaQueue();
-    bq.enqueuePeel(peelQueueTag, new PeelNode());
+    assertFalse(bq.enqueuePeel(peelQueueTag, new PeelNode()));
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
     
-    bq.enqueueBanana(new BananaNode());
-    bq.enqueuePeel(peelQueueTag, new PeelNode());
+    assertTrue(bq.enqueueBanana(new BananaNode()));
+    assertFalse(bq.enqueuePeel(peelQueueTag, new PeelNode()));
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
     
-    bq.addPeelQueue(peelQueueTag);
-    bq.enqueuePeel(peelQueueTag, new PeelNode());
+    assertTrue(bq.addPeelQueue(peelQueueTag));
+    assertTrue(bq.enqueuePeel(peelQueueTag, new PeelNode()));
     assertTrue(bq.getPeelSize(peelQueueTag) == 1);
   }
 
@@ -41,20 +41,22 @@ public class BananaQueueTest {
   public void testDequeuePeel() {
     String peelQueueTag = "test";
     BananaQueue bq = new BananaQueue();
-    bq.dequeuePeel(peelQueueTag);
+    PeelNode pn = new PeelNode();
+
+    assertTrue(bq.dequeuePeel(peelQueueTag) == null);
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
     
-    bq.enqueueBanana(new BananaNode());
-    bq.dequeuePeel(peelQueueTag);
+    assertTrue(bq.enqueueBanana(new BananaNode()));
+    assertTrue(bq.dequeuePeel(peelQueueTag) == null);
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
     
-    bq.addPeelQueue(peelQueueTag);
-    bq.dequeuePeel(peelQueueTag);
+    assertTrue(bq.addPeelQueue(peelQueueTag));
+    assertTrue(bq.dequeuePeel(peelQueueTag) == null);
     assertTrue(bq.getPeelSize(peelQueueTag) == 0);
 
-    bq.enqueuePeel(peelQueueTag, new PeelNode());
+    assertTrue(bq.enqueuePeel(peelQueueTag, pn));
     assertTrue(bq.getPeelSize(peelQueueTag) == 1);
-    bq.dequeuePeel(peelQueueTag);
+    assertTrue(Objects.deepEquals(bq.dequeuePeel(peelQueueTag), pn));
     assertTrue(bq.getPeelSize(peelQueueTag) == 0);
   }
 
@@ -65,16 +67,16 @@ public class BananaQueueTest {
     BananaQueue bq = new BananaQueue();
     PeelQueue pq = new PeelQueue();
     
-    bq.addPeelQueue(peelQueueTag1);
+    assertFalse(bq.addPeelQueue(peelQueueTag1));
     assertTrue(bq.getPeelSize(peelQueueTag1) == -1);
 
-    bq.addPeelQueue(peelQueueTag2, pq);
+    assertFalse(bq.addPeelQueue(peelQueueTag2, pq));
     assertTrue(bq.getPeelSize(peelQueueTag2) == -1);
 
-    bq.enqueueBanana(new BananaNode());
+    assertTrue(bq.enqueueBanana(new BananaNode()));
 
-    bq.addPeelQueue(peelQueueTag1);
-    bq.addPeelQueue(peelQueueTag2, pq);
+    assertTrue(bq.addPeelQueue(peelQueueTag1));
+    assertTrue(bq.addPeelQueue(peelQueueTag2, pq));
     assertTrue(bq.getPeelSize(peelQueueTag1) == 0);
     assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);
@@ -86,14 +88,14 @@ public class BananaQueueTest {
     BananaQueue bq = new BananaQueue();
     
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
-    bq.removePeelQueue(peelQueueTag);
+    assertTrue(bq.removePeelQueue(peelQueueTag) == null);
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
 
-    bq.enqueueBanana(new BananaNode());
-    bq.addPeelQueue(peelQueueTag);
+    assertTrue(bq.enqueueBanana(new BananaNode()));
+    assertTrue(bq.addPeelQueue(peelQueueTag));
     assertTrue(bq.getPeelSize(peelQueueTag) == 0);
 
-    bq.removePeelQueue(peelQueueTag);
+    assertTrue(bq.removePeelQueue(peelQueueTag) != null);
     assertTrue(bq.getPeelSize(peelQueueTag) == -1);
     assertTrue(bq.peekBanana().getPeels().size() == 0);
   }
@@ -104,25 +106,26 @@ public class BananaQueueTest {
 
     assertTrue(bq.getSize() == 0);
 
-    bq.enqueueBanana(new BananaNode());
+    assertTrue(bq.enqueueBanana(new BananaNode()));
     assertTrue(bq.getSize() == 1);
 
-    bq.enqueueBanana(new BananaNode());
+    assertTrue(bq.enqueueBanana(new BananaNode()));
     assertTrue(bq.getSize() == 2);
   }
 
   @Test
   public void testDequeueBanana() {
     BananaQueue bq = new BananaQueue();
+    BananaNode bn = new BananaNode();
 
     assertTrue(bq.getSize() == 0);
     assertTrue(bq.peekBanana() == null);
 
-    bq.enqueueBanana(new BananaNode());
+    assertTrue(bq.enqueueBanana(bn));
     assertTrue(bq.getSize() == 1);
     assertTrue(bq.peekBanana() != null);
 
-    bq.dequeueBanana();
+    assertTrue(Objects.deepEquals(bq.dequeueBanana(), bn));
     assertTrue(bq.getSize() == 0);
     assertTrue(bq.peekBanana() == null);
   }
@@ -134,18 +137,17 @@ public class BananaQueueTest {
     BananaQueue bq = new BananaQueue();
     BananaNode bn = new BananaNode();
 
-    bq.enqueueBanana(bn);
-    bq.addPeelQueue(peelQueueTag1);
-    bq.enqueuePeel(peelQueueTag1, new PeelNode());
-    bq.addPeelQueue(peelQueueTag2);
+    assertTrue(bq.enqueueBanana(bn));
+    assertTrue(bq.addPeelQueue(peelQueueTag1));
+    assertTrue(bq.enqueuePeel(peelQueueTag1, new PeelNode()));
+    assertTrue(bq.addPeelQueue(peelQueueTag2));
     assertTrue(bq.getPeelSize(peelQueueTag1) == 1);
     assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);
     assertFalse(bq.peekBanana().isComplete());
     assertTrue(bq.peekBanana().getPrev() == null);
 
-    bq.enqueueBanana(new BananaNode());
-    bq.addPeelQueue(peelQueueTag1);
+    assertTrue(bq.enqueueBanana(new BananaNode()));
     assertTrue(bq.getSize() == 2);
 
     assertTrue(Objects.deepEquals(bq.dequeueBanana(), bn));
