@@ -67,6 +67,7 @@ public class BananaNode {
    * Removes String mapping to stored PeelQueue given a tag. Converts tag to lowercase.
    * 
    * @param peelQueueTag Tag to associated PeelQueue.
+   * @return removed PeelQueue
    */
   public PeelQueue removePeelQueue(String peelQueueTag) {
     return peels.remove(peelQueueTag.toLowerCase());

@@ -30,6 +30,7 @@ public class PeelQueue {
    * Adds PeelNode to the end of the queue and increments the size.
    * 
    * @param peel PeelNode to add
+   * @return true if enqueue is successful 
    */
   public boolean enqueue(PeelNode peel) {
     if(peel == null) {
@@ -53,6 +54,8 @@ public class PeelQueue {
   /**
    * Marks the front PeelNode in the queue as complete, decrements the size, and moves the front of 
    * the queue to the next element (can be null).
+   *
+   * @return dequeued PeelNode (can be null)
    */
   public PeelNode dequeue() {
     if(head == null) {
