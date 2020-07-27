@@ -12,17 +12,57 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
+/*
+ initIndex()
+ Function that runs when the body of index loads.
+ Actions:
+   - Check if the user is logged in and display their name or give them the 
+     option to log in. 
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function initIndex() {
+  console.log("this works");
+  displayLogIn();
 }
+
+async function displayLogIn() {
+  const loginResponse = await fetch('/login');
+  const loginResponseText = await loginResponse.text();
+  var loginInfo = loginResponseText.split("\n");
+  
+  // This contains wheter the user is logged in, the user email, and login/out link
+  const loggedin = loginInfo[0];
+  const userEmail = loginInfo[1]
+  const url = loginInfo[2];
+
+  const loginContainer = document.getElementById("login");
+
+  if(loggedin == "1") {
+    loginContainer.innerHTML = createLogoutTemplate(userEmail, url);
+  }
+  else if(loggedin == "0") {
+    loginContainer.innerHTML = createLoginTemplate(url);
+  }
+
+
+}
+
+function createLoginTemplate(url) {
+  var template = 
+  `
+  <p>Welcome, stranger. 
+    <a href='https://8080-ce19f3ee-62b8-4778-b1d0-8b6beb1e067f.us-east1.cloudshell.dev/${url}'>Login Here!</a>
+  </p>
+  `;
+  return template;
+}
+
+function createLogoutTemplate(name, url) {
+  var template = 
+  `
+  <p>Welcome, ${name}. 
+    <a href='https://8080-ce19f3ee-62b8-4778-b1d0-8b6beb1e067f.us-east1.cloudshell.dev/${url}'>Logout here</a>
+  </p>
+  `;
+  return template;
+}
+
