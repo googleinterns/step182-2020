@@ -62,7 +62,7 @@ public class BananaQueue {
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    * @param peel PeelNode to add.
-   * @return true if enqueue is successful
+   * @return true if enqueue is successful.
    */
   public boolean enqueuePeel(String peelQueueTag, PeelNode peel) {
     if(peel == null || head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -76,7 +76,7 @@ public class BananaQueue {
    * Dequeues PeelQueue associated with the tag if the BananaQueue's front element has a PeelQueue with the same associated name.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return dequeued PeelNode
+   * @return dequeued PeelNode.
    */
   public PeelNode dequeuePeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -90,7 +90,7 @@ public class BananaQueue {
    * Adds generic PeelQueue to the front element of the BananaQueue with the given tag. 
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return true if add is successful
+   * @return true if add is successful.
    */
   public boolean addPeelQueue(String peelQueueTag) {
     return addPeelQueue(peelQueueTag, new PeelQueue());
@@ -102,7 +102,7 @@ public class BananaQueue {
    *
    * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
-   * @return true if add is successful
+   * @return true if add is successful.
    */
   public boolean addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     if(head == null || head.peelQueueExists(peelQueueTag)) {
@@ -117,7 +117,7 @@ public class BananaQueue {
    * Removes PeelQueue from the front element of the BananaQueue with the given tag. 
    *
    * @param peelQueueTag Tag to access PeelQueue.
-   * @return removed PeelQueue
+   * @return removed PeelQueue.
    */
   public PeelQueue removePeelQueue(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -130,8 +130,8 @@ public class BananaQueue {
   /**
    * Adds BananaNode to the end of the queue and increments the size.
    * 
-   * @param banana BananaNode to add
-   * @return true if enqueue is successful
+   * @param banana BananaNode to add.
+   * @return true if enqueue is successful.
    */
   public boolean enqueueBanana(BananaNode banana) {
     if(banana == null) {
@@ -157,7 +157,7 @@ public class BananaQueue {
    * front of the queue to the next element (can be null), and copies all the PeelQueues 
    * in the old front to the new front (if not null).
    *
-   * @return dequeued BananaNode
+   * @return dequeued BananaNode.
    */
   public BananaNode dequeueBanana() {
     if(head == null) {
@@ -188,7 +188,7 @@ public class BananaQueue {
    * Returns the front PeelNode of the queue (can be null) given an associated tag.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return front of PeelQueue mapped to tag
+   * @return front of PeelQueue mapped to tag.
    */
   public PeelNode peekPeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -207,18 +207,17 @@ public class BananaQueue {
   }
 
   /**
-   * Returns the number of PeelNodes in the PeelQueue of the associated tag. If not found, 
-   * then it returns "-1".
+   * Returns the number of PeelNodes in the PeelQueue of the associated tag.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return number of PeelNodes in the PeelQueue mapped to tag.
+   * @return number of PeelNodes in the PeelQueue mapped to tag as an Optional object.
    */
-  public int getPeelSize(String peelQueueTag) {
+  public Optional<Integer> getPeelSize(String peelQueueTag) {
     Optional<Integer> opt = Optional.empty();
     if(head != null && head.peelQueueExists(peelQueueTag)) {
       opt = Optional.of(head.getPeelQueue(peelQueueTag).getSize());
     }
-    return opt.orElse(-1);
+    return opt;
   }
 
   /**
