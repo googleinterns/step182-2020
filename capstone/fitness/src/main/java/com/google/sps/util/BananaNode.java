@@ -17,7 +17,7 @@ package com.google.sps.util;
 import java.util.*;
 
 /* Nodes in the BananaQueue. Holds references to PeelQueues. */
-public class BananaNode {
+public class BananaNode implements Serializable {
   private boolean complete;
   
   /* Uses Linked List model. */

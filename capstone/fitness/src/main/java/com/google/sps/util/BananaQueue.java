@@ -14,7 +14,7 @@
 
 package com.google.sps.util;
 
-public class BananaQueue {
+public class BananaQueue implements Serializable {
 
   private BananaNode head, foot;
   private int size;
