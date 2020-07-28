@@ -19,9 +19,22 @@ import java.util.*;
 
 public class Milestone extends BananaNode {
 
+  private final int level;
+  
+  public Milestone(int level) {
+    this.level = level;
+  }
+
+  // Methods for considered alternatives
+  progressSupplementalMilestone();
+  progressMainMilestone();
+
   public HashMap<String, SupplementalMilestone> getSupplementalMilestones() {
     return null;
   }
   
+  public int getLevel() {
+    return level;
+  }
 
 }

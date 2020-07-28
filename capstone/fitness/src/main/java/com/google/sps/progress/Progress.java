@@ -16,6 +16,26 @@ package com.google.sps.progress;
 
 import com.google.sps.util.*;
 
+/*
+
+
+
+
+In order of priority
+- Code Review
+- MAKE MOCK DATA CLASS
+- Move FitnessSet Logic to Progress Handler
+- Consider Milestone only implementation of progressModel
+  - or just keep both and replace with whichever works in grand scheme (if milestone works, go with that)
+- Create logic to build model
+
+
+
+
+
+
+*/
+
 public class Progress {
 
   private ProgressModel buildModel(Object data) {
