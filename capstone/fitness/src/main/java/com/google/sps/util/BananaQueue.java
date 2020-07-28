@@ -13,6 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.util;
+import java.util.Optional;
 
 /*
  * Queue with the ability to hold multiple queues at each node.  
@@ -213,10 +214,11 @@ public class BananaQueue {
    * @return number of PeelNodes in the PeelQueue mapped to tag.
    */
   public int getPeelSize(String peelQueueTag) {
-    if(head == null || !head.peelQueueExists(peelQueueTag)) {
-      return -1;
+    Optional<Integer> opt = Optional.empty();
+    if(head != null && head.peelQueueExists(peelQueueTag)) {
+      opt = Optional.of(head.getPeelQueue(peelQueueTag).getSize());
     }
-    return head.getPeelQueue(peelQueueTag).getSize();
+    return opt.orElse(-1);
   }
 
   /**
