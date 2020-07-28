@@ -22,8 +22,6 @@
 package com.google.sps.fit;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Random; 
 
 public class FitnessSet implements Serializable {
   
@@ -41,53 +39,6 @@ public class FitnessSet implements Serializable {
     this.setType2 = setType2;
     this.setType1Values = setType1Values;
     this.setType2Values = setType2Values;
-  }
-
-  public FitnessSet(FitnessSet fs, FitnessSet goal, float setValuesChangeBy) {
-    name = fs.name;
-    setType1 = fs.setType1;
-    setType2 = fs.setType2;
-    Random rand = new Random(); 
-    boolean randomFinished = false;
-    while(!randomFinished) {
-      int increment = rand.nextInt(4);
-      switch(increment) {
-        case 0: // Fall Through
-        case 1:
-          // increase sets
-          if(fs.sets < goal.sets) {
-            sets = fs.sets + 1;
-            setType1Values = copyAndAddValue(fs.setType1Values);
-            if(setType2 != null) {
-              setType2Values = copyAndAddValue(fs.setType2Values);
-            }
-            randomFinished = true;
-            break;
-          }
-        case 2:
-          // increase set1
-          if(Arrays.equals(fs.setType1Values, goal.setType1Values)) {
-            sets = fs.sets;
-            setType1Values = incrementSet(fs.setType1Values, setValuesChangeBy);
-            if(setType2 != null) {
-              setType2Values = fs.setType2Values.clone();
-            }
-            randomFinished = true;
-            break;
-          }
-        case 3:
-          // increse set2
-          if(setType2 != null && Arrays.equals(fs.setType2Values, goal.setType2Values)) {
-            sets = fs.sets;
-            setType1Values = fs.setType1Values.clone();
-            setType2Values = incrementSet(fs.setType2Values, setValuesChangeBy);
-            randomFinished = true;
-            break;
-          }
-        default:
-          break;
-      }
-    }
   }
 
   /**
@@ -124,24 +75,15 @@ public class FitnessSet implements Serializable {
            Arrays.equals(setType2Values, fs.setType2Values);
   }
 
-  protected static float[] incrementSet(float[] setValues, float setValuesChangeBy) {
-    float[] copy = Arrays.sort(setValues.clone(), Collections.reverseOrder());
-    if(copy[0] == copy[copy.length - 1]) {
-      copy[0] += setValuesChangeBy;
-    }
-    else {
-      int i = 1;
-      while(copy[0] == copy[i]) {
-        i++;
-      }
-      copy[i] += setValuesChangeBy;
-    }
-    return copy;
+  public int getSets() {
+    return sets;
   }
-  
-  protected static float[] copyAndAddValue(float[] setValues) {
-    float[] copy = copyOf(setValues, setValues.length + 1);
-    copy[copy.length - 1] = copy[copy.length - 2];
-    return copy;
+
+  public String getSetType(boolean type1) {
+    return type1 ? setType1 : setType2;
+  }
+
+  public float[] getSetTypeValues(boolean type1) {
+    return type1 ? setType1Values : setType2Values;
   }
 }

@@ -21,9 +21,18 @@ public class ProgressModel extends BananaQueue {
   public boolean progressSupplementalMilestone(FitnessSet fSet) {
     return false;
   }
-
+  
   public boolean progressMainMilestone(FitnessSet fSet) {
+    if(getCurrentMainMilestone.avgGreaterThan(fSet) || this.fSet.equalTo(fSet)) {
+      progressMain();
+      return true;
+    }
     return false;
+  }
+
+  // Method for considered alternatives
+  public Milestone progressMain() {
+    return (Milestone) dequeueBanana();
   }
 
   public Milestone getCurrentMainMilestone() {

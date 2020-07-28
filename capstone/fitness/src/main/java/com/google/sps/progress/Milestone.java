@@ -20,14 +20,30 @@ import java.util.*;
 public class Milestone extends BananaNode {
 
   private final int level;
-  
-  public Milestone(int level) {
+  private final FitnessSet fSet;
+
+  // Variable for considered alternatives
+  private final ProgressModel model;
+
+  public Milestone(int level, FitnessSet fSet, ProgressModel model) {
     this.level = level;
+    this.fSet = fSet;
+    this.model = model;
   }
 
-  // Methods for considered alternatives
-  progressSupplementalMilestone();
-  progressMainMilestone();
+  // Method for considered alternatives
+  public boolean progressSupplementalMilestone(FitnessSet fSet) {
+    return false;
+  }
+
+  // Method for considered alternatives
+  public Milestone progressMainMilestone(FitnessSet fSet) {
+    if(this.fSet.avgGreaterThan(fSet) || this.fSet.equalTo(fSet)) {
+      model.progressMain();
+      return model.getCurrentMainMilestone();
+    }
+    return this;
+  }
 
   public HashMap<String, SupplementalMilestone> getSupplementalMilestones() {
     return null;
