@@ -66,7 +66,8 @@ public class BananaQueue {
   }
   
   /**
-   * Adds given PeelQueue to the front element of the BananaQueue with the given tag. 
+   * Adds given PeelQueue to the front element of the BananaQueue with the given tag
+   * if it does not exist already. 
    *
    * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
@@ -187,13 +188,10 @@ public class BananaQueue {
     }
     return head.getPeelQueue(peelQueueTag).getSize();
   }
-  
-  public void setSize(int size) {
-    this.size = size;
-  }
 
   /**
-   * Returns array representation of queue. [Currently deciding best approach]
+   * Returns array representation of queue.
+   * TODO(ijelue): Figure out implementation.
    *
    * @return array representation of queue.
    */
