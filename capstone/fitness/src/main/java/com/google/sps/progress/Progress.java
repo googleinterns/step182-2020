@@ -37,25 +37,25 @@ public class Progress {
   
   private ProgressModel buildMainMilestones(Data data) {
     int changeCount = data.getDaysAvailable();
-    Milestone start = data.getStart();
-    Milestone goal = data.getGoal();
+    FitnessSet start = data.getStart();
+    FitnessSet goal = data.getGoal();
 
-    float[] setValuesDelta = getValuesChangeBy(changeCount, start.getFitnessSet(), goal.getFitnessSet());
+    float[] setValuesDelta = getValuesChangeBy(changeCount, start, goal);
     if(setValuesDelta == null) {
       return null; // throw error
     }
 
     ProgressModel model = new ProgressModel();
-    model.addMainMilestone(start);
+    model.addMainMilestone(new Milestone(start));
     Milestone current = model.getCurrentMainMilestone();
 
     for(int i = 1; i < changeCount - 1; i++) {
-      Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal.getFitnessSet(), setValuesDelta));
+      Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal, setValuesDelta));
       model.addMainMilestone(next);
       current = next;
     }
 
-    model.addMainMilestone(goal);
+    model.addMainMilestone(new Milestone(goal));
 
     return model;
   }
@@ -165,7 +165,7 @@ public class Progress {
       return null; // Might be better to throw an error
     }
     HashMap<String, SupplementalMilestone> supplementalMilestoneSets = milestone.getSupplementalMilestones();
-    FitnessSet[] sessionSets = data.getLastSession().getSets();
+    FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
     
     for(FitnessSet sessionSet : sessionSets) {
       if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {

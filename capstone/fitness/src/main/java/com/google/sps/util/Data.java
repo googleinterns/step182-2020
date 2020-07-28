@@ -14,6 +14,7 @@
 
 package com.google.sps.util;
 
+import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 
 /* Mock Data Handler */
@@ -21,10 +22,10 @@ public class Data {
 
   private Session lastSession;
   private ProgressModel model;
-  private Milestone start;
-  private Milestone goal;
+  private FitnessSet start;
+  private FitnessSet goal;
 
-  public Data(Session lastSession, ProgressModel model, Milestone start, Milestone goal) {
+  public Data(Session lastSession, ProgressModel model, FitnessSet start, FitnessSet goal) {
     this.lastSession = lastSession;
     this.model = model;
     this.start = start;
@@ -47,17 +48,17 @@ public class Data {
   }
 
   /*
-  * Returns days available between the start and goal 
+  * Returns days available from the start and goal inclusive
   */
   public int getDaysAvailable() {
     return 4;
   }
 
-  public Milestone getStart() {
+  public FitnessSet getStart() {
     return start;
   }
 
-  public Milestone getGoal() {
+  public FitnessSet getGoal() {
     return goal;
   }
 

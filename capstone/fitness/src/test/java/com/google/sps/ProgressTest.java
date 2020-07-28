@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.util;
+package com.google.sps;
 
-import com.google.sps.fit.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+import com.google.sps.util.*;
+import java.util.Objects;
 
-/* Mock Session */
-public class Session {
+public class ProgressTest {
 
-  private FitnessSet[] fSets;
-
-  public Session(FitnessSet[] fSets) {
-    this.fSets = fSets;
+  @Test
+  public void test() {
+    
   }
-
-  public FitnessSet[] getFitnessSets() {
-    return fSets;
-  } 
 
 }

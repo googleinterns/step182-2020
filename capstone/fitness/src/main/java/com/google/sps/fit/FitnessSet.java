@@ -33,15 +33,6 @@ public class FitnessSet implements Serializable {
   protected float[] setType1Values;
   protected float[] setType2Values;
 
-  public FitnessSet() {
-    name = "test";
-    sets = 1;
-    setType1 = "set_1";
-    setType2 = "set_2";
-    setType1Values = new float[] {1};
-    setType2Values = new float[] {1};
-  }
-
   public FitnessSet(String name, int sets, String setType1, String setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
     this.sets = sets;
