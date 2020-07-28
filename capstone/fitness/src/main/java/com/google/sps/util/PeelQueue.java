@@ -83,7 +83,8 @@ public class PeelQueue implements Serializable {
   }
   
   /**
-   * Returns array representation of queue. [Currently deciding best approach]
+   * Returns array representation of queue.
+   * TODO(ijelue): Figure out implementation.
    *
    * @return array representation of queue.
    */

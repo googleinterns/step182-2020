@@ -14,7 +14,39 @@
 
 package com.google.sps.util;
 
-public class BananaQueue implements Serializable {
+import java.util.Optional;
+
+/*
+ * Queue with the ability to hold multiple queues at each node.  
+ * Each dequeue results in a transfer of queues to the next node.
+ * Each node is called a BananaNode.
+ * Each extra queue is called a PeelQueue.
+ * Every node in a PeelQueue is called a PeelNode.
+ *
+ * Example Structure:
+ *
+ *    @1 - @2 - @3
+ *   /
+ * O - O - O - O - O
+ *   \
+ *    #1 - #2
+ *
+ * Example Dequeue:
+ *
+ *        @1 - @2 - @3
+ *       /
+ * X - O - O - O - O
+ *       \
+ *        #1 - #2
+ *
+ * Key:
+ *   X = Completed BananaNode
+ *   O = Uncompleted BananaNode
+ *   (/, -, \) = Connections
+ *   @n = PeelNode
+ *   #n = PeelNode
+ */
+public class BananaQueue {
 
   private BananaNode head, foot;
   private int size;
@@ -31,7 +63,7 @@ public class BananaQueue implements Serializable {
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    * @param peel PeelNode to add.
-   * @return true if enqueue is successful
+   * @return true if enqueue is successful.
    */
   public boolean enqueuePeel(String peelQueueTag, PeelNode peel) {
     if(peel == null || head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -45,7 +77,7 @@ public class BananaQueue implements Serializable {
    * Dequeues PeelQueue associated with the tag if the BananaQueue's front element has a PeelQueue with the same associated name.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return dequeued PeelNode
+   * @return dequeued PeelNode.
    */
   public PeelNode dequeuePeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -59,18 +91,19 @@ public class BananaQueue implements Serializable {
    * Adds generic PeelQueue to the front element of the BananaQueue with the given tag. 
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return true if add is successful
+   * @return true if add is successful.
    */
   public boolean addPeelQueue(String peelQueueTag) {
     return addPeelQueue(peelQueueTag, new PeelQueue());
   }
   
   /**
-   * Adds given PeelQueue to the front element of the BananaQueue with the given tag. 
+   * Adds given PeelQueue to the front element of the BananaQueue with the given tag
+   * if it does not exist already. 
    *
    * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
-   * @return true if add is successful
+   * @return true if add is successful.
    */
   public boolean addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     if(head == null || head.peelQueueExists(peelQueueTag)) {
@@ -85,7 +118,7 @@ public class BananaQueue implements Serializable {
    * Removes PeelQueue from the front element of the BananaQueue with the given tag. 
    *
    * @param peelQueueTag Tag to access PeelQueue.
-   * @return removed PeelQueue
+   * @return removed PeelQueue.
    */
   public PeelQueue removePeelQueue(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -98,8 +131,8 @@ public class BananaQueue implements Serializable {
   /**
    * Adds BananaNode to the end of the queue and increments the size.
    * 
-   * @param banana BananaNode to add
-   * @return true if enqueue is successful
+   * @param banana BananaNode to add.
+   * @return true if enqueue is successful.
    */
   public boolean enqueueBanana(BananaNode banana) {
     if(banana == null) {
@@ -125,7 +158,7 @@ public class BananaQueue implements Serializable {
    * front of the queue to the next element (can be null), and copies all the PeelQueues 
    * in the old front to the new front (if not null).
    *
-   * @return dequeued BananaNode
+   * @return dequeued BananaNode.
    */
   public BananaNode dequeueBanana() {
     if(head == null) {
@@ -156,7 +189,7 @@ public class BananaQueue implements Serializable {
    * Returns the front PeelNode of the queue (can be null) given an associated tag.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return front of PeelQueue mapped to tag
+   * @return front of PeelQueue mapped to tag.
    */
   public PeelNode peekPeel(String peelQueueTag) {
     if(head == null || !head.peelQueueExists(peelQueueTag)) {
@@ -175,25 +208,22 @@ public class BananaQueue implements Serializable {
   }
 
   /**
-   * Returns the number of PeelNodes in the PeelQueue of the associated tag. If not found, 
-   * then it returns "-1".
+   * Returns the number of PeelNodes in the PeelQueue of the associated tag.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
-   * @return number of PeelNodes in the PeelQueue mapped to tag.
+   * @return number of PeelNodes in the PeelQueue mapped to tag as an Optional object.
    */
-  public int getPeelSize(String peelQueueTag) {
-    if(head == null || !head.peelQueueExists(peelQueueTag)) {
-      return -1;
+  public Optional<Integer> getPeelSize(String peelQueueTag) {
+    Optional<Integer> opt = Optional.empty();
+    if(head != null && head.peelQueueExists(peelQueueTag)) {
+      opt = Optional.of(head.getPeelQueue(peelQueueTag).getSize());
     }
-    return head.getPeelQueue(peelQueueTag).getSize();
-  }
-  
-  public void setSize(int size) {
-    this.size = size;
+    return opt;
   }
 
   /**
-   * Returns array representation of queue. [Currently deciding best approach]
+   * Returns array representation of queue.
+   * TODO(ijelue): Figure out implementation.
    *
    * @return array representation of queue.
    */

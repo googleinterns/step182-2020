@@ -21,82 +21,109 @@ import java.util.Objects;
 
 public class BananaQueueTest {
   
+  private final String peelQueueTag = "test";
+
   @Test
   public void testEnqueuePeel() {
-    String peelQueueTag = "test";
     BananaQueue bq = new BananaQueue();
+
+    // Try to add Peel without PeelQueue or BananaNode to attach to.
     assertFalse(bq.enqueuePeel(peelQueueTag, new PeelNode()));
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     
+    // Try to add Peel without PeelQueue to attach to.
     assertTrue(bq.enqueueBanana(new BananaNode()));
     assertFalse(bq.enqueuePeel(peelQueueTag, new PeelNode()));
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     
+    // Add Peel.
     assertTrue(bq.addPeelQueue(peelQueueTag));
     assertTrue(bq.enqueuePeel(peelQueueTag, new PeelNode()));
-    assertTrue(bq.getPeelSize(peelQueueTag) == 1);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 1);
   }
 
   @Test
   public void testDequeuePeel() {
-    String peelQueueTag = "test";
     BananaQueue bq = new BananaQueue();
     PeelNode pn = new PeelNode();
 
+    // Try to remove Peel without PeelQueue or BananaNode to remove from.
     assertTrue(bq.dequeuePeel(peelQueueTag) == null);
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     
+    // Try to remove Peel without PeelQueue to remove from.
     assertTrue(bq.enqueueBanana(new BananaNode()));
     assertTrue(bq.dequeuePeel(peelQueueTag) == null);
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     
+    // Try to remove Peel From PeelQueue that contains no elements.
     assertTrue(bq.addPeelQueue(peelQueueTag));
     assertTrue(bq.dequeuePeel(peelQueueTag) == null);
-    assertTrue(bq.getPeelSize(peelQueueTag) == 0);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 0);
 
+    // Remove Peel.
     assertTrue(bq.enqueuePeel(peelQueueTag, pn));
-    assertTrue(bq.getPeelSize(peelQueueTag) == 1);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 1);
     assertTrue(Objects.deepEquals(bq.dequeuePeel(peelQueueTag), pn));
-    assertTrue(bq.getPeelSize(peelQueueTag) == 0);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 0);
   }
 
   @Test
   public void testAddPeelQueue() {
-    String peelQueueTag1 = "test";
-    String peelQueueTag2 = "test2";
+    String peelQueueTag2 = peelQueueTag + "2";
     BananaQueue bq = new BananaQueue();
     PeelQueue pq = new PeelQueue();
     
-    assertFalse(bq.addPeelQueue(peelQueueTag1));
-    assertTrue(bq.getPeelSize(peelQueueTag1) == -1);
-
+    // Try to add PeelQueues without BananaNode to attach to.
+    assertFalse(bq.addPeelQueue(peelQueueTag));
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     assertFalse(bq.addPeelQueue(peelQueueTag2, pq));
-    assertTrue(bq.getPeelSize(peelQueueTag2) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag2).isPresent());
 
     assertTrue(bq.enqueueBanana(new BananaNode()));
 
-    assertTrue(bq.addPeelQueue(peelQueueTag1));
+    // Add PeelQueues.
+    assertTrue(bq.addPeelQueue(peelQueueTag));
     assertTrue(bq.addPeelQueue(peelQueueTag2, pq));
-    assertTrue(bq.getPeelSize(peelQueueTag1) == 0);
-    assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 0);
+    assertTrue(bq.getPeelSize(peelQueueTag2).get() == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);
   }
 
   @Test
-  public void testRemovePeelQueue() {
-    String peelQueueTag = "test";
+  public void testAddPeelQueueUpperCase() {
+    String peelQueueTagUpper = peelQueueTag.toUpperCase();
     BananaQueue bq = new BananaQueue();
-    
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
-    assertTrue(bq.removePeelQueue(peelQueueTag) == null);
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
 
     assertTrue(bq.enqueueBanana(new BananaNode()));
-    assertTrue(bq.addPeelQueue(peelQueueTag));
-    assertTrue(bq.getPeelSize(peelQueueTag) == 0);
 
+    // Add PeelQueues.
+    assertTrue(bq.addPeelQueue(peelQueueTag));
+    assertFalse(bq.addPeelQueue(peelQueueTagUpper));
+
+    // Test that they are the same.
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 0);
+    assertTrue(bq.getPeelSize(peelQueueTagUpper).get() == 0);
+    assertTrue(bq.peekBanana().getPeels().size() == 1);
+  }
+
+  @Test
+  public void testRemovePeelQueue() {
+    BananaQueue bq = new BananaQueue();
+    
+    // Try to remove PeelQueue without BananaNode to remove from.
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
+    assertTrue(bq.removePeelQueue(peelQueueTag) == null);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
+
+    // Add PeelQueue to BananaNode.
+    assertTrue(bq.enqueueBanana(new BananaNode()));
+    assertTrue(bq.addPeelQueue(peelQueueTag));
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 0);
+
+    // Remove PeelQueue from BananaNode.
     assertTrue(bq.removePeelQueue(peelQueueTag) != null);
-    assertTrue(bq.getPeelSize(peelQueueTag) == -1);
+    assertFalse(bq.getPeelSize(peelQueueTag).isPresent());
     assertTrue(bq.peekBanana().getPeels().size() == 0);
   }
 
@@ -132,17 +159,17 @@ public class BananaQueueTest {
 
   @Test
   public void testDequeueBananaWithPeels() {
-    String peelQueueTag1 = "test";
-    String peelQueueTag2 = "test2";
+    String peelQueueTag2 = peelQueueTag + "2";
     BananaQueue bq = new BananaQueue();
     BananaNode bn = new BananaNode();
 
+    // Add a BananaNode to BananaQueue with 2 PeelQueues (1st PeelQueue contains one PeelNode).
     assertTrue(bq.enqueueBanana(bn));
-    assertTrue(bq.addPeelQueue(peelQueueTag1));
-    assertTrue(bq.enqueuePeel(peelQueueTag1, new PeelNode()));
+    assertTrue(bq.addPeelQueue(peelQueueTag));
+    assertTrue(bq.enqueuePeel(peelQueueTag, new PeelNode()));
     assertTrue(bq.addPeelQueue(peelQueueTag2));
-    assertTrue(bq.getPeelSize(peelQueueTag1) == 1);
-    assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 1);
+    assertTrue(bq.getPeelSize(peelQueueTag2).get() == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);
     assertFalse(bq.peekBanana().isComplete());
     assertTrue(bq.peekBanana().getPrev() == null);
@@ -150,9 +177,13 @@ public class BananaQueueTest {
     assertTrue(bq.enqueueBanana(new BananaNode()));
     assertTrue(bq.getSize() == 2);
 
+    // Make sure correct BananaNode is returned from dequeue.
     assertTrue(Objects.deepEquals(bq.dequeueBanana(), bn));
-    assertTrue(bq.getPeelSize(peelQueueTag1) == 1);
-    assertTrue(bq.getPeelSize(peelQueueTag2) == 0);
+    assertFalse(Objects.deepEquals(bq.peekBanana(), bn));
+
+    // Test transfer of PeelNodes and status of BananaNode head is correct.
+    assertTrue(bq.getPeelSize(peelQueueTag).get() == 1);
+    assertTrue(bq.getPeelSize(peelQueueTag2).get() == 0);
     assertTrue(bq.peekBanana().getPeels().size() == 2);
     assertFalse(bq.peekBanana().isComplete());
     assertTrue(bq.peekBanana().getPrev() != null);
