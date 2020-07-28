@@ -14,6 +14,36 @@
 
 package com.google.sps.util;
 
+/*
+ * Queue with the ability to hold multiple queues at each node.  
+ * Each dequeue results in a transfer of queues to the next node.
+ * Each node is called a BananaNode.
+ * Each extra queue is called a PeelQueue.
+ * Every node in a PeelQueue is called a PeelNode.
+ *
+ * Example Structure:
+ *
+ *    @1 - @2 - @3
+ *   /
+ * O - O - O - O - O
+ *   \
+ *    #1 - #2
+ *
+ * Example Dequeue:
+ *
+ *        @1 - @2 - @3
+ *       /
+ * X - O - O - O - O
+ *       \
+ *        #1 - #2
+ *
+ * Key:
+ *   X = Completed BananaNode
+ *   O = Uncompleted BananaNode
+ *   (/, -, \) = Connections
+ *   @n = PeelNode
+ *   #n = PeelNode
+ */
 public class BananaQueue {
 
   private BananaNode head, foot;
