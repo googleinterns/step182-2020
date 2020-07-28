@@ -19,16 +19,46 @@ import com.google.sps.progress.*;
 /* Mock Data Handler */
 public class Data {
 
-  public Session lastSession() {
-    return new Session();
+  private Session lastSession;
+  private ProgressModel model;
+  private Milestone start;
+  private Milestone goal;
+
+  public Data(Session lastSession, ProgressModel model, Milestone start, Milestone goal) {
+    this.lastSession = lastSession;
+    this.model = model;
+    this.start = start;
+    this.goal = goal;
+  }
+
+  public Session getLastSession() {
+    return lastSession;
   }
 
   public ProgressModel getProgressModel() {
-    return null;
+    return model;
   }
 
   public Milestone getCurrentMainMilestone() {
-    return null;
+    if(model == null) {
+      return null;
+    }
+    return model.getCurrentMainMilestone();
+  }
+
+  /*
+  * Returns days available between the start and goal 
+  */
+  public int getDaysAvailable() {
+    return 4;
+  }
+
+  public Milestone getStart() {
+    return start;
+  }
+
+  public Milestone getGoal() {
+    return goal;
   }
 
 }

@@ -32,6 +32,10 @@ public class ProgressModel extends BananaQueue {
     return false;
   }
 
+  public boolean addMainMilestone(Milestone milestone) {
+    return enqueueBanana(milestone);
+  }
+
   // Method for considered alternatives
   public Milestone progressMain() {
     return (Milestone) dequeueBanana();

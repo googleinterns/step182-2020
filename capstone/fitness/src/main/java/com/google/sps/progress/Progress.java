@@ -20,11 +20,8 @@ import java.util.*;
 
 /*
 
-
 In order of priority
 - Create logic to build model
-
-
 
 */
 
@@ -39,21 +36,50 @@ public class Progress {
   }
   
   private ProgressModel buildMainMilestones(Data data) {
-    // Logic to build linear progression
-    // TODO
-    // getCahngesCount then get values change by and build based off that
-    return null;
-  }
-  
-  private int getChangesCount(int daysAvailable) {
-    return 0;
+    int changeCount = data.getDaysAvailable();
+    Milestone start = data.getStart();
+    Milestone goal = data.getGoal();
+
+    float[] setValuesDelta = getValuesChangeBy(changeCount, start.getFitnessSet(), goal.getFitnessSet());
+    if(setValuesDelta == null) {
+      return null; // throw error
+    }
+
+    ProgressModel model = new ProgressModel();
+    model.addMainMilestone(start);
+    Milestone current = model.getCurrentMainMilestone();
+
+    for(int i = 1; i < changeCount - 1; i++) {
+      Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal.getFitnessSet(), setValuesDelta));
+      model.addMainMilestone(next);
+      current = next;
+    }
+
+    model.addMainMilestone(goal);
+
+    return model;
   }
 
-  private int[] getValuesChangeBy(int changesCount) {
-    return null;
+  private float[] getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
+    int setDifference = goal.getSets() - start.getSets();
+    if(setDifference < 0) {
+      return null;
+    }
+    int setValuesChangesCount = changeCount - setDifference;
+    if(start.getSetType(false) != null) {
+      setValuesChangesCount /= 2;
+    }
+
+    float setType1Delta = (goal.getSetTypeValues(true)[0] - start.getSetTypeValues(true)[0])/setValuesChangesCount;
+    if(start.getSetType(false) != null) {
+      float setType2Delta = (goal.getSetTypeValues(false)[0] - start.getSetTypeValues(false)[0])/setValuesChangesCount;
+      return new float[] {setType1Delta, setType2Delta};
+    }
+
+    return new float[] {setType1Delta};
   } 
 
-  private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, float setValuesChangeBy) {
+  private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, float[] setValuesChangeBy) {
     String name = goal.getName();
     int sets = fs.getSets();
     String setType1 = goal.getSetType(true);
@@ -79,7 +105,7 @@ public class Progress {
         case 2:
           // increase set1
           if(Arrays.equals(fs.getSetTypeValues(true), goal.getSetTypeValues(true))) {
-            setType1Values = incrementSet(fs.getSetTypeValues(true), setValuesChangeBy);
+            setType1Values = incrementSet(fs.getSetTypeValues(true), setValuesChangeBy[0]);
             setType2Values = cloneArray(fs.getSetTypeValues(false));
             randomFinished = true;
             break;
@@ -88,7 +114,7 @@ public class Progress {
           // increse set2
           if(setType2 != null && Arrays.equals(fs.getSetTypeValues(false), goal.getSetTypeValues(false))) {
             setType1Values = cloneArray(fs.getSetTypeValues(true));
-            setType2Values = incrementSet(fs.getSetTypeValues(false), setValuesChangeBy);
+            setType2Values = incrementSet(fs.getSetTypeValues(false), setValuesChangeBy[1]);
             randomFinished = true;
             break;
           }
@@ -139,7 +165,7 @@ public class Progress {
       return null; // Might be better to throw an error
     }
     HashMap<String, SupplementalMilestone> supplementalMilestoneSets = milestone.getSupplementalMilestones();
-    FitnessSet[] sessionSets = data.lastSession().getSets();
+    FitnessSet[] sessionSets = data.getLastSession().getSets();
     
     for(FitnessSet sessionSet : sessionSets) {
       if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {

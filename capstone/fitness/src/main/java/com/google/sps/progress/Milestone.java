@@ -20,22 +20,15 @@ import java.util.*;
 
 public class Milestone extends BananaNode {
 
-  private final int level;
   private final FitnessSet fSet;
 
-  public Milestone(int level, FitnessSet fSet) {
-    this.level = level;
+  public Milestone(FitnessSet fSet) {
     this.fSet = fSet;
   }
 
   public HashMap<String, SupplementalMilestone> getSupplementalMilestones() {
     return null;
   }
-  
-  public int getLevel() {
-    return level;
-  }
-
 
   public String getName() {
     return fSet.getName();
