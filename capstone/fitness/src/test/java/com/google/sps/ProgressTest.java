@@ -16,14 +16,50 @@ package com.google.sps;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import com.google.sps.fit.*;
+import com.google.sps.fit.FitnessSet.SetType;
+import com.google.sps.progress.*;
 import com.google.sps.util.*;
-import java.util.Objects;
 
 public class ProgressTest {
 
+  private final FitnessSet start = new FitnessSet("test", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
+  private final FitnessSet goal = new FitnessSet("test", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});
+  private final int daysAvailable = 8;
+
   @Test
-  public void test() {
-    
+  public void testUpdateProgressModelNoModel() {
+    // TODO(ijelue): Add actual assertions rather than prints.
+
+    Data data = new Data(null, null, start, goal, daysAvailable);
+    Progress progress = new Progress();
+
+    ProgressModel model = progress.getUpdatedProgressModel(data);
+    System.out.println(model);
   }
 
+  @Test
+  public void testUpdateProgressModelWithModel() {
+    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito.
+
+    FitnessSet start2 = new FitnessSet("test2", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
+    FitnessSet goal2 = new FitnessSet("test2", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});
+    Data data = new Data(null, null, start2, goal2, daysAvailable);
+    Progress progress = new Progress();
+    
+    ProgressModel model = progress.getUpdatedProgressModel(data);
+    System.out.println(model);
+    
+    Session sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
+    Data data2 = new Data(sess, model, null, null, daysAvailable);
+    
+    model = progress.getUpdatedProgressModel(data2); 
+    System.out.println(model);
+
+    sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
+    data2 = new Data(sess, model, null, null, daysAvailable);
+    
+    model = progress.getUpdatedProgressModel(data2); 
+    System.out.println(model);
+  }
 }

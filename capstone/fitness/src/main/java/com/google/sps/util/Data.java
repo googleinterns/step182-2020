@@ -24,12 +24,14 @@ public class Data {
   private ProgressModel model;
   private FitnessSet start;
   private FitnessSet goal;
+  private int daysAvailable;
 
-  public Data(Session lastSession, ProgressModel model, FitnessSet start, FitnessSet goal) {
+  public Data(Session lastSession, ProgressModel model, FitnessSet start, FitnessSet goal, int daysAvailable) {
     this.lastSession = lastSession;
     this.model = model;
     this.start = start;
     this.goal = goal;
+    this.daysAvailable = daysAvailable;
   }
 
   public Session getLastSession() {
@@ -51,7 +53,7 @@ public class Data {
   * Returns days available from the start and goal inclusive
   */
   public int getDaysAvailable() {
-    return 4;
+    return daysAvailable;
   }
 
   public FitnessSet getStart() {

@@ -26,14 +26,21 @@ import java.util.Arrays;
 
 public class FitnessSet implements Serializable {
   
+  public enum SetType {
+    DISTANCE,
+    DURATION,
+    REPS,
+    WEIGHT;
+  }
+
   protected String name;
   protected int sets;
-  protected String setType1;
-  protected String setType2;
+  protected SetType setType1;
+  protected SetType setType2;
   protected float[] setType1Values;
   protected float[] setType2Values;
 
-  public FitnessSet(String name, int sets, String setType1, String setType2, float[] setType1Values, float[] setType2Values) {
+  public FitnessSet(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
     this.sets = sets;
     this.setType1 = setType1;
@@ -80,7 +87,7 @@ public class FitnessSet implements Serializable {
     return sets;
   }
 
-  public String getSetType(boolean type1) {
+  public SetType getSetType(boolean type1) {
     return type1 ? setType1 : setType2;
   }
 
@@ -90,5 +97,16 @@ public class FitnessSet implements Serializable {
 
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    String setType2 = "";
+    String setType2Values = "";
+    if(this.setType2 != null) {
+      setType2 = this.setType2.name();
+      setType2Values = Arrays.toString(this.setType2Values);
+    }
+    return String.format("Name: %s\nSets: %d\nSet Types: [%s, %s]\nSet Values: [%s, %s]", name, sets, setType1.name(), setType2, Arrays.toString(setType1Values), setType2Values);
   }
 }

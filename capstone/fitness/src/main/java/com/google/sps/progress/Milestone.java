@@ -37,4 +37,9 @@ public class Milestone extends BananaNode {
   public FitnessSet getFitnessSet() {
     return fSet;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Milestone\nComplete? %b\n{\n%s\n}", isComplete(), fSet.toString());
+  }
 }

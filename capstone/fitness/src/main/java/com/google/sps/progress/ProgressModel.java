@@ -36,7 +36,6 @@ public class ProgressModel extends BananaQueue {
     return enqueueBanana(milestone);
   }
 
-  // Method for considered alternatives
   public Milestone progressMain() {
     return (Milestone) dequeueBanana();
   }
@@ -45,8 +44,28 @@ public class ProgressModel extends BananaQueue {
     return (Milestone) peekBanana();
   }
 
-  public BananaNode[] toArray() {
-    return null;
+  public Milestone[] toArray() {
+    int length = getSize();
+    Milestone firstMilestone = getCurrentMainMilestone();
+    while(firstMilestone.getPrev() != null) {
+      firstMilestone = (Milestone) firstMilestone.getPrev();
+      length++;
+    }
+    Milestone[] milestones = new Milestone[length];
+    for(int i = 0; i < length; i++) {
+      milestones[i] = firstMilestone;
+      firstMilestone = (Milestone) firstMilestone.getNext();
+    }
+    return milestones;
   }
 
+  @Override
+  public String toString() {
+    String str = String.format("Progress Model For %s\nSize: %d\n", getCurrentMainMilestone().getName(), getSize());
+    Milestone[] arr = toArray();
+    for(int i = 0; i < arr.length; i++) {
+      str += arr[i] + "\n\n";
+    }
+    return str;
+  }
 }

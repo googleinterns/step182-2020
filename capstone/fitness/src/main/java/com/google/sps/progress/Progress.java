@@ -15,6 +15,7 @@
 package com.google.sps.progress;
 
 import com.google.sps.fit.*;
+import com.google.sps.fit.FitnessSet.SetType;
 import com.google.sps.util.*;
 import java.util.*;
 
@@ -55,7 +56,9 @@ public class Progress {
       current = next;
     }
 
-    model.addMainMilestone(new Milestone(goal));
+    if(!current.getFitnessSet().equalTo(goal)) {
+      model.addMainMilestone(new Milestone(goal));
+    }
 
     return model;
   }
@@ -65,10 +68,11 @@ public class Progress {
     if(setDifference < 0) {
       return null;
     }
-    int setValuesChangesCount = changeCount - setDifference;
+    float setValuesChangesCount = changeCount/ (setDifference  + 1);
     if(start.getSetType(false) != null) {
       setValuesChangesCount /= 2;
     }
+    System.out.println("Change By: " + setValuesChangesCount);
 
     float setType1Delta = (goal.getSetTypeValues(true)[0] - start.getSetTypeValues(true)[0])/setValuesChangesCount;
     if(start.getSetType(false) != null) {
@@ -82,8 +86,8 @@ public class Progress {
   private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, float[] setValuesChangeBy) {
     String name = goal.getName();
     int sets = fs.getSets();
-    String setType1 = goal.getSetType(true);
-    String setType2 = goal.getSetType(false);
+    SetType setType1 = goal.getSetType(true);
+    SetType setType2 = goal.getSetType(false);
     float[] setType1Values = null;
     float[] setType2Values = null;
 
@@ -104,7 +108,7 @@ public class Progress {
           }
         case 2:
           // increase set1
-          if(Arrays.equals(fs.getSetTypeValues(true), goal.getSetTypeValues(true))) {
+          if(!Arrays.equals(fs.getSetTypeValues(true), goal.getSetTypeValues(true))) {
             setType1Values = incrementSet(fs.getSetTypeValues(true), setValuesChangeBy[0]);
             setType2Values = cloneArray(fs.getSetTypeValues(false));
             randomFinished = true;
@@ -112,7 +116,7 @@ public class Progress {
           }
         case 3:
           // increse set2
-          if(setType2 != null && Arrays.equals(fs.getSetTypeValues(false), goal.getSetTypeValues(false))) {
+          if(setType2 != null && !Arrays.equals(fs.getSetTypeValues(false), goal.getSetTypeValues(false))) {
             setType1Values = cloneArray(fs.getSetTypeValues(true));
             setType2Values = incrementSet(fs.getSetTypeValues(false), setValuesChangeBy[1]);
             randomFinished = true;
