@@ -14,6 +14,7 @@
 
 package com.google.sps.util;
 
+import java.io.Serializable;
 import java.util.*;
 
 /* Nodes in the BananaQueue. Holds references to PeelQueues. */

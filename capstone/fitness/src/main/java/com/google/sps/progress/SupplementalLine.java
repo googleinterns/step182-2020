@@ -24,12 +24,7 @@ public class SupplementalLine extends PeelQueue {
   public SupplementalLine() {
     super();
   }
-  
-  /**
-   * Returns array representation of queue. [Currently deciding best approach]
-   *
-   * @return array representation of queue.
-   */
+
   public PeelNode[] toArray() {
     return null;
   }

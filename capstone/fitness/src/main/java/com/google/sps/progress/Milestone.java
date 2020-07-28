@@ -14,6 +14,7 @@
 
 package com.google.sps.progress;
 
+import com.google.sps.fit.*;
 import com.google.sps.util.*;
 import java.util.*;
 
@@ -22,27 +23,9 @@ public class Milestone extends BananaNode {
   private final int level;
   private final FitnessSet fSet;
 
-  // Variable for considered alternatives
-  private final ProgressModel model;
-
-  public Milestone(int level, FitnessSet fSet, ProgressModel model) {
+  public Milestone(int level, FitnessSet fSet) {
     this.level = level;
     this.fSet = fSet;
-    this.model = model;
-  }
-
-  // Method for considered alternatives
-  public boolean progressSupplementalMilestone(FitnessSet fSet) {
-    return false;
-  }
-
-  // Method for considered alternatives
-  public Milestone progressMainMilestone(FitnessSet fSet) {
-    if(this.fSet.avgGreaterThan(fSet) || this.fSet.equalTo(fSet)) {
-      model.progressMain();
-      return model.getCurrentMainMilestone();
-    }
-    return this;
   }
 
   public HashMap<String, SupplementalMilestone> getSupplementalMilestones() {
@@ -53,4 +36,12 @@ public class Milestone extends BananaNode {
     return level;
   }
 
+
+  public String getName() {
+    return fSet.getName();
+  }
+
+  public FitnessSet getFitnessSet() {
+    return fSet;
+  }
 }

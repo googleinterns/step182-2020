@@ -16,6 +16,8 @@ package com.google.sps.util;
 
 import java.util.Optional;
 
+import java.io.Serializable;
+
 /*
  * Queue with the ability to hold multiple queues at each node.  
  * Each dequeue results in a transfer of queues to the next node.

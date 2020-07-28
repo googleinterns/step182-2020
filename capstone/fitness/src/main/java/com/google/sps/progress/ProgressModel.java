@@ -14,16 +14,18 @@
 
 package com.google.sps.progress;
 
+import com.google.sps.fit.*;
 import com.google.sps.util.*;
 
 public class ProgressModel extends BananaQueue {
-  
+
   public boolean progressSupplementalMilestone(FitnessSet fSet) {
     return false;
   }
   
   public boolean progressMainMilestone(FitnessSet fSet) {
-    if(getCurrentMainMilestone.avgGreaterThan(fSet) || this.fSet.equalTo(fSet)) {
+    FitnessSet currentFSet = ((Milestone) peekBanana()).getFitnessSet();
+    if(fSet.avgGreaterThan(currentFSet) || fSet.equalTo(currentFSet)) {
       progressMain();
       return true;
     }
@@ -39,11 +41,6 @@ public class ProgressModel extends BananaQueue {
     return (Milestone) peekBanana();
   }
 
-  /**
-   * Returns array representation of queue. [Currently deciding best approach]
-   *
-   * @return array representation of queue.
-   */
   public BananaNode[] toArray() {
     return null;
   }

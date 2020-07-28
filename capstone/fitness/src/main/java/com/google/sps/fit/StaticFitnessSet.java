@@ -27,8 +27,8 @@ public class StaticFitnessSet extends FitnessSet {
   protected float setType1Min, setType1Max;
   protected float setType2Min, setType2Max;
 
-  public StaticFitnessSet() {
-    super();
+  public StaticFitnessSet(String name, int sets, String setType1, String setType2, float[] setType1Values, float[] setType2Values) {
+    super(name, sets, setType1, setType2, setType1Values, setType2Values);
     setMin = 0;
     setMax = 1;
     setType1Min = 0;

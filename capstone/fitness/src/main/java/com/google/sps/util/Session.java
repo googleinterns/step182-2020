@@ -14,6 +14,8 @@
 
 package com.google.sps.util;
 
+import com.google.sps.fit.*;
+
 /* Mock Session */
 public class Session {
 

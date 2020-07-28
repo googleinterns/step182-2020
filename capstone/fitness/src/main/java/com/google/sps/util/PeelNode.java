@@ -14,6 +14,8 @@
 
 package com.google.sps.util;
 
+import java.io.Serializable;
+
 /* Nodes in the PeelQueue. */
 public class PeelNode implements Serializable {
   private boolean complete;
