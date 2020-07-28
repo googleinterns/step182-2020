@@ -18,15 +18,4 @@ import com.google.sps.util.*;
 
 public class SupplementalLine extends PeelQueue {
 
-  private PeelNode head, foot;
-  private int size;
-
-  public SupplementalLine() {
-    super();
-  }
-
-  public PeelNode[] toArray() {
-    return null;
-  }
-
 }

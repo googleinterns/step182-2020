@@ -18,6 +18,7 @@ import com.google.sps.fit.*;
 import com.google.sps.util.*;
 import java.util.*;
 
+/* Progress marker that holds a FitnessSet. */
 public class Milestone extends BananaNode {
 
   private final FitnessSet fSet;
@@ -26,8 +27,14 @@ public class Milestone extends BananaNode {
     this.fSet = fSet;
   }
 
-  public HashMap<String, SupplementalMilestone> getSupplementalMilestones() {
-    return null;
+  /**
+   * Returns hashmap of supplemental milestones. 
+   * Note: Entities obtained from hashmap have to be casted.
+   *
+   * @return hashmap of supplemental milestones.
+   */
+  public HashMap<String, PeelQueue> getSupplementalMilestones() {
+    return getPeels();
   }
 
   public String getName() {

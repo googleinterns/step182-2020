@@ -16,7 +16,7 @@ package com.google.sps.util;
 
 import com.google.sps.fit.*;
 
-/* Mock Session */
+/* Mock Session. */
 public class Session {
 
   private FitnessSet[] fSets;

@@ -21,6 +21,7 @@
 
 package com.google.sps.fit;
 
+/* Placeholder class for future Supplemental Milestones implementation. */
 public class StaticFitnessSet extends FitnessSet {
   
   protected float setMin, setMax;

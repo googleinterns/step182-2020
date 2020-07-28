@@ -23,6 +23,13 @@ public class ProgressModel extends BananaQueue {
     return false;
   }
   
+  /**
+   * Advances to the next milestone if the given fitness set is greater on average than the current
+   * milestone or if the given fitness set is equal to the current milestone.
+   *
+   * @param fSet FitnessSet to compare to.
+   * @return if the operation was successful.
+   */
   public boolean progressMainMilestone(FitnessSet fSet) {
     FitnessSet currentFSet = ((Milestone) peekBanana()).getFitnessSet();
     if(fSet.avgGreaterThan(currentFSet) || fSet.equalTo(currentFSet)) {
@@ -44,6 +51,11 @@ public class ProgressModel extends BananaQueue {
     return (Milestone) peekBanana();
   }
 
+  /**
+   * Array representation of all main milestones in the progress model.
+   * 
+   * @return array representation of all main milestones in the progress model.
+   */
   public Milestone[] toArray() {
     int length = getSize();
     Milestone firstMilestone = getCurrentMainMilestone();

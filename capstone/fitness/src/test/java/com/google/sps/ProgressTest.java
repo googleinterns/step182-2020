@@ -40,7 +40,7 @@ public class ProgressTest {
 
   @Test
   public void testUpdateProgressModelWithModel() {
-    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito.
+    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
 
     FitnessSet start2 = new FitnessSet("test2", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
     FitnessSet goal2 = new FitnessSet("test2", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});

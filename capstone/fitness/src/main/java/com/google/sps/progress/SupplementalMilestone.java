@@ -18,7 +18,4 @@ import com.google.sps.util.*;
 
 public class SupplementalMilestone extends PeelNode {
 
-  public SupplementalMilestone() {
-    super();
-  }
 }

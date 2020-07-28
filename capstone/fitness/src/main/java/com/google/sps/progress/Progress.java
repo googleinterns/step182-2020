@@ -19,13 +19,7 @@ import com.google.sps.fit.FitnessSet.SetType;
 import com.google.sps.util.*;
 import java.util.*;
 
-/*
-
-In order of priority
-- Create logic to build model
-
-*/
-
+/* Handler for ProgressModel updates. */
 public class Progress {
 
   private ProgressModel buildModel(Data data) {
@@ -41,21 +35,21 @@ public class Progress {
     FitnessSet start = data.getStart();
     FitnessSet goal = data.getGoal();
 
+    // Values to change sets by
     float[] setValuesDelta = getValuesChangeBy(changeCount, start, goal);
-    if(setValuesDelta == null) {
-      return null; // throw error
-    }
 
     ProgressModel model = new ProgressModel();
     model.addMainMilestone(new Milestone(start));
     Milestone current = model.getCurrentMainMilestone();
 
+    // Build model
     for(int i = 1; i < changeCount - 1; i++) {
       Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal, setValuesDelta));
       model.addMainMilestone(next);
       current = next;
     }
 
+    // Add goal only if it's not the current last one (result of basic algorithm)
     if(!current.getFitnessSet().equalTo(goal)) {
       model.addMainMilestone(new Milestone(goal));
     }
@@ -66,14 +60,17 @@ public class Progress {
   private float[] getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
     int setDifference = goal.getSets() - start.getSets();
     if(setDifference < 0) {
-      return null;
+      throw new ArithmeticException("Difference between goal and start sets is negative");
     }
+    
+    // With this, the changes in the individual non-set parameters will never exceed the days available
     float setValuesChangesCount = changeCount/ (setDifference  + 1);
     if(start.getSetType(false) != null) {
+      // Splits the current available changes if fitness set is based on two quantitative types
       setValuesChangesCount /= 2;
     }
-    System.out.println("Change By: " + setValuesChangesCount);
 
+    // Sets the change by values based on the first elements in the starter fitness set
     float setType1Delta = (goal.getSetTypeValues(true)[0] - start.getSetTypeValues(true)[0])/setValuesChangesCount;
     if(start.getSetType(false) != null) {
       float setType2Delta = (goal.getSetTypeValues(false)[0] - start.getSetTypeValues(false)[0])/setValuesChangesCount;
@@ -91,14 +88,16 @@ public class Progress {
     float[] setType1Values = null;
     float[] setType2Values = null;
 
+    // The increment by fitness set is based on randomness (50% set increase, 25% set1 value increase, 25% set2 value increase)
+    // Using a switch statement allows priority to trickle down as changes are no longer applicable
     Random rand = new Random(); 
     boolean randomFinished = false;
     while(!randomFinished) {
       int increment = rand.nextInt(4);
       switch(increment) {
-        case 0: // Fall Through
-        case 1:
+        case 0:
           // increase sets
+        case 1:
           if(fs.getSets() < goal.getSets()) {
             sets++;
             setType1Values = copyAndAddValue(fs.getSetTypeValues(true));
@@ -133,10 +132,10 @@ public class Progress {
     return arr == null ? null : arr.clone();
   } 
 
-  /*
-  * Under the assumption the float array is in descending order
-  */
+  
   private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
+    // Invariant: setValues is in descending order
+
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
       copy[0] += setValuesChangeBy;
@@ -158,17 +157,16 @@ public class Progress {
   }
 
   private ProgressModel buildSupplementalMilestones(ProgressModel model) {
-    // Logic to add static fitness sets
-    // TODO
+    // TODO(ijelue): Logic to add relevant static fitness sets.
     return model;
   }
 
   private ProgressModel updateProgressModel(Data data, ProgressModel model) {
     Milestone milestone = model.getCurrentMainMilestone();
     if(milestone == null) {
-      return null; // Might be better to throw an error
+      throw new NullPointerException("Milestone head in Progress Model is null");
     }
-    HashMap<String, SupplementalMilestone> supplementalMilestoneSets = milestone.getSupplementalMilestones();
+    HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
     FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
     
     for(FitnessSet sessionSet : sessionSets) {
@@ -176,6 +174,7 @@ public class Progress {
         model.progressSupplementalMilestone(sessionSet);
       }
       else if(milestone.getName().equals(sessionSet.getName())) {
+        // Rebuilds the supplemental milestones if main milestone was hit  
         boolean progressed = model.progressMainMilestone(sessionSet);
         model = progressed ? buildSupplementalMilestones(model) : model;
       }
@@ -184,6 +183,13 @@ public class Progress {
     return model;
   }
 
+  /**
+   * Returns an updated Progress Model based on given data object or a newly made one if data object does 
+   * not currently contain one.
+   *
+   * @param data data abstraction object
+   * @return an updated progress model
+   */
   public ProgressModel getUpdatedProgressModel(Data data) {
     ProgressModel model = data.getProgressModel(); 
     if(model == null) {

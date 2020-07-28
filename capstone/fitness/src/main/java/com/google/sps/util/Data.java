@@ -17,7 +17,7 @@ package com.google.sps.util;
 import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 
-/* Mock Data Handler */
+/* Mock Data Handler. */
 public class Data {
 
   private Session lastSession;
@@ -49,9 +49,11 @@ public class Data {
     return model.getCurrentMainMilestone();
   }
 
-  /*
-  * Returns days available from the start and goal inclusive
-  */
+  /**
+   * Returns days available from the start to the goal inclusive.
+   *
+   * @return days available from the start to the goal inclusive.
+   */
   public int getDaysAvailable() {
     return daysAvailable;
   }

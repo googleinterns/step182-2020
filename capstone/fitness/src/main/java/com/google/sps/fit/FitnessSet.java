@@ -24,6 +24,7 @@ package com.google.sps.fit;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/* Representation of specific exercise with sets. */
 public class FitnessSet implements Serializable {
   
   public enum SetType {
@@ -50,8 +51,11 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if FitnessSet average values are greater than greater the given FitnessSet’s average 
-   * value in one type (types and name have to be the same)
+   * Returns true if FitnessSet average values are greater than the given FitnessSet’s average 
+   * values in each type (types and name have to be the same).
+   * 
+   * @param fs FitnessSet to compare to.
+   * @return whether this FitnessSet is greater on average than the given one.
    */
   public boolean avgGreaterThan(FitnessSet fs) {
     return fs.name.equals(name) &&
@@ -73,7 +77,10 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if FitnessSet is equal to given FitnessSet in terms of values, types, and name
+   * Returns true if FitnessSet is equal to given FitnessSet in terms of values, types, and name.
+   * 
+   * @param fs FitnessSet to compare to.
+   * @return whether this FitnessSet is equal to the given one.
    */
   public boolean equalTo(FitnessSet fs) {
     return fs.name.equals(name) &&
@@ -87,10 +94,22 @@ public class FitnessSet implements Serializable {
     return sets;
   }
 
+  /**
+   * Return set type 1 or 2 based off given boolean.
+   * 
+   * @param type1 will return set type 1 if true and set type 2 if false
+   * @return set type
+   */
   public SetType getSetType(boolean type1) {
     return type1 ? setType1 : setType2;
   }
 
+  /**
+   * Return set type 1 or 2 values based off given boolean.
+   * 
+   * @param type1 will return set type 1 values if true and set type 2 values if false
+   * @return set type values
+   */
   public float[] getSetTypeValues(boolean type1) {
     return type1 ? setType1Values : setType2Values;
   }
