@@ -24,6 +24,7 @@ public class Milestone extends BananaNode {
   private final FitnessSet fSet;
 
   public Milestone(FitnessSet fSet) {
+    super();
     this.fSet = fSet;
   }
 
