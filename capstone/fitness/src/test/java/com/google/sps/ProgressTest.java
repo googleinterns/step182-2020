@@ -34,8 +34,7 @@ public class ProgressTest {
 
     Progress progress = new Progress();
     ProgressModel model = progress.getUpdatedProgressModel(data);
-    assertTrue(model.getSize() <= daysAvailable);
-    // System.out.println(model);
+    System.out.println(model);
   }
 
   @Test
@@ -44,20 +43,18 @@ public class ProgressTest {
 
     Progress progress = new Progress();
     ProgressModel model = progress.getUpdatedProgressModel(data);
-    // System.out.println(model);
+    System.out.println(model);
     
     Session sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
     Data data2 = new Data(sess, model, null, null, daysAvailable);
     
     model = progress.getUpdatedProgressModel(data2); 
-    assertTrue(model.getSize() <= daysAvailable - 1);
-    // System.out.println(model);
+    System.out.println(model);
 
     sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
     data2 = new Data(sess, model, null, null, daysAvailable);
     
     model = progress.getUpdatedProgressModel(data2); 
-    assertTrue(model.getSize() <= daysAvailable - 2);
-    // System.out.println(model);
+    System.out.println(model);
   }
 }
