@@ -26,14 +26,13 @@ public class ProgressTest {
   private final FitnessSet start = new FitnessSet("test", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
   private final FitnessSet goal = new FitnessSet("test", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});
   private final int daysAvailable = 8;
+  private final Data data = new Data(null, null, start, goal, daysAvailable);
 
   @Test
   public void testUpdateProgressModelNoModel() {
     // TODO(ijelue): Add actual assertions rather than prints.
 
-    Data data = new Data(null, null, start, goal, daysAvailable);
     Progress progress = new Progress();
-
     ProgressModel model = progress.getUpdatedProgressModel(data);
     System.out.println(model);
   }
@@ -42,11 +41,7 @@ public class ProgressTest {
   public void testUpdateProgressModelWithModel() {
     // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
 
-    FitnessSet start2 = new FitnessSet("test2", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
-    FitnessSet goal2 = new FitnessSet("test2", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});
-    Data data = new Data(null, null, start2, goal2, daysAvailable);
     Progress progress = new Progress();
-    
     ProgressModel model = progress.getUpdatedProgressModel(data);
     System.out.println(model);
     
