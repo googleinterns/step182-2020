@@ -23,8 +23,8 @@ import com.google.sps.util.*;
 
 public class ProgressTest {
 
-  private final FitnessSet start = new FitnessSet("test", 1, SetType.DISTANCE, SetType.DURATION, new float[] {2}, new float[] {600});
-  private final FitnessSet goal = new FitnessSet("test", 2, SetType.DISTANCE, SetType.DURATION, new float[] {4, 4}, new float[] {300, 300});
+  private final FitnessSet start = new FitnessSet("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+  private final FitnessSet goal = new FitnessSet("test", 2, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
   private final int daysAvailable = 8;
   private final Data data = new Data(null, null, start, goal, daysAvailable);
 
@@ -34,7 +34,8 @@ public class ProgressTest {
 
     Progress progress = new Progress();
     ProgressModel model = progress.getUpdatedProgressModel(data);
-    System.out.println(model);
+    assertTrue(model.getSize() <= daysAvailable);
+    // System.out.println(model);
   }
 
   @Test
@@ -43,18 +44,20 @@ public class ProgressTest {
 
     Progress progress = new Progress();
     ProgressModel model = progress.getUpdatedProgressModel(data);
-    System.out.println(model);
+    // System.out.println(model);
     
     Session sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
     Data data2 = new Data(sess, model, null, null, daysAvailable);
     
     model = progress.getUpdatedProgressModel(data2); 
-    System.out.println(model);
+    assertTrue(model.getSize() <= daysAvailable - 1);
+    // System.out.println(model);
 
     sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
     data2 = new Data(sess, model, null, null, daysAvailable);
     
     model = progress.getUpdatedProgressModel(data2); 
-    System.out.println(model);
+    assertTrue(model.getSize() <= daysAvailable - 2);
+    // System.out.println(model);
   }
 }

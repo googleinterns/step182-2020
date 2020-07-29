@@ -28,10 +28,32 @@ import java.util.Arrays;
 public class FitnessSet implements Serializable {
   
   public enum SetType {
-    DISTANCE,
-    DURATION,
-    REPS,
-    WEIGHT;
+    DISTANCE(true),
+    DURATION_INC(true),
+    DURATION_DEC(false),
+    REPS(true),
+    WEIGHT(true);
+    
+    boolean moreIsBetter;
+
+    SetType(boolean moreIsBetter) {
+      this.moreIsBetter = moreIsBetter;
+    }
+
+    /**
+     * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
+     * returning a "greater than" comparison for two numbers depending on if more of the stat is better.
+     *
+     * @param src starting float
+     * @param comp float to compare to
+     * @return if the starting float is "greater than" its comparison.
+     */
+    public boolean greaterThan(float src, float comp) {
+      if(moreIsBetter) {
+        return src > comp;
+      }
+      return src < comp;
+    }
   }
 
   protected String name;
@@ -61,8 +83,8 @@ public class FitnessSet implements Serializable {
     return fs.name.equals(name) &&
            fs.setType1.equals(setType1) &&
            ((fs.setType2 == null && setType2 == null) || fs.setType2.equals(setType2)) &&
-           avg(setType1Values) > avg(fs.setType1Values) &&
-           ((fs.setType2Values == null && setType2Values == null) || avg(setType2Values) > avg(fs.setType2Values));
+           setType1.greaterThan(avg(setType1Values), avg(fs.setType1Values)) &&
+           ((fs.setType2Values == null && setType2Values == null) || setType2.greaterThan(avg(setType2Values), avg(fs.setType2Values)));
   }
   
   protected float avg(float[] src) {
