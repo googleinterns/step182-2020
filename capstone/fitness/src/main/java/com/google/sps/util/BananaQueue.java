@@ -13,7 +13,10 @@
 // limitations under the License.
 
 package com.google.sps.util;
+
 import java.util.Optional;
+
+import java.io.Serializable;
 
 /*
  * Queue with the ability to hold multiple queues at each node.  
