@@ -35,21 +35,21 @@ public class Progress {
     FitnessSet start = data.getStart();
     FitnessSet goal = data.getGoal();
 
-    // Values to change sets by
+    // Values to change sets by.
     float[] setValuesDelta = getValuesChangeBy(changeCount, start, goal);
 
     ProgressModel model = new ProgressModel();
     model.addMainMilestone(new Milestone(start));
     Milestone current = model.getCurrentMainMilestone();
 
-    // Build model
+    // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
       Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal, setValuesDelta));
       model.addMainMilestone(next);
       current = next;
     }
 
-    // Add goal only if it's not the current last one (result of basic algorithm)
+    // Add goal only if it's not the current last one (result of basic algorithm).
     if(!current.getFitnessSet().equalTo(goal)) {
       model.addMainMilestone(new Milestone(goal));
     }
@@ -63,14 +63,14 @@ public class Progress {
       throw new ArithmeticException("Difference between goal and start sets is negative");
     }
     
-    // With this, the changes in the individual non-set parameters will never exceed the days available
+    // With this, the changes in the individual non-set parameters will never exceed the days available.
     float setValuesChangesCount = changeCount/ (setDifference  + 1);
     if(start.getSetType(false) != null) {
-      // Splits the current available changes if fitness set is based on two quantitative types
+      // Splits the current available changes if fitness set is based on two quantitative types.
       setValuesChangesCount /= 2;
     }
 
-    // Sets the change by values based on the first elements in the starter fitness set
+    // Sets the change by values based on the first elements in the starter fitness set.
     float setType1Delta = (goal.getSetTypeValues(true)[0] - start.getSetTypeValues(true)[0])/setValuesChangesCount;
     if(start.getSetType(false) != null) {
       float setType2Delta = (goal.getSetTypeValues(false)[0] - start.getSetTypeValues(false)[0])/setValuesChangesCount;
@@ -88,15 +88,15 @@ public class Progress {
     float[] setType1Values = null;
     float[] setType2Values = null;
 
-    // The increment by fitness set is based on randomness (50% set increase, 25% set1 value increase, 25% set2 value increase)
-    // Using a switch statement allows priority to trickle down as changes are no longer applicable
+    // The increment by fitness set is based on randomness (50% set increase, 25% set1 value increase, 25% set2 value increase).
+    // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
     boolean randomFinished = false;
     while(!randomFinished) {
       int increment = rand.nextInt(4);
       switch(increment) {
         case 0:
-          // increase sets
+          // Increase sets.
         case 1:
           if(fs.getSets() < goal.getSets()) {
             sets++;
@@ -106,7 +106,7 @@ public class Progress {
             break;
           }
         case 2:
-          // increase set1
+          // Increase set1.
           if(!Arrays.equals(fs.getSetTypeValues(true), goal.getSetTypeValues(true))) {
             setType1Values = incrementSet(fs.getSetTypeValues(true), setValuesChangeBy[0]);
             setType2Values = cloneArray(fs.getSetTypeValues(false));
@@ -114,7 +114,7 @@ public class Progress {
             break;
           }
         case 3:
-          // increse set2
+          // Increase set2.
           if(setType2 != null && !Arrays.equals(fs.getSetTypeValues(false), goal.getSetTypeValues(false))) {
             setType1Values = cloneArray(fs.getSetTypeValues(true));
             setType2Values = incrementSet(fs.getSetTypeValues(false), setValuesChangeBy[1]);
@@ -134,7 +134,7 @@ public class Progress {
 
   
   private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
-    // Invariant: setValues is in descending order
+    // Invariant: setValues are in descending order.
 
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
@@ -174,7 +174,7 @@ public class Progress {
         model.progressSupplementalMilestone(sessionSet);
       }
       else if(milestone.getName().equals(sessionSet.getName())) {
-        // Rebuilds the supplemental milestones if main milestone was hit  
+        // Rebuilds the supplemental milestones if main milestone was hit.  
         boolean progressed = model.progressMainMilestone(sessionSet);
         model = progressed ? buildSupplementalMilestones(model) : model;
       }
@@ -187,8 +187,8 @@ public class Progress {
    * Returns an updated Progress Model based on given data object or a newly made one if data object does 
    * not currently contain one.
    *
-   * @param data data abstraction object
-   * @return an updated progress model
+   * @param data data abstraction object.
+   * @return an updated progress model.
    */
   public ProgressModel getUpdatedProgressModel(Data data) {
     ProgressModel model = data.getProgressModel(); 

@@ -17,5 +17,5 @@ package com.google.sps.progress;
 import com.google.sps.util.*;
 
 public class SupplementalMilestone extends PeelNode {
-
+  // TODO(ijelue): Purpose is to add additional exercises to main exercise line.
 }

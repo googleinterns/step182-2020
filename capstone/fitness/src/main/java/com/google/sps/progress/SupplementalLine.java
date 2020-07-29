@@ -17,5 +17,5 @@ package com.google.sps.progress;
 import com.google.sps.util.*;
 
 public class SupplementalLine extends PeelQueue {
-
+  // TODO(ijelue): Purpose is to hold SupplementalMilestones.
 }
