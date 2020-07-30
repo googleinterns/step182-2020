@@ -36,6 +36,7 @@ public class ProgressModel {
     }
 
     while(trueStart.getNext() != null) {
+      trueStart = trueStart.getNext();
       size++;
     }
     
@@ -112,9 +113,7 @@ public class ProgressModel {
     String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
     BananaNode[] arr = toArray();
     for(int i = 0; i < arr.length; i++) {
-      if(arr[i] != null) {
-        str += arr[i] + "\n\n";
-      }
+      str += arr[i] + "\n\n";
     }
     return str;
   }

@@ -112,12 +112,6 @@ public class Progress {
             randomFinished = true;
             break;
           }
-          else if(!fs.greaterThan(goal, altType).orElse(true) && !fs.equalTo(goal, altType).orElse(true)) {
-            setValues.put(altType, incrementSet(fs.getSetValues(altType), setValuesChangeBy.get(altType)));
-            setValues.put(type, cloneArray(fs.getSetValues(type)));
-            randomFinished = true;
-            break;
-          }
         default:
           break;
       }
@@ -168,28 +162,6 @@ public class Progress {
     return model;
   }
 
-  private ProgressModel updateProgressModel(Data data, ProgressModel model) {
-    Milestone milestone = model.getCurrentMainMilestone();
-    if(milestone == null) {
-      throw new NullPointerException("Milestone head in Progress Model is null");
-    }
-    HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
-    FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
-    
-    for(FitnessSet sessionSet : sessionSets) {
-      if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {
-        model.progressSupplementalMilestone(sessionSet);
-      }
-      else if(milestone.getName().equals(sessionSet.getName())) {
-        // Rebuilds the supplemental milestones if main milestone was hit.  
-        boolean progressed = model.progressMainMilestone(sessionSet);
-        model = progressed ? buildSupplementalMilestones(model) : model;
-      }
-    }
-
-    return model;
-  }
-
   private Milestone updateMilestone(Data data, Milestone milestone) {
     ProgressModel model = new ProgressModel(milestone);
     HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
@@ -207,21 +179,6 @@ public class Progress {
     }
 
     return model.getCurrentMainMilestone();
-  }
-
-  /**
-   * Returns an updated Progress Model based on given data object or a newly made one if data object does 
-   * not currently contain one.
-   *
-   * @param data data abstraction object.
-   * @return an updated progress model.
-   */
-  public ProgressModel getUpdatedProgressModel(Data data) {
-    ProgressModel model = data.getProgressModel(); 
-    if(model == null) {
-      return buildModel(data);
-    }
-    return updateProgressModel(data, model);
   }
 
   public Milestone getUpdatedMilestone(Data data) {

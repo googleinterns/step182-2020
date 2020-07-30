@@ -71,7 +71,7 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if summation of FitnessSet values are greater than the given FitnessSet’s sum 
+   * Returns true if average of FitnessSet values are greater than the given FitnessSet’s sum 
    * values in each type (types and name have to be the same).
    * 
    * @param fs FitnessSet to compare to.
@@ -127,7 +127,7 @@ public class FitnessSet implements Serializable {
    */
   public boolean equalTo(FitnessSet fs) {
     for(SetType type : setValues.keySet()) {
-      if(!Arrays.equals(getSetValues(type), fs.getSetValues(type))) {
+      if(avg(getSetValues(type)) != avg(fs.getSetValues(type))) {
         return false;
       }
     }
@@ -146,7 +146,7 @@ public class FitnessSet implements Serializable {
     for(SetType type : setValues.keySet()) {
       if(setType.name().equals(type.name())) {
         typePresent = true;
-        if(!Arrays.equals(getSetValues(type), fs.getSetValues(type))) {
+        if(avg(getSetValues(type)) != avg(fs.getSetValues(type))) {
           opt = Optional.of(false);
         }
       }

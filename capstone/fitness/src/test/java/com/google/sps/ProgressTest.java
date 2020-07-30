@@ -33,8 +33,8 @@ public class ProgressTest {
     // TODO(ijelue): Add actual assertions rather than prints.
 
     Progress progress = new Progress();
-    ProgressModel model = progress.getUpdatedProgressModel(data);
-    System.out.println(model);
+    Milestone mainMilestone = progress.getUpdatedMilestone(data);
+    System.out.println(new ProgressModel(mainMilestone));
   }
 
   @Test
@@ -42,19 +42,19 @@ public class ProgressTest {
     // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
 
     Progress progress = new Progress();
-    ProgressModel model = progress.getUpdatedProgressModel(data);
-    System.out.println(model);
+    Milestone mainMilestone = progress.getUpdatedMilestone(data);
+    System.out.println(new ProgressModel(mainMilestone));
     
-    Session sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
-    Data data2 = new Data(sess, model, null, null, daysAvailable);
+    Session sess = new Session(new FitnessSet[] {mainMilestone.getFitnessSet()});
+    Data data2 = new Data(sess, mainMilestone, null, null, daysAvailable);
     
-    model = progress.getUpdatedProgressModel(data2); 
-    System.out.println(model);
+    mainMilestone = progress.getUpdatedMilestone(data2);
+    System.out.println(new ProgressModel(mainMilestone));
 
-    sess = new Session(new FitnessSet[] {model.getCurrentMainMilestone().getFitnessSet()});
-    data2 = new Data(sess, model, null, null, daysAvailable);
+    sess = new Session(new FitnessSet[] {mainMilestone.getFitnessSet()});
+    data2 = new Data(sess, mainMilestone, null, null, daysAvailable);
     
-    model = progress.getUpdatedProgressModel(data2); 
-    System.out.println(model);
+    mainMilestone = progress.getUpdatedMilestone(data2);
+    System.out.println(new ProgressModel(mainMilestone));
   }
 }

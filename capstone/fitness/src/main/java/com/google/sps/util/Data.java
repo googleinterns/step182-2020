@@ -20,15 +20,15 @@ import com.google.sps.progress.*;
 /* Mock Data Handler. */
 public class Data {
 
-  private Session lastSession;
-  private ProgressModel model;
-  private FitnessSet start;
-  private FitnessSet goal;
-  private int daysAvailable;
+  private final Session lastSession;
+  private final Milestone milestone;
+  private final FitnessSet start;
+  private final FitnessSet goal;
+  private final int daysAvailable;
 
-  public Data(Session lastSession, ProgressModel model, FitnessSet start, FitnessSet goal, int daysAvailable) {
+  public Data(Session lastSession, Milestone milestone, FitnessSet start, FitnessSet goal, int daysAvailable) {
     this.lastSession = lastSession;
-    this.model = model;
+    this.milestone = milestone;
     this.start = start;
     this.goal = goal;
     this.daysAvailable = daysAvailable;
@@ -38,15 +38,8 @@ public class Data {
     return lastSession;
   }
 
-  public ProgressModel getProgressModel() {
-    return model;
-  }
-
   public Milestone getCurrentMainMilestone() {
-    if(model == null) {
-      return null;
-    }
-    return model.getCurrentMainMilestone();
+    return milestone;
   }
 
   /**
