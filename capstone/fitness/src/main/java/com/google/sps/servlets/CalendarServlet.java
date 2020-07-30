@@ -53,8 +53,7 @@ public class CalendarServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
-    // response.getWriter().println(date.toString());
-    String dateJSON = gson.toJSON(date);
-    response.getWriter()println(dateJSON);
+    response.getWriter().println(date.toString());
+   
   }
 }
