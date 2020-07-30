@@ -18,13 +18,10 @@ import java.io.Serializable;
 import java.util.*;
 
 /*
- * Queue with the ability to hold multiple queues at each node.  
- * Each dequeue results in a transfer of queues to the next node.
- * Each node is called a BananaNode.
- * Each extra queue is called a PeelQueue.
- * Every node in a PeelQueue is called a PeelNode.
- *
- * Example Structure:
+ * Nodes that hold PeelQueues.
+ * A chain of BananaNodes creates a BananaQueue with the following behaviour and structure:
+ * - Each dequeue results in a transfer of queues to the next node.
+ * - Example Structure:
  *
  *    @1 - @2 - @3
  *   /
@@ -32,7 +29,7 @@ import java.util.*;
  *   \
  *    #1 - #2
  *
- * Example Dequeue:
+ * - Example Dequeue:
  *
  *        @1 - @2 - @3
  *       /
@@ -40,15 +37,13 @@ import java.util.*;
  *       \
  *        #1 - #2
  *
- * Key:
+ * - Key:
  *   X = Completed BananaNode
  *   O = Uncompleted BananaNode
  *   (/, -, \) = Connections
  *   @n = PeelNode
  *   #n = PeelNode
  */
-
-/* Nodes in the BananaQueue. Holds references to PeelQueues. */
 public class BananaNode implements Serializable {
   private boolean complete;
   
