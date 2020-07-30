@@ -26,3 +26,10 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+// TODO: load in user information from LoginServlet.java
+// TODO: load in user's scheduled events from CalendarServlet.java
+// TODO: get current date.
+function getCalendarInfo(){
+    console.log("get calendar");
+}
