@@ -26,3 +26,13 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+// TODO: load in user information from LoginServlet.java
+// TODO: load in user's scheduled events from CalendarServlet.java
+// DONE: get current date.
+async function getCalendarInfo(){
+    console.log("fetching date");
+    const response = await fetch('/calendar-servlet');
+    const date = await response.text();
+    document.getElementById('week-container').innerText = `Planned events for the week of ${date}`;
+}
