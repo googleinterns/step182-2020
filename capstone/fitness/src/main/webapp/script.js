@@ -30,7 +30,7 @@ function addRandomGreeting() {
 // TODO: load in user information from LoginServlet.java
 // TODO: load in user's scheduled events from CalendarServlet.java
 // DONE: get current date.
-function getCalendarInfo(){
+async function getCalendarInfo(){
     console.log("fetching date");
     const response = await fetch('/calendar-servlet');
     const date = await response.text();
