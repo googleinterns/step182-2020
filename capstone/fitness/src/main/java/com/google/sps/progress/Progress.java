@@ -21,14 +21,6 @@ import java.util.*;
 
 /* Handler for ProgressModel updates. */
 public class Progress {
-
-  private ProgressModel buildModel(Data data) {
-    ProgressModel model = buildMainMilestones(data);
-    if(model != null) {
-      model = buildSupplementalMilestones(model);
-    }
-    return model;
-  }
   
   private ProgressModel buildMainMilestones(Data data) {
     int changeCount = data.getDaysAvailable();
@@ -38,19 +30,23 @@ public class Progress {
     // Values to change sets by.
     HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount, start, goal);
 
-    ProgressModel model = new ProgressModel(new Milestone(start));
-    Milestone current = model.getCurrentMainMilestone();
+    Milestone current = new Milestone(start);
+    current = buildSupplementalMilestones(current);
+    ProgressModel model = new ProgressModel(current);
 
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
       Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal, setValuesDelta));
+      next = buildSupplementalMilestones(next);
       model.addMainMilestone(next);
       current = next;
     }
 
     // Add goal only if it's not the current last one (result of basic algorithm).
     if(!current.getFitnessSet().equalTo(goal)) {
-      model.addMainMilestone(new Milestone(goal));
+      Milestone last = new Milestone(goal);
+      last = buildSupplementalMilestones(last);
+      model.addMainMilestone(last);
     }
 
     return model;
@@ -157,9 +153,9 @@ public class Progress {
     return copy;
   }
 
-  private ProgressModel buildSupplementalMilestones(ProgressModel model) {
+  private Milestone buildSupplementalMilestones(Milestone milestone) {
     // TODO(ijelue): Logic to add relevant static fitness sets.
-    return model;
+    return milestone;
   }
 
   private Milestone updateMilestone(Data data, Milestone milestone) {
@@ -172,9 +168,7 @@ public class Progress {
         model.progressSupplementalMilestone(sessionSet);
       }
       else if(milestone.getName().equals(sessionSet.getName())) {
-        // Rebuilds the supplemental milestones if main milestone was hit.  
-        boolean progressed = model.progressMainMilestone(sessionSet);
-        model = progressed ? buildSupplementalMilestones(model) : model;
+        model.progressMainMilestone(sessionSet);
       }
     }
 
@@ -184,7 +178,7 @@ public class Progress {
   public Milestone getUpdatedMilestone(Data data) {
     Milestone milestone = data.getCurrentMainMilestone();
     if(milestone == null) {
-      ProgressModel model = buildModel(data);
+      ProgressModel model = buildMainMilestones(data);
       return model.getCurrentMainMilestone();
     }
     return updateMilestone(data, milestone);
