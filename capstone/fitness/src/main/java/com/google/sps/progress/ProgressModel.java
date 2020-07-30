@@ -17,7 +17,30 @@ package com.google.sps.progress;
 import com.google.sps.fit.*;
 import com.google.sps.util.*;
 
-public class ProgressModel extends BananaQueue {
+public class ProgressModel {
+
+  private Milestone head;
+  private int size;
+
+  public ProgressModel(Milestone start) {
+    head = start;
+    size = updateSize(start);
+  }
+
+  private int updateSize(Milestone start) {
+    int size = 1;
+    BananaNode trueStart = start;
+    
+    while(!trueStart.isHead()) {
+      trueStart = trueStart.getPrev();
+    }
+
+    while(trueStart.getNext() != null) {
+      size++;
+    }
+    
+    return size;
+  }
 
   public boolean progressSupplementalMilestone(FitnessSet fSet) {
     return false;
@@ -31,8 +54,8 @@ public class ProgressModel extends BananaQueue {
    * @return if the operation was successful.
    */
   public boolean progressMainMilestone(FitnessSet fSet) {
-    FitnessSet currentFSet = ((Milestone) peekBanana()).getFitnessSet();
-    if(fSet.avgGreaterThan(currentFSet) || fSet.equalTo(currentFSet)) {
+    FitnessSet currentFSet = head.getFitnessSet();
+    if(fSet.greaterThan(currentFSet) || fSet.equalTo(currentFSet)) {
       progressMain();
       return true;
     }
@@ -40,15 +63,28 @@ public class ProgressModel extends BananaQueue {
   }
 
   public boolean addMainMilestone(Milestone milestone) {
-    return enqueueBanana(milestone);
+    boolean success = head.enqueue(milestone);
+    if(success) {
+      size++;
+    }
+    return success;
   }
 
-  public Milestone progressMain() {
-    return (Milestone) dequeueBanana();
+  public BananaNode progressMain() {
+    BananaNode oldHead = head.dequeue();
+    if(oldHead != null) {
+      size--;
+      head = (Milestone) head.getNext();
+    }
+    return oldHead;
   }
 
   public Milestone getCurrentMainMilestone() {
-    return (Milestone) peekBanana();
+    return head;
+  }
+
+  public int getSize() {
+    return size;
   }
 
   /**
@@ -56,27 +92,29 @@ public class ProgressModel extends BananaQueue {
    * 
    * @return array representation of all main milestones in the progress model.
    */
-  public Milestone[] toArray() {
-    int length = getSize();
-    Milestone firstMilestone = getCurrentMainMilestone();
+  public BananaNode[] toArray() {
+    int length = size;
+    BananaNode firstMilestone = head;
     while(firstMilestone.getPrev() != null) {
-      firstMilestone = (Milestone) firstMilestone.getPrev();
+      firstMilestone = firstMilestone.getPrev();
       length++;
     }
-    Milestone[] milestones = new Milestone[length];
+    BananaNode[] milestones = new BananaNode[length];
     for(int i = 0; i < length; i++) {
       milestones[i] = firstMilestone;
-      firstMilestone = (Milestone) firstMilestone.getNext();
+      firstMilestone = firstMilestone.getNext();
     }
     return milestones;
   }
 
   @Override
   public String toString() {
-    String str = String.format("Progress Model For %s\nSize: %d\n", getCurrentMainMilestone().getName(), getSize());
-    Milestone[] arr = toArray();
+    String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
+    BananaNode[] arr = toArray();
     for(int i = 0; i < arr.length; i++) {
-      str += arr[i] + "\n\n";
+      if(arr[i] != null) {
+        str += arr[i] + "\n\n";
+      }
     }
     return str;
   }

@@ -36,10 +36,9 @@ public class Progress {
     FitnessSet goal = data.getGoal();
 
     // Values to change sets by.
-    float[] setValuesDelta = getValuesChangeBy(changeCount, start, goal);
+    HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount, start, goal);
 
-    ProgressModel model = new ProgressModel();
-    model.addMainMilestone(new Milestone(start));
+    ProgressModel model = new ProgressModel(new Milestone(start));
     Milestone current = model.getCurrentMainMilestone();
 
     // Build model.
@@ -57,67 +56,65 @@ public class Progress {
     return model;
   }
 
-  private float[] getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
+  private HashMap<SetType, Float> getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
+    HashMap<SetType, Float> changeBy = new HashMap<>();
     int setDifference = goal.getSets() - start.getSets();
     if(setDifference < 0) {
       throw new ArithmeticException("Difference between goal and start sets is negative");
     }
     
     // With this, the changes in the individual non-set parameters will never exceed the days available.
-    float setValuesChangesCount = changeCount/ (setDifference  + 1);
-    if(start.getSetType(false) != null) {
-      // Splits the current available changes if fitness set is based on two quantitative types.
-      setValuesChangesCount /= 2;
-    }
+    float setValuesChangesCount = changeCount/(setDifference  + 1);
+    
+    // Splits the current available changes if fitness set is based on two quantitative types.
+    setValuesChangesCount /= start.getSetValues().size();
 
     // Sets the change by values based on the first elements in the starter fitness set.
-    float setType1Delta = (goal.getSetTypeValues(true)[0] - start.getSetTypeValues(true)[0])/setValuesChangesCount;
-    if(start.getSetType(false) != null) {
-      float setType2Delta = (goal.getSetTypeValues(false)[0] - start.getSetTypeValues(false)[0])/setValuesChangesCount;
-      return new float[] {setType1Delta, setType2Delta};
+    for(SetType type : start.getSetValues().keySet()) {
+      Float setChangeBy = (goal.getSetValues(type)[0] - start.getSetValues(type)[0])/setValuesChangesCount;
+      changeBy.put(type, setChangeBy);
     }
 
-    return new float[] {setType1Delta};
+    return changeBy;
   } 
 
-  private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, float[] setValuesChangeBy) {
+  private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, HashMap<SetType, Float> setValuesChangeBy) {
     String name = goal.getName();
     int sets = fs.getSets();
-    SetType setType1 = goal.getSetType(true);
-    SetType setType2 = goal.getSetType(false);
-    float[] setType1Values = null;
-    float[] setType2Values = null;
+    HashMap<SetType, float[]> setValues = new HashMap<>();
+    setValues.putAll(fs.getSetValues());
 
-    // The increment by fitness set is based on randomness (50% set increase, 25% set1 value increase, 25% set2 value increase).
+    // The increment by fitness set is based on randomness (50% set increase, 50% set value increase).
     // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
     boolean randomFinished = false;
     while(!randomFinished) {
-      int increment = rand.nextInt(4);
+      int increment = rand.nextInt(2);
       switch(increment) {
         case 0:
-          // Increase sets.
-        case 1:
+        // Increase sets.
           if(fs.getSets() < goal.getSets()) {
             sets++;
-            setType1Values = copyAndAddValue(fs.getSetTypeValues(true));
-            setType2Values = copyAndAddValue(fs.getSetTypeValues(false));
+            for(SetType type : setValues.keySet()) {
+              setValues.put(type, copyAndAddValue(setValues.get(type)));
+            }
             randomFinished = true;
             break;
           }
-        case 2:
-          // Increase set1.
-          if(!Arrays.equals(fs.getSetTypeValues(true), goal.getSetTypeValues(true))) {
-            setType1Values = incrementSet(fs.getSetTypeValues(true), setValuesChangeBy[0]);
-            setType2Values = cloneArray(fs.getSetTypeValues(false));
+        case 1:
+        // Increase set values.
+          Object[] setTypes = setValues.keySet().toArray();
+          SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
+          SetType altType = getAlternativeType(setTypes, type);
+          if(!fs.greaterThan(goal, type).orElse(true) && !fs.equalTo(goal, type).orElse(true)) {
+            setValues.put(type, incrementSet(fs.getSetValues(type), setValuesChangeBy.get(type)));
+            setValues.put(altType, cloneArray(fs.getSetValues(altType)));
             randomFinished = true;
             break;
           }
-        case 3:
-          // Increase set2.
-          if(setType2 != null && !Arrays.equals(fs.getSetTypeValues(false), goal.getSetTypeValues(false))) {
-            setType1Values = cloneArray(fs.getSetTypeValues(true));
-            setType2Values = incrementSet(fs.getSetTypeValues(false), setValuesChangeBy[1]);
+          else if(!fs.greaterThan(goal, altType).orElse(true) && !fs.equalTo(goal, altType).orElse(true)) {
+            setValues.put(altType, incrementSet(fs.getSetValues(altType), setValuesChangeBy.get(altType)));
+            setValues.put(type, cloneArray(fs.getSetValues(type)));
             randomFinished = true;
             break;
           }
@@ -125,7 +122,17 @@ public class Progress {
           break;
       }
     }
-    return new FitnessSet(name, sets, setType1, setType2, setType1Values, setType2Values);
+    return new FitnessSet(name, sets, setValues);
+  }
+
+  private SetType getAlternativeType(Object[] setTypes, SetType type) {
+    for(Object obj : setTypes) {
+      SetType setType = (SetType) obj;
+      if(!setType.name().equals(type.name())) {
+        return setType;
+      }
+    }
+    return null;
   }
 
   private float[] cloneArray(float[] arr) {
@@ -134,7 +141,7 @@ public class Progress {
 
   
   private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
-    // Invariant: setValues are in descending order.
+    // Invariant: setValues are in ascending or descending order.
 
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
@@ -183,6 +190,25 @@ public class Progress {
     return model;
   }
 
+  private Milestone updateMilestone(Data data, Milestone milestone) {
+    ProgressModel model = new ProgressModel(milestone);
+    HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
+    FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
+    
+    for(FitnessSet sessionSet : sessionSets) {
+      if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {
+        model.progressSupplementalMilestone(sessionSet);
+      }
+      else if(milestone.getName().equals(sessionSet.getName())) {
+        // Rebuilds the supplemental milestones if main milestone was hit.  
+        boolean progressed = model.progressMainMilestone(sessionSet);
+        model = progressed ? buildSupplementalMilestones(model) : model;
+      }
+    }
+
+    return model.getCurrentMainMilestone();
+  }
+
   /**
    * Returns an updated Progress Model based on given data object or a newly made one if data object does 
    * not currently contain one.
@@ -196,5 +222,14 @@ public class Progress {
       return buildModel(data);
     }
     return updateProgressModel(data, model);
+  }
+
+  public Milestone getUpdatedMilestone(Data data) {
+    Milestone milestone = data.getCurrentMainMilestone();
+    if(milestone == null) {
+      ProgressModel model = buildModel(data);
+      return model.getCurrentMainMilestone();
+    }
+    return updateMilestone(data, milestone);
   }
 }

@@ -48,6 +48,6 @@ public class Milestone extends BananaNode {
 
   @Override
   public String toString() {
-    return String.format("Milestone\nComplete? %b\n{\n%s\n}", isComplete(), fSet.toString());
+    return String.format("Milestone\nComplete? %b\n{\n%s}", isComplete(), fSet.toString());
   }
 }

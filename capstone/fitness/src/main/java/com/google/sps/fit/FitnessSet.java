@@ -22,24 +22,18 @@
 package com.google.sps.fit;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.*;
 
 /* Representation of specific exercise with sets. */
 public class FitnessSet implements Serializable {
   
   public enum SetType {
-    DISTANCE(true),
-    DURATION_INC(true),
-    DURATION_DEC(false),
-    REPS(true),
-    WEIGHT(true);
+    DISTANCE,
+    DURATION_INC,
+    DURATION_DEC,
+    REPS,
+    WEIGHT;
     
-    boolean moreIsBetter;
-
-    SetType(boolean moreIsBetter) {
-      this.moreIsBetter = moreIsBetter;
-    }
-
     /**
      * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
      * returning a "greater than" comparison for two numbers depending on if more of the stat is better.
@@ -49,42 +43,69 @@ public class FitnessSet implements Serializable {
      * @return if the starting float is "greater than" its comparison.
      */
     public boolean greaterThan(float src, float comp) {
-      if(moreIsBetter) {
-        return src > comp;
+      if(this.name().contains("_DEC")) {
+        return src < comp;
       }
-      return src < comp;
+      return src > comp;
     }
   }
 
   protected String name;
   protected int sets;
-  protected SetType setType1;
-  protected SetType setType2;
-  protected float[] setType1Values;
-  protected float[] setType2Values;
+  protected HashMap<SetType, float[]> setValues;
 
   public FitnessSet(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
     this.sets = sets;
-    this.setType1 = setType1;
-    this.setType2 = setType2;
-    this.setType1Values = setType1Values;
-    this.setType2Values = setType2Values;
+    setValues = new HashMap<>();
+    setValues.put(setType1, setType1Values);
+    if(setType2 != null) {
+      setValues.put(setType2, setType2Values);
+    }
+  }
+
+  public FitnessSet(String name, int sets, HashMap<SetType, float[]> setValues) {
+    this.name = name;
+    this.sets = sets;
+    this.setValues = setValues;
   }
 
   /**
-   * Returns true if FitnessSet average values are greater than the given FitnessSet’s average 
+   * Returns true if summation of FitnessSet values are greater than the given FitnessSet’s sum 
    * values in each type (types and name have to be the same).
    * 
    * @param fs FitnessSet to compare to.
-   * @return whether this FitnessSet is greater on average than the given one.
+   * @return whether this FitnessSet's values are greater than the given one.
    */
-  public boolean avgGreaterThan(FitnessSet fs) {
-    return fs.name.equals(name) &&
-           fs.setType1.equals(setType1) &&
-           ((fs.setType2 == null && setType2 == null) || fs.setType2.equals(setType2)) &&
-           setType1.greaterThan(avg(setType1Values), avg(fs.setType1Values)) &&
-           ((fs.setType2Values == null && setType2Values == null) || setType2.greaterThan(avg(setType2Values), avg(fs.setType2Values)));
+  public boolean greaterThan(FitnessSet fs) {
+    for(SetType type : setValues.keySet()) {
+      if(!type.greaterThan(avg(getSetValues(type)), avg(fs.getSetValues(type)))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if summation of FitnessSet values are greater than the given FitnessSet’s sum 
+   * values in each type (types and name have to be the same).
+   * 
+   * @param fs FitnessSet to compare to.
+   * @return whether this FitnessSet's values are greater than the given one.
+   */
+  public Optional<Boolean> greaterThan(FitnessSet fs, SetType setType) {
+    Optional<Boolean> opt = Optional.empty();
+    boolean typePresent = false;
+    for(SetType type : setValues.keySet()) {
+      if(setType.name().equals(type.name())) {
+        typePresent = true;
+        if(!type.greaterThan(avg(getSetValues(type)), avg(fs.getSetValues(type)))) {
+          opt = Optional.of(false);
+        }
+      }
+    }
+    opt = typePresent && !opt.isPresent() ? Optional.of(true) : opt; 
+    return opt;
   }
   
   protected float avg(float[] src) {
@@ -99,41 +120,57 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if FitnessSet is equal to given FitnessSet in terms of values, types, and name.
+   * Returns true if FitnessSet is equal to given FitnessSet in terms of value.
    * 
    * @param fs FitnessSet to compare to.
    * @return whether this FitnessSet is equal to the given one.
    */
   public boolean equalTo(FitnessSet fs) {
-    return fs.name.equals(name) &&
-           fs.setType1.equals(setType1) &&
-           ((fs.setType2 == null && setType2 == null) || fs.setType2.equals(setType2)) &&
-           Arrays.equals(setType1Values, fs.setType1Values) &&
-           Arrays.equals(setType2Values, fs.setType2Values);
+    for(SetType type : setValues.keySet()) {
+      if(!Arrays.equals(getSetValues(type), fs.getSetValues(type))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if FitnessSet is equal to given FitnessSet in terms of value.
+   * 
+   * @param fs FitnessSet to compare to.
+   * @return whether this FitnessSet is equal to the given one.
+   */
+  public Optional<Boolean> equalTo(FitnessSet fs, SetType setType) {
+    Optional<Boolean> opt = Optional.empty();
+    boolean typePresent = false;
+    for(SetType type : setValues.keySet()) {
+      if(setType.name().equals(type.name())) {
+        typePresent = true;
+        if(!Arrays.equals(getSetValues(type), fs.getSetValues(type))) {
+          opt = Optional.of(false);
+        }
+      }
+    }
+    opt = typePresent && !opt.isPresent() ? Optional.of(true) : opt; 
+    return opt;
   }
 
   public int getSets() {
     return sets;
   }
 
-  /**
-   * Return set type 1 or 2 based off given boolean.
-   * 
-   * @param type1 will return set type 1 if true and set type 2 if false
-   * @return set type
-   */
-  public SetType getSetType(boolean type1) {
-    return type1 ? setType1 : setType2;
+  public HashMap<SetType, float[]> getSetValues() {
+    return setValues;
   }
 
   /**
-   * Return set type 1 or 2 values based off given boolean.
+   * Return set type values for the given set type.
    * 
-   * @param type1 will return set type 1 values if true and set type 2 values if false
+   * @param type SetType tag
    * @return set type values
    */
-  public float[] getSetTypeValues(boolean type1) {
-    return type1 ? setType1Values : setType2Values;
+  public float[] getSetValues(SetType type) {
+    return setValues.get(type);
   }
 
   public String getName() {
@@ -142,12 +179,10 @@ public class FitnessSet implements Serializable {
 
   @Override
   public String toString() {
-    String setType2 = "";
-    String setType2Values = "";
-    if(this.setType2 != null) {
-      setType2 = this.setType2.name();
-      setType2Values = Arrays.toString(this.setType2Values);
+    String formattedStr = "";
+    for(SetType type : setValues.keySet()) {
+      formattedStr += String.format("Type: %s, Value: %s\n", type.name(), Arrays.toString(getSetValues(type)));
     }
-    return String.format("Name: %s\nSets: %d\nSet Types: [%s, %s]\nSet Values: [%s, %s]", name, sets, setType1.name(), setType2, Arrays.toString(setType1Values), setType2Values);
+    return String.format("Name: %s\nSets: %d\n%s", name, sets, formattedStr);
   }
 }
