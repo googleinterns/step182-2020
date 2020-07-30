@@ -89,10 +89,23 @@ public class BananaNode implements Serializable {
    * Adds String mapping to given PeelQueue. Converts tag to lowercase.
    * 
    * @param peelQueueTag Tag to access PeelQueue.
+   */
+  public boolean addPeelQueue(String peelQueueTag) {
+    return addPeelQueue(peelQueueTag, new PeelQueue());
+  }
+
+  /**
+   * Adds String mapping to given PeelQueue. Converts tag to lowercase.
+   * 
+   * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
    */
-  public void addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
+  public boolean addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
+    if(peelQueue == null || peelQueueExists(peelQueueTag)) {
+      return false;
+    }
     peels.put(peelQueueTag.toLowerCase(), peelQueue);
+    return true;
   }
 
   /**
@@ -224,7 +237,7 @@ public class BananaNode implements Serializable {
   }
 
   public boolean isHead() {
-    return prevNode == null || prevNode.isComplete();
+    return !complete && (prevNode == null || prevNode.isComplete());
   }
 
   public boolean isComplete() {
