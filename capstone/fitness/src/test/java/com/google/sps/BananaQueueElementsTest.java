@@ -113,14 +113,17 @@ public class BananaQueueElementsTest {
     BananaNode bn = new BananaNode();
     BananaNode bn2 = new BananaNode();
 
+    // Test BananaNode behaviour when separate.
     assertTrue(bn.isHead());
     assertTrue(bn2.isHead());
 
+    // Establish BananaQueue with nodes and determine heads and links.
     assertTrue(bn.enqueue(bn2));
     assertTrue(bn.isHead());
     assertFalse(bn2.isHead());
     assertTrue(bn2.getNext() == null);
 
+    // Test enqueue from head. 
     assertTrue(bn.enqueue(new BananaNode()));
     assertTrue(bn.isHead());
     assertFalse(bn2.isHead());
@@ -132,10 +135,12 @@ public class BananaQueueElementsTest {
     BananaNode bn = new BananaNode();
     BananaNode bn2 = new BananaNode();
 
+    // Establish BananaQueue with nodes and determine heads.
     assertTrue(bn.enqueue(bn2));
     assertTrue(bn.isHead());
     assertFalse(bn2.isHead());
 
+    // Test BananaNode head status after dequeue.
     assertTrue(Objects.deepEquals(bn.dequeue(), bn));
     assertFalse(bn.isHead());
     assertTrue(bn2.isHead());

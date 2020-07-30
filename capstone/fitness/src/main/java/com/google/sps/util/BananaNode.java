@@ -86,9 +86,10 @@ public class BananaNode implements Serializable {
   }
 
   /**
-   * Adds String mapping to given PeelQueue. Converts tag to lowercase.
-   * 
-   * @param peelQueueTag Tag to access PeelQueue.
+   * Adds generic PeelQueue to the front element of the BananaQueue with the given tag. 
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return true if add is successful.
    */
   public boolean addPeelQueue(String peelQueueTag) {
     return addPeelQueue(peelQueueTag, new PeelQueue());
@@ -99,6 +100,7 @@ public class BananaNode implements Serializable {
    * 
    * @param peelQueueTag Tag to access PeelQueue.
    * @param peelQueue PeelQueue to add.
+   * @return true if operation is successful.
    */
   public boolean addPeelQueue(String peelQueueTag, PeelQueue peelQueue) {
     if(peelQueue == null || peelQueueExists(peelQueueTag)) {
@@ -139,8 +141,7 @@ public class BananaNode implements Serializable {
   }
 
   /**
-   * Enqueues given PeelNode to PeelQueue associated with tag if PeelNode has a value and the BananaQueue's front element
-   * has a PeelQueue with the same associated name.
+   * Enqueues given PeelNode to PeelQueue associated with tag if PeelNode has a value and PeelQueue exists.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    * @param peel PeelNode to add.
@@ -155,7 +156,7 @@ public class BananaNode implements Serializable {
   }
  
   /**
-   * Dequeues PeelQueue associated with the tag if the BananaQueue's front element has a PeelQueue with the same associated name.
+   * Dequeues PeelQueue associated with the tag if PeelQueue exists.
    *
    * @param peelQueueTag Tag to associated PeelQueue.
    * @return dequeued PeelNode.
@@ -169,7 +170,7 @@ public class BananaNode implements Serializable {
   }
 
   /**
-   * Adds BananaNode to the end of the queue and increments the size.
+   * Adds BananaNode to the last element of the BananaNode chain.
    * 
    * @param banana BananaNode to add.
    * @return true if enqueue is successful.
@@ -187,9 +188,8 @@ public class BananaNode implements Serializable {
   }
   
   /**
-   * Marks the front BananaNode in the queue as complete, decrements the size, moves the 
-   * front of the queue to the next element (can be null), and copies all the PeelQueues 
-   * in the old front to the new front (if not null).
+   * Marks the head of BananaNode chain as complete and and copies all the PeelQueues in the old head to 
+   * the new head (if not null).
    *
    * @return dequeued BananaNode.
    */
