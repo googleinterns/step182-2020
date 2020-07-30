@@ -25,7 +25,7 @@ public class BananaQueueTest {
 
   @Test
   public void testEnqueuePeel() {
-    BananaQueue bq = new BananaQueue();
+    BananNode bq = new BananaQueue();
 
     // Try to add Peel without PeelQueue or BananaNode to attach to.
     assertFalse(bq.enqueuePeel(peelQueueTag, new PeelNode()));

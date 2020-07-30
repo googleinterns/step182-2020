@@ -17,6 +17,37 @@ package com.google.sps.util;
 import java.io.Serializable;
 import java.util.*;
 
+/*
+ * Queue with the ability to hold multiple queues at each node.  
+ * Each dequeue results in a transfer of queues to the next node.
+ * Each node is called a BananaNode.
+ * Each extra queue is called a PeelQueue.
+ * Every node in a PeelQueue is called a PeelNode.
+ *
+ * Example Structure:
+ *
+ *    @1 - @2 - @3
+ *   /
+ * O - O - O - O - O
+ *   \
+ *    #1 - #2
+ *
+ * Example Dequeue:
+ *
+ *        @1 - @2 - @3
+ *       /
+ * X - O - O - O - O
+ *       \
+ *        #1 - #2
+ *
+ * Key:
+ *   X = Completed BananaNode
+ *   O = Uncompleted BananaNode
+ *   (/, -, \) = Connections
+ *   @n = PeelNode
+ *   #n = PeelNode
+ */
+
 /* Nodes in the BananaQueue. Holds references to PeelQueues. */
 public class BananaNode implements Serializable {
   private boolean complete;
@@ -92,6 +123,108 @@ public class BananaNode implements Serializable {
    */
   public PeelQueue getPeelQueue(String peelQueueTag) {
     return peels.get(peelQueueTag.toLowerCase());
+  }
+
+  /**
+   * Enqueues given PeelNode to PeelQueue associated with tag if PeelNode has a value and the BananaQueue's front element
+   * has a PeelQueue with the same associated name.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @param peel PeelNode to add.
+   * @return true if enqueue is successful.
+   */
+  public boolean enqueuePeel(String peelQueueTag, PeelNode peel) {
+    if(peel == null || !peelQueueExists(peelQueueTag)) {
+      return false;
+    }
+
+    return getPeelQueue(peelQueueTag).enqueue(peel);
+  }
+ 
+  /**
+   * Dequeues PeelQueue associated with the tag if the BananaQueue's front element has a PeelQueue with the same associated name.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return dequeued PeelNode.
+   */
+  public PeelNode dequeuePeel(String peelQueueTag) {
+    if(!peelQueueExists(peelQueueTag)) {
+      return null;
+    }
+
+    return getPeelQueue(peelQueueTag).dequeue();
+  }
+
+  /**
+   * Adds BananaNode to the end of the queue and increments the size.
+   * 
+   * @param banana BananaNode to add.
+   * @return true if enqueue is successful.
+   */
+  public boolean enqueue(BananaNode banana) {
+    BananaNode current = this;
+
+    while(current.getNext() != null) {
+      current = current.getNext();
+    }
+
+    current.setNext(banana);
+    banana.setPrev(current);
+    return true;
+  }
+  
+  /**
+   * Marks the front BananaNode in the queue as complete, decrements the size, moves the 
+   * front of the queue to the next element (can be null), and copies all the PeelQueues 
+   * in the old front to the new front (if not null).
+   *
+   * @return dequeued BananaNode.
+   */
+  public BananaNode dequeue() {
+    BananaNode current = this;
+
+    while(!current.isHead()) {
+      current = current.getPrev();
+    }
+
+    current.setComplete(true);  
+    if(current.getNext() != null) {
+      current.getNext().addPeels(current.getPeels());
+    }
+    current.removePeels();
+    
+    return current;
+  }
+
+  /**
+   * Returns the front PeelNode of the queue (can be null) given an associated tag.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return front of PeelQueue mapped to tag.
+   */
+  public PeelNode peekPeel(String peelQueueTag) {
+    if(!peelQueueExists(peelQueueTag)) {
+      return null;
+    }
+    return getPeelQueue(peelQueueTag).peek(); 
+  }
+
+  /**
+   * Returns the number of PeelNodes in the PeelQueue of the associated tag.
+   *
+   * @param peelQueueTag Tag to associated PeelQueue.
+   * @return number of PeelNodes in the PeelQueue mapped to tag as an Optional object.
+   */
+  public Optional<Integer> getPeelSize(String peelQueueTag) {
+    Optional<Integer> opt = Optional.empty();
+    if(peelQueueExists(peelQueueTag)) {
+      opt = Optional.of(getPeelQueue(peelQueueTag).getSize());
+    }
+    return opt;
+  }
+
+  public boolean isHead() {
+    return prevNode == null || prevNode.isComplete();
   }
 
   public boolean isComplete() {
