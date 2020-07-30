@@ -40,5 +40,8 @@ public class CalendarServlet extends HttpServlet {
     response.setContentType("text/html;");
     response.getWriter().println(date.toString());
   }
+  public void makeUserPlan(String username){
+
+  }
 
 }
