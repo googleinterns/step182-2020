@@ -27,19 +27,6 @@ public class ProgressTest {
   private final int daysAvailable = 9;
   private final String name = "test";
 
-  @Test
-  public void testUpdateGoalStepOneStaticSet() {
-    Exercise start = new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    // assert first is start
-    // assert last is goal
-    // assert size
-  }
-
   @Test(expected = ArithmeticException.class)
   public void testUpdateGoalStepAllStaticSets() {
     // Note: This means the feature does not support only increasing in sets.
@@ -78,10 +65,10 @@ public class ProgressTest {
   }
 
   @Test
-  public void testUpdateGoalStepMulitpleSetTypes() {
+  public void testUpdateGoalStepSingle() {
     // TODO(ijelue): Add actual assertions rather than prints.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+    Exercise start = new Exercise(name, SetType.DURATION_DEC, new float[] {600});
+    Exercise goal = new Exercise(name, SetType.DURATION_DEC, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
@@ -92,10 +79,24 @@ public class ProgressTest {
   }
 
   @Test
-  public void testUpdateGoalStepSingle() {
+  public void testUpdateGoalStepOneStaticSet() {
+    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
+    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
+    Data data = new Data(null, null, start, goal, daysAvailable);
+
+    Progress progress = new Progress();
+    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    // assert first is start
+    // assert last is goal
+    // assert size
+  }
+
+  @Test
+  public void testUpdateGoalStepMulitpleSetTypes() {
     // TODO(ijelue): Add actual assertions rather than prints.
-    Exercise start = new Exercise(name, SetType.DURATION_DEC, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DURATION_DEC, new float[] {300});
+    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
