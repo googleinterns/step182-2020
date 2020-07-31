@@ -19,10 +19,10 @@ import com.google.sps.util.*;
 
 public class ProgressModel {
 
-  private Milestone head;
+  private GoalStep head;
   private int size;
 
-  public ProgressModel(Milestone start) {
+  public ProgressModel(GoalStep start) {
     head = start;
     size = updateSize(start);
   }
@@ -37,27 +37,27 @@ public class ProgressModel {
     return size;
   }
 
-  public boolean progressSupplementalMilestone(FitnessSet fSet) {
+  public boolean progressSupplementalGoalStep(Exercise exercise) {
     return false;
   }
   
   /**
-   * Advances to the next milestone if the given fitness set is greater than or equal to the current milestone.
+   * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
    *
-   * @param fSet FitnessSet to compare to.
+   * @param exercise Exercise to compare to.
    * @return if the operation was successful.
    */
-  public boolean progressMainMilestone(FitnessSet fSet) {
-    FitnessSet currentFSet = head.getFitnessSet();
-    if(fSet.greaterThan(currentFSet) || fSet.equalTo(currentFSet)) {
+  public boolean progressMainGoalStep(Exercise exercise) {
+    Exercise currentExercise = head.getExercise();
+    if(exercise.greaterThan(currentExercise) || exercise.equalTo(currentExercise)) {
       progressMain();
       return true;
     }
     return false;
   }
 
-  public boolean addMainMilestone(Milestone milestone) {
-    boolean success = head.enqueue(milestone);
+  public boolean addMainGoalStep(GoalStep goalStep) {
+    boolean success = head.enqueue(goalStep);
     if(success) {
       size++;
     }
@@ -68,12 +68,12 @@ public class ProgressModel {
     BananaNode oldHead = head.dequeue();
     if(oldHead != null) {
       size--;
-      head = (Milestone) head.getNext();
+      head = (GoalStep) head.getNext();
     }
     return oldHead;
   }
 
-  public Milestone getCurrentMainMilestone() {
+  public GoalStep getCurrentMainGoalStep() {
     return head;
   }
 
@@ -89,21 +89,21 @@ public class ProgressModel {
   public BananaNode[] toArray() {
     // Get size from based on uncompleted nodes.
     int length = size;
-    BananaNode firstMilestone = head;
+    BananaNode firstGoalStep = head;
 
     // Get the true size of queue based on the first ever node.
-    while(firstMilestone.getPrev() != null) {
-      firstMilestone = firstMilestone.getPrev();
+    while(firstGoalStep.getPrev() != null) {
+      firstGoalStep = firstGoalStep.getPrev();
       length++;
     }
 
     // Add all nodes that ever existed in queue to array.
-    BananaNode[] milestones = new BananaNode[length];
+    BananaNode[] goalSteps = new BananaNode[length];
     for(int i = 0; i < length; i++) {
-      milestones[i] = firstMilestone;
-      firstMilestone = firstMilestone.getNext();
+      goalSteps[i] = firstGoalStep;
+      firstGoalStep = firstGoalStep.getNext();
     }
-    return milestones;
+    return goalSteps;
   }
 
   @Override

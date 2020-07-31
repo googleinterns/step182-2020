@@ -18,35 +18,35 @@ import com.google.sps.fit.*;
 import com.google.sps.util.*;
 import java.util.*;
 
-/* Progress marker that holds a FitnessSet. */
-public class Milestone extends BananaNode {
+/* Progress marker that holds an Exercise. */
+public class GoalStep extends BananaNode {
 
-  private final FitnessSet fSet;
+  private final Exercise exercise;
 
-  public Milestone(FitnessSet fSet) {
+  public GoalStep(Exercise exercise) {
     super();
-    this.fSet = fSet;
+    this.exercise = exercise;
   }
 
   /**
-   * Returns hashmap of supplemental milestones. 
+   * Returns hashmap of supplemental goal steps. 
    *
-   * @return hashmap of supplemental milestones.
+   * @return hashmap of supplemental goal steps.
    */
-  public HashMap<String, PeelQueue> getSupplementalMilestones() {
+  public HashMap<String, PeelQueue> getSupplementalGoalSteps() {
     return getPeels();
   }
 
   public String getName() {
-    return fSet.getName();
+    return exercise.getName();
   }
 
-  public FitnessSet getFitnessSet() {
-    return fSet;
+  public Exercise getExercise() {
+    return exercise;
   }
 
   @Override
   public String toString() {
-    return String.format("Milestone\nComplete? %b\n{\n%s}", isComplete(), fSet.toString());
+    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), exercise.toString());
   }
 }

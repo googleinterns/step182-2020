@@ -15,45 +15,45 @@
 package com.google.sps.progress;
 
 import com.google.sps.fit.*;
-import com.google.sps.fit.FitnessSet.SetType;
+import com.google.sps.fit.Exercise.SetType;
 import com.google.sps.util.*;
 import java.util.*;
 
 /* Handler for ProgressModel updates. */
 public class Progress {
   
-  private ProgressModel buildMainMilestones(Data data) {
+  private ProgressModel buildMainGoalSteps(Data data) {
     int changeCount = data.getDaysAvailable();
-    FitnessSet start = data.getStart();
-    FitnessSet goal = data.getGoal();
+    Exercise start = data.getStart();
+    Exercise goal = data.getGoal();
 
     // Values to change sets by.
     HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount, start, goal);
 
     // Start BananaQueue as ProgressModel.
-    Milestone current = new Milestone(start);
-    current = buildSupplementalMilestones(current);
+    GoalStep current = new GoalStep(start);
+    current = buildSupplementalGoalSteps(current);
     ProgressModel model = new ProgressModel(current);
 
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
-      Milestone next = new Milestone(createFitnessSet(current.getFitnessSet(), goal, setValuesDelta));
-      next = buildSupplementalMilestones(next);
-      model.addMainMilestone(next);
+      GoalStep next = new GoalStep(createExercise(current.getExercise(), goal, setValuesDelta));
+      next = buildSupplementalGoalSteps(next);
+      model.addMainGoalStep(next);
       current = next;
     }
 
     // Add goal only if it's not the current last one (result of algorithm).
-    if(!current.getFitnessSet().equalTo(goal)) {
-      Milestone last = new Milestone(goal);
-      last = buildSupplementalMilestones(last);
-      model.addMainMilestone(last);
+    if(!current.getExercise().equalTo(goal)) {
+      GoalStep last = new GoalStep(goal);
+      last = buildSupplementalGoalSteps(last);
+      model.addMainGoalStep(last);
     }
 
     return model;
   }
 
-  private HashMap<SetType, Float> getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
+  private HashMap<SetType, Float> getValuesChangeBy(int changeCount, Exercise start, Exercise goal) {
     HashMap<SetType, Float> changeBy = new HashMap<>();
 
     // Determine how many changes needs to be done to sets. 
@@ -65,10 +65,10 @@ public class Progress {
     // With this, the changes in the individual non-set parameters will never exceed the days available.
     float setValuesChangesCount = changeCount/(setDifference  + 1);
     
-    // Splits the current available changes if fitness set is based on two quantitative types.
+    // Splits the current available changes if Exercise is based on two quantitative types.
     setValuesChangesCount /= start.getSetValues().size();
 
-    // Sets the change by values based on the first elements in the starter fitness set.
+    // Sets the change by values based on the first elements in the Exercise's set values.
     for(SetType type : start.getSetValues().keySet()) {
       Float setChangeBy = (goal.getSetValues(type)[0] - start.getSetValues(type)[0])/setValuesChangesCount;
       changeBy.put(type, setChangeBy);
@@ -77,14 +77,14 @@ public class Progress {
     return changeBy;
   } 
 
-  private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, HashMap<SetType, Float> setValuesChangeBy) {
-    // Prepare new FitnessSet variables.
+  private Exercise createExercise(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
+    // Prepare new Exercise variables.
     String name = goal.getName();
-    int sets = fs.getSets();
+    int sets = src.getSets();
     HashMap<SetType, float[]> setValues = new HashMap<>();
-    setValues.putAll(fs.getSetValues());
+    setValues.putAll(src.getSetValues());
 
-    // The increment by fitness set is based on randomness (66.7% set increase, 33.3% set value increase).
+    // The increment of the Exercise is based on randomness (66.7% set increase, 33.3% set value increase).
     // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
     boolean randomFinished = false;
@@ -94,7 +94,7 @@ public class Progress {
         case 0:
         // Increase sets.
         case 1:
-          if(fs.getSets() < goal.getSets()) {
+          if(src.getSets() < goal.getSets()) {
             sets++;
             for(SetType type : setValues.keySet()) {
               setValues.put(type, copyAndAddValue(setValues.get(type)));
@@ -108,9 +108,9 @@ public class Progress {
           SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
           SetType altType = getAlternativeType(setTypes, type);
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
-          if(!fs.greaterThan(goal, type).orElse(true) && !fs.equalTo(goal, type).orElse(true)) {
-            setValues.put(type, incrementSet(fs.getSetValues(type), setValuesChangeBy.get(type)));
-            setValues.put(altType, cloneArray(fs.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
+          if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
+            setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
+            setValues.put(altType, cloneArray(src.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
             randomFinished = true;
             break;
           }
@@ -118,7 +118,7 @@ public class Progress {
           break;
       }
     }
-    return new FitnessSet(name, sets, setValues);
+    return new Exercise(name, sets, setValues);
   }
 
   private SetType getAlternativeType(Object[] setTypes, SetType type) {
@@ -161,36 +161,36 @@ public class Progress {
     return copy;
   }
 
-  private Milestone buildSupplementalMilestones(Milestone milestone) {
-    // TODO(ijelue): Logic to add relevant static fitness sets as SupplementalMilestones.
-    return milestone;
+  private GoalStep buildSupplementalGoalSteps(GoalStep goalStep) {
+    // TODO(ijelue): Logic to add relevant supplemental goal steps.
+    return goalStep;
   }
 
-  private Milestone updateMilestone(Data data, Milestone milestone) {
+  private GoalStep updateGoalStep(Data data, GoalStep goalStep) {
     // Set up model and lastest session.
-    ProgressModel model = new ProgressModel(milestone);
-    HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
-    FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
+    ProgressModel model = new ProgressModel(goalStep);
+    HashMap<String, PeelQueue> supplementalGoalSteps = goalStep.getSupplementalGoalSteps();
+    Exercise[] workout = data.getLastSession().getWorkout();
     
     // Progress model based on lastest session.
-    for(FitnessSet sessionSet : sessionSets) {
-      if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {
-        model.progressSupplementalMilestone(sessionSet);
+    for(Exercise exercise : workout) {
+      if(supplementalGoalSteps != null && supplementalGoalSteps.containsKey(exercise.getName())) {
+        model.progressSupplementalGoalStep(exercise);
       }
-      else if(milestone.getName().equals(sessionSet.getName())) {
-        model.progressMainMilestone(sessionSet);
+      else if(goalStep.getName().equals(exercise.getName())) {
+        model.progressMainGoalStep(exercise);
       }
     }
 
-    return model.getCurrentMainMilestone();
+    return model.getCurrentMainGoalStep();
   }
 
-  public Milestone getUpdatedMilestone(Data data) {
-    Milestone milestone = data.getCurrentMainMilestone();
-    if(milestone == null) {
-      ProgressModel model = buildMainMilestones(data);
-      return model.getCurrentMainMilestone();
+  public GoalStep getUpdatedGoalStep(Data data) {
+    GoalStep goalStep = data.getCurrentMainGoalStep();
+    if(goalStep == null) {
+      ProgressModel model = buildMainGoalSteps(data);
+      return model.getCurrentMainGoalStep();
     }
-    return updateMilestone(data, milestone);
+    return updateGoalStep(data, goalStep);
   }
 }

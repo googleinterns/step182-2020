@@ -21,14 +21,14 @@ import com.google.sps.progress.*;
 public class Data {
 
   private final Session lastSession;
-  private final Milestone milestone;
-  private final FitnessSet start;
-  private final FitnessSet goal;
+  private final GoalStep goalStep;
+  private final Exercise start;
+  private final Exercise goal;
   private final int daysAvailable;
 
-  public Data(Session lastSession, Milestone milestone, FitnessSet start, FitnessSet goal, int daysAvailable) {
+  public Data(Session lastSession, GoalStep goalStep, Exercise start, Exercise goal, int daysAvailable) {
     this.lastSession = lastSession;
-    this.milestone = milestone;
+    this.goalStep = goalStep;
     this.start = start;
     this.goal = goal;
     this.daysAvailable = daysAvailable;
@@ -38,8 +38,8 @@ public class Data {
     return lastSession;
   }
 
-  public Milestone getCurrentMainMilestone() {
-    return milestone;
+  public GoalStep getCurrentMainGoalStep() {
+    return goalStep;
   }
 
   /**
@@ -51,11 +51,11 @@ public class Data {
     return daysAvailable;
   }
 
-  public FitnessSet getStart() {
+  public Exercise getStart() {
     return start;
   }
 
-  public FitnessSet getGoal() {
+  public Exercise getGoal() {
     return goal;
   }
 

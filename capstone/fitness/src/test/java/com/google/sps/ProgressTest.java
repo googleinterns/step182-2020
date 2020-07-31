@@ -17,14 +17,33 @@ package com.google.sps;
 import org.junit.*;
 import static org.junit.Assert.*;
 import com.google.sps.fit.*;
-import com.google.sps.fit.FitnessSet.SetType;
+import com.google.sps.fit.Exercise.SetType;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
 
 public class ProgressTest {
 
-  private final FitnessSet start = new FitnessSet("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-  private final FitnessSet goal = new FitnessSet("test", 2, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+
+/*
+
+
+
+
+
+
+Update test names and pseudo test single set/consistent set type
+
+
+
+
+
+
+
+
+*/
+
+  private final Exercise start = new Exercise("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+  private final Exercise goal = new Exercise("test", 2, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
   private final int daysAvailable = 8;
   private final Data data = new Data(null, null, start, goal, daysAvailable);
 
@@ -33,8 +52,8 @@ public class ProgressTest {
     // TODO(ijelue): Add actual assertions rather than prints.
 
     Progress progress = new Progress();
-    Milestone mainMilestone = progress.getUpdatedMilestone(data);
-    System.out.println(new ProgressModel(mainMilestone));
+    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    System.out.println(new ProgressModel(mainGoalStep));
   }
 
   @Test
@@ -42,19 +61,19 @@ public class ProgressTest {
     // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
 
     Progress progress = new Progress();
-    Milestone mainMilestone = progress.getUpdatedMilestone(data);
-    System.out.println(new ProgressModel(mainMilestone));
+    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    System.out.println(new ProgressModel(mainGoalStep));
     
-    Session sess = new Session(new FitnessSet[] {mainMilestone.getFitnessSet()});
-    Data data2 = new Data(sess, mainMilestone, null, null, daysAvailable);
+    Session sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
+    Data data2 = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
-    mainMilestone = progress.getUpdatedMilestone(data2);
-    System.out.println(new ProgressModel(mainMilestone));
+    mainGoalStep = progress.getUpdatedGoalStep(data2);
+    System.out.println(new ProgressModel(mainGoalStep));
 
-    sess = new Session(new FitnessSet[] {mainMilestone.getFitnessSet()});
-    data2 = new Data(sess, mainMilestone, null, null, daysAvailable);
+    sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
+    data2 = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
-    mainMilestone = progress.getUpdatedMilestone(data2);
-    System.out.println(new ProgressModel(mainMilestone));
+    mainGoalStep = progress.getUpdatedGoalStep(data2);
+    System.out.println(new ProgressModel(mainGoalStep));
   }
 }

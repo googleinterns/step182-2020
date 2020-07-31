@@ -18,18 +18,18 @@ import com.google.sps.fit.*;
 
 /*
  * Mock Session object. 
- * Meant to hold all the FitnessSets done by the user during a scheduled event.
+ * Meant to hold workout done by the user during a scheduled event.
  */
 public class Session {
 
-  private FitnessSet[] fSets;
+  private Exercise[] workout;
 
-  public Session(FitnessSet[] fSets) {
-    this.fSets = fSets;
+  public Session(Exercise[] workout) {
+    this.workout = workout;
   }
 
-  public FitnessSet[] getFitnessSets() {
-    return fSets;
+  public Exercise[] getWorkout() {
+    return workout;
   } 
 
 }
