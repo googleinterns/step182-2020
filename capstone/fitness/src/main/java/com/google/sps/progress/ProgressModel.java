@@ -28,7 +28,7 @@ public class ProgressModel {
   }
 
   private int updateSize(BananaNode start) {
-    // Start counts as part of the size.
+    // "start" counts as part of the size.
     int size = 1;
     while(start.getNext() != null) {
       start = start.getNext();
@@ -79,6 +79,14 @@ public class ProgressModel {
 
   public int getSize() {
     return size;
+  }
+
+  public GoalStep getLast() {
+    BananaNode last = head;
+    while(last.getNext() != null) {
+        last = last.getNext();
+    }
+    return (GoalStep) last;
   }
 
   /**

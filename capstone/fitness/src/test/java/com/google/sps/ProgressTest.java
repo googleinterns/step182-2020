@@ -66,78 +66,82 @@ public class ProgressTest {
 
   @Test
   public void testUpdateGoalStepSingle() {
-    // TODO(ijelue): Add actual assertions rather than prints.
     Exercise start = new Exercise(name, SetType.DURATION_DEC, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DURATION_DEC, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    // assert first is start
-    // assert last is goal
-    // assert size
+    ProgressModel model = new ProgressModel(mainGoalStep);
+
+    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
+    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getSize() <= daysAvailable);
   }
 
   @Test
   public void testUpdateGoalStepOneStaticSet() {
-    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    // assert first is start
-    // assert last is goal
-    // assert size
+    ProgressModel model = new ProgressModel(mainGoalStep);
+
+    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
+    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getSize() <= daysAvailable);
   }
 
   @Test
   public void testUpdateGoalStepMulitpleSetTypes() {
-    // TODO(ijelue): Add actual assertions rather than prints.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    // assert first is start
-    // assert last is goal
-    // assert size
+    ProgressModel model = new ProgressModel(mainGoalStep);
+
+    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
+    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getSize() <= daysAvailable);
   }
 
   @Test
   public void testUpdateGoalStepWithPrevious() {
-    // TODO(ijelue): Add actual assertions rather than prints. Use Mockito to eliminate randomness.
-
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    //System.out.println(new ProgressModel(mainGoalStep));
-    // assert first is start
-    // assert last is goal
-    // assert size
+    ProgressModel model = new ProgressModel(mainGoalStep);
+    
+    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
+    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable);
 
     Session sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
     data = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
     mainGoalStep = progress.getUpdatedGoalStep(data);
-    //System.out.println(new ProgressModel(mainGoalStep));
-    // assert first is start
-    // assert last is goal
-    // assert size
+    model = new ProgressModel(mainGoalStep);
+
+    boolean greaterThanInOneType = model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DISTANCE).orElse(false) ||
+                                   model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DURATION_DEC).orElse(false); 
+    assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSets() > start.getSets());
+    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 1);
 
     sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
     data = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
     mainGoalStep = progress.getUpdatedGoalStep(data);
-    //System.out.println(new ProgressModel(mainGoalStep));
-
-    // assert first is start
-    // assert last is goal
-    // assert size
+    model = new ProgressModel(mainGoalStep);
+    greaterThanInOneType = model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DISTANCE).orElse(false) ||
+                                   model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DURATION_DEC).orElse(false); 
+    assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSets() > start.getSets());
+    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 2);
   }
 }
