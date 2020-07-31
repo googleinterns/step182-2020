@@ -24,7 +24,7 @@ package com.google.sps.fit;
 import java.io.Serializable;
 import java.util.*;
 
-/* Representation of specific exercise with sets. */
+/* Representation of exercise with specific quantitative data. */
 public class FitnessSet implements Serializable {
   
   public enum SetType {
@@ -50,9 +50,14 @@ public class FitnessSet implements Serializable {
     }
   }
 
-  protected String name;
-  protected int sets;
-  protected HashMap<SetType, float[]> setValues;
+  /* Exercise Name. */
+  private String name;
+
+  /* Sets per exercise. */
+  private int sets;
+
+  /* Set type mappings to values. */
+  private HashMap<SetType, float[]> setValues;
 
   public FitnessSet(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
@@ -71,11 +76,12 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if average of FitnessSet values are greater than the given FitnessSet’s sum 
-   * values in each type (types and name have to be the same).
+   * Returns true if average of FitnessSet values are greater than the given FitnessSet’s average 
+   * values in each type.
+   * Note: Uses average to ignore set count.
    * 
    * @param fs FitnessSet to compare to.
-   * @return whether this FitnessSet's values are greater than the given one.
+   * @return whether this FitnessSet's average values are greater than the given one's.
    */
   public boolean greaterThan(FitnessSet fs) {
     for(SetType type : setValues.keySet()) {
@@ -87,11 +93,13 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if summation of FitnessSet values are greater than the given FitnessSet’s sum 
-   * values in each type (types and name have to be the same).
+   * Returns Optional object holding true if average of FitnessSet values are greater than the given FitnessSet’s average 
+   * values for the specific set type. An empty Optional object means the type wasn't in the set values hashmap.
+   * Note: Uses average to ignore set count.
    * 
    * @param fs FitnessSet to compare to.
-   * @return whether this FitnessSet's values are greater than the given one.
+   * @param setType SetType to compare to.
+   * @return whether this FitnessSet's average values are greater than the given one's for the specific set type.
    */
   public Optional<Boolean> greaterThan(FitnessSet fs, SetType setType) {
     Optional<Boolean> opt = Optional.empty();
@@ -108,7 +116,7 @@ public class FitnessSet implements Serializable {
     return opt;
   }
   
-  protected float avg(float[] src) {
+  private float avg(float[] src) {
     if(src == null) {
       return 0;
     }
@@ -120,7 +128,8 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if FitnessSet is equal to given FitnessSet in terms of value.
+   * Returns true if FitnessSet is equal to given FitnessSet in terms of average value.
+   * Note: Uses average to ignore set count.
    * 
    * @param fs FitnessSet to compare to.
    * @return whether this FitnessSet is equal to the given one.
@@ -135,9 +144,12 @@ public class FitnessSet implements Serializable {
   }
 
   /**
-   * Returns true if FitnessSet is equal to given FitnessSet in terms of value.
+   * Returns Optional object holding true if FitnessSet is equal to given FitnessSet in terms of average value. 
+   * An empty Optional object means the type wasn't in the set values hashmap.
+   * Note: Uses average to ignore set count.
    * 
    * @param fs FitnessSet to compare to.
+   * @param setType SetType to compare to.
    * @return whether this FitnessSet is equal to the given one.
    */
   public Optional<Boolean> equalTo(FitnessSet fs, SetType setType) {

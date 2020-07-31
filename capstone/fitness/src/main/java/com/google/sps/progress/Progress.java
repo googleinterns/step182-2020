@@ -30,6 +30,7 @@ public class Progress {
     // Values to change sets by.
     HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount, start, goal);
 
+    // Start BananaQueue as ProgressModel.
     Milestone current = new Milestone(start);
     current = buildSupplementalMilestones(current);
     ProgressModel model = new ProgressModel(current);
@@ -42,7 +43,7 @@ public class Progress {
       current = next;
     }
 
-    // Add goal only if it's not the current last one (result of basic algorithm).
+    // Add goal only if it's not the current last one (result of algorithm).
     if(!current.getFitnessSet().equalTo(goal)) {
       Milestone last = new Milestone(goal);
       last = buildSupplementalMilestones(last);
@@ -54,6 +55,8 @@ public class Progress {
 
   private HashMap<SetType, Float> getValuesChangeBy(int changeCount, FitnessSet start, FitnessSet goal) {
     HashMap<SetType, Float> changeBy = new HashMap<>();
+
+    // Determine how many changes needs to be done to sets. 
     int setDifference = goal.getSets() - start.getSets();
     if(setDifference < 0) {
       throw new ArithmeticException("Difference between goal and start sets is negative");
@@ -75,20 +78,22 @@ public class Progress {
   } 
 
   private FitnessSet createFitnessSet(FitnessSet fs, FitnessSet goal, HashMap<SetType, Float> setValuesChangeBy) {
+    // Prepare new FitnessSet variables.
     String name = goal.getName();
     int sets = fs.getSets();
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.putAll(fs.getSetValues());
 
-    // The increment by fitness set is based on randomness (50% set increase, 50% set value increase).
+    // The increment by fitness set is based on randomness (66.7% set increase, 33.3% set value increase).
     // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
     boolean randomFinished = false;
     while(!randomFinished) {
-      int increment = rand.nextInt(2);
+      int increment = rand.nextInt(3);
       switch(increment) {
         case 0:
         // Increase sets.
+        case 1:
           if(fs.getSets() < goal.getSets()) {
             sets++;
             for(SetType type : setValues.keySet()) {
@@ -97,14 +102,15 @@ public class Progress {
             randomFinished = true;
             break;
           }
-        case 1:
+        case 2:
         // Increase set values.
           Object[] setTypes = setValues.keySet().toArray();
           SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
           SetType altType = getAlternativeType(setTypes, type);
+          // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!fs.greaterThan(goal, type).orElse(true) && !fs.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(fs.getSetValues(type), setValuesChangeBy.get(type)));
-            setValues.put(altType, cloneArray(fs.getSetValues(altType)));
+            setValues.put(altType, cloneArray(fs.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
             randomFinished = true;
             break;
           }
@@ -116,6 +122,7 @@ public class Progress {
   }
 
   private SetType getAlternativeType(Object[] setTypes, SetType type) {
+    // Gets first set type that isn't the given set type.
     for(Object obj : setTypes) {
       SetType setType = (SetType) obj;
       if(!setType.name().equals(type.name())) {
@@ -148,21 +155,24 @@ public class Progress {
   }
   
   private float[] copyAndAddValue(float[] setValues) {
+    // Return array copy with an extra element to at the end that's equal to the original's last element.
     float[] copy = Arrays.copyOf(setValues, setValues.length + 1);
     copy[copy.length - 1] = copy[copy.length - 2];
     return copy;
   }
 
   private Milestone buildSupplementalMilestones(Milestone milestone) {
-    // TODO(ijelue): Logic to add relevant static fitness sets.
+    // TODO(ijelue): Logic to add relevant static fitness sets as SupplementalMilestones.
     return milestone;
   }
 
   private Milestone updateMilestone(Data data, Milestone milestone) {
+    // Set up model and lastest session.
     ProgressModel model = new ProgressModel(milestone);
     HashMap<String, PeelQueue> supplementalMilestoneSets = milestone.getSupplementalMilestones();
     FitnessSet[] sessionSets = data.getLastSession().getFitnessSets();
     
+    // Progress model based on lastest session.
     for(FitnessSet sessionSet : sessionSets) {
       if(supplementalMilestoneSets != null && supplementalMilestoneSets.containsKey(sessionSet.getName())) {
         model.progressSupplementalMilestone(sessionSet);

@@ -16,6 +16,11 @@ package com.google.sps.progress;
 
 import com.google.sps.util.*;
 
+/*
+ * Meant to hold a StaticFitnessSet for easier generation.
+ * TODO(ijelue):
+ * Add interface with StaticFitnessSet.
+ */
 public class SupplementalMilestone extends PeelNode {
-  // TODO(ijelue): Purpose is to add additional exercises to main exercise line.
+  
 }

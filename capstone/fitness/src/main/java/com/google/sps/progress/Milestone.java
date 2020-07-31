@@ -30,7 +30,6 @@ public class Milestone extends BananaNode {
 
   /**
    * Returns hashmap of supplemental milestones. 
-   * Note: Entities obtained from hashmap have to be casted.
    *
    * @return hashmap of supplemental milestones.
    */

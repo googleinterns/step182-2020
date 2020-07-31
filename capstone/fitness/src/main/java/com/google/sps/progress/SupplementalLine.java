@@ -16,6 +16,11 @@ package com.google.sps.progress;
 
 import com.google.sps.util.*;
 
+/*
+ * Meant to generate and hold SupplementalMilestones by using StaticFitnessSets.
+ * TODO(ijelue):
+ * Add generator similar to main milestone generator.
+ */
 public class SupplementalLine extends PeelQueue {
-  // TODO(ijelue): Purpose is to hold SupplementalMilestones.
+  
 }

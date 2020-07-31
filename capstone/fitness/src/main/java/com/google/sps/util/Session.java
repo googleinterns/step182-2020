@@ -16,7 +16,10 @@ package com.google.sps.util;
 
 import com.google.sps.fit.*;
 
-/* Mock Session. */
+/*
+ * Mock Session object. 
+ * Meant to hold all the FitnessSets done by the user during a scheduled event.
+ */
 public class Session {
 
   private FitnessSet[] fSets;

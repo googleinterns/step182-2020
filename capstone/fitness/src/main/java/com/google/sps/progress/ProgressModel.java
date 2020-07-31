@@ -28,18 +28,12 @@ public class ProgressModel {
   }
 
   private int updateSize(Milestone start) {
+    // Start counts as part of the size.
     int size = 1;
-    BananaNode trueStart = start;
-    
-    while(!trueStart.isHead()) {
-      trueStart = trueStart.getPrev();
-    }
-
-    while(trueStart.getNext() != null) {
-      trueStart = trueStart.getNext();
+    while(start.getNext() != null) {
+      start = start.getNext();
       size++;
     }
-    
     return size;
   }
 
@@ -48,8 +42,7 @@ public class ProgressModel {
   }
   
   /**
-   * Advances to the next milestone if the given fitness set is greater on average than the current
-   * milestone or if the given fitness set is equal to the current milestone.
+   * Advances to the next milestone if the given fitness set is greater than or equal to the current milestone.
    *
    * @param fSet FitnessSet to compare to.
    * @return if the operation was successful.
@@ -94,12 +87,17 @@ public class ProgressModel {
    * @return array representation of all main milestones in the progress model.
    */
   public BananaNode[] toArray() {
+    // Get size from based on uncompleted nodes.
     int length = size;
     BananaNode firstMilestone = head;
+
+    // Get the true size of queue based on the first ever node.
     while(firstMilestone.getPrev() != null) {
       firstMilestone = firstMilestone.getPrev();
       length++;
     }
+
+    // Add all nodes that ever existed in queue to array.
     BananaNode[] milestones = new BananaNode[length];
     for(int i = 0; i < length; i++) {
       milestones[i] = firstMilestone;

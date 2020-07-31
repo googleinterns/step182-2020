@@ -21,20 +21,13 @@
 
 package com.google.sps.fit;
 
-/* Placeholder class for future Supplemental Milestones implementation. */
+/*
+ * TODO(ijelue):
+ * Plan is to have this class be a parser for automatic generation of FitnessSet setValues based on predefined minimums and maximums when requested.
+ */
 public class StaticFitnessSet extends FitnessSet {
-  
-  protected float setMin, setMax;
-  protected float setType1Min, setType1Max;
-  protected float setType2Min, setType2Max;
 
   public StaticFitnessSet(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     super(name, sets, setType1, setType2, setType1Values, setType2Values);
-    setMin = 0;
-    setMax = 1;
-    setType1Min = 0;
-    setType1Max = 1;
-    setType2Min = 0;
-    setType2Max = 1;
   }
 }
