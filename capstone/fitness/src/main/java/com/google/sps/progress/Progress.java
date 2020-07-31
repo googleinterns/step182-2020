@@ -28,7 +28,7 @@ public class Progress {
     Exercise goal = data.getGoal();
 
     // Values to change sets by.
-    // TODO(ijelue): Figure out why it's "-1" (maybe having the start as a goal step offsets the math)
+    // Subtracts "1" to account for start being in progress model.
     HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount - 1, start, goal);
 
     // Start BananaQueue as ProgressModel.
@@ -60,7 +60,7 @@ public class Progress {
     // Determine how many changes needs to be done to sets. 
     int setDifference = goal.getSets() - src.getSets();
     if(setDifference < 0) {
-      throw new ArithmeticException("Difference between goal and src sets is negative");
+      throw new ArithmeticException("Difference between goal and src sets is negative.");
     }
     
     // With this, the changes in the individual non-set parameters will never exceed the days available.
@@ -78,6 +78,11 @@ public class Progress {
       Float setChangeBy = (goal.getSetValues(type)[0] - src.getSetValues(type)[0])/setValuesChangesCount;
       zeros = setChangeBy == 0 ? zeros + 1 : zeros;
       changeBy.put(type, setChangeBy);
+    }
+    
+    // Ensure there's change between set values.
+    if(zeros == changeBy.size()) {
+      throw new ArithmeticException("No set values change.");
     }
 
     // Divide each element by zeros count + 1 to get even distribution.
@@ -97,6 +102,7 @@ public class Progress {
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.putAll(src.getSetValues());
 
+    // TODO(ijelue): Add backup plan if it gets stuck in loop.
     // The increment of the Exercise is based on randomness (66.7% set increase, 33.3% set value increase).
     // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
@@ -140,7 +146,7 @@ public class Progress {
           break;
       }
     }
-    return new Exercise(name, sets, setValues);
+    return new Exercise(name, setValues);
   }
 
   private SetType getAlternativeType(Object[] setTypes, ArrayList<SetType> usedTypes) {

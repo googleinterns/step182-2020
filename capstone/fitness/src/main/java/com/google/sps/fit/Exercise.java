@@ -59,24 +59,49 @@ public class Exercise implements Serializable {
   /* Set type mappings to values. */
   private HashMap<SetType, float[]> setValues;
 
-  public Exercise(String name, int sets, SetType setType, float[] setTypeValues) {
-    this(name, sets, setType, null, setTypeValues, null);
+  public Exercise(String name, SetType setType, float[] setTypeValues) {
+    this(name, setType, null, setTypeValues, null);
   }
 
-  public Exercise(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
+  public Exercise(String name, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
-    this.sets = sets;
+    this.sets = setType1Values.length;
     setValues = new HashMap<>();
     setValues.put(setType1, setType1Values);
     if(setType2 != null) {
       setValues.put(setType2, setType2Values);
     }
+    if(!validateSetValuesLength()) {
+      throw new ArithmeticException("Set values are different lengths.");
+    } 
   }
 
-  public Exercise(String name, int sets, HashMap<SetType, float[]> setValues) {
+  public Exercise(String name, HashMap<SetType, float[]> setValues) {
     this.name = name;
+    int sets = 0;
+    for(SetType type : setValues.keySet()) {
+      sets = setValues.get(type).length;
+      break;
+    }
     this.sets = sets;
     this.setValues = setValues;
+    if(!validateSetValuesLength()) {
+      throw new ArithmeticException("Set values are different lengths.");
+    } 
+  }
+
+  private boolean validateSetValuesLength() {
+    float prevLength = -1;
+    for(SetType type : setValues.keySet()) {
+      if(prevLength == -1) {
+        prevLength = getSetValues(type).length;
+        continue;
+      }
+      if(prevLength != getSetValues(type).length) {
+        return false;
+      }
+    } 
+    return true;
   }
 
   /**
