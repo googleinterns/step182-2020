@@ -42,9 +42,13 @@ Update test names and pseudo test single set/consistent set type
 
 */
 
+  //private final Exercise start = new Exercise("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+  //private final Exercise goal = new Exercise("test", 2, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+  //private final Exercise start = new Exercise("test", 1, SetType.DURATION_DEC, new float[] {600});
+  //private final Exercise goal = new Exercise("test", 1, SetType.DURATION_DEC, new float[] {300});
   private final Exercise start = new Exercise("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-  private final Exercise goal = new Exercise("test", 2, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
-  private final int daysAvailable = 8;
+  private final Exercise goal = new Exercise("test", 1, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
+  private final int daysAvailable = 9;
   private final Data data = new Data(null, null, start, goal, daysAvailable);
 
   @Test

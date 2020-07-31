@@ -28,15 +28,18 @@ public class Progress {
     Exercise goal = data.getGoal();
 
     // Values to change sets by.
-    HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount, start, goal);
+    // TODO(ijelue): Figure out why it's "-1" (maybe having the start as a goal step offsets the math)
+    HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount - 1, start, goal);
 
     // Start BananaQueue as ProgressModel.
     GoalStep current = new GoalStep(start);
     current = buildSupplementalGoalSteps(current);
     ProgressModel model = new ProgressModel(current);
+    System.out.println(setValuesDelta);
 
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
+      System.out.println(model);
       GoalStep next = new GoalStep(createExercise(current.getExercise(), goal, setValuesDelta));
       next = buildSupplementalGoalSteps(next);
       model.addMainGoalStep(next);
@@ -53,25 +56,37 @@ public class Progress {
     return model;
   }
 
-  private HashMap<SetType, Float> getValuesChangeBy(int changeCount, Exercise start, Exercise goal) {
+  private HashMap<SetType, Float> getValuesChangeBy(int changeCount, Exercise src, Exercise goal) {
     HashMap<SetType, Float> changeBy = new HashMap<>();
 
     // Determine how many changes needs to be done to sets. 
-    int setDifference = goal.getSets() - start.getSets();
+    int setDifference = goal.getSets() - src.getSets();
     if(setDifference < 0) {
-      throw new ArithmeticException("Difference between goal and start sets is negative");
+      throw new ArithmeticException("Difference between goal and src sets is negative");
     }
     
     // With this, the changes in the individual non-set parameters will never exceed the days available.
-    float setValuesChangesCount = changeCount/(setDifference  + 1);
+    float setValuesChangesCount = changeCount/(setDifference + 1);
     
     // Splits the current available changes if Exercise is based on two quantitative types.
-    setValuesChangesCount /= start.getSetValues().size();
+    setValuesChangesCount /= src.getSetValues().size();
+
+    // Counts the number of set types that don't change in value from src to goal.
+    // Needed so the algorithm doesn't get stuck on unchanging values.
+    int zeros = 0;
 
     // Sets the change by values based on the first elements in the Exercise's set values.
-    for(SetType type : start.getSetValues().keySet()) {
-      Float setChangeBy = (goal.getSetValues(type)[0] - start.getSetValues(type)[0])/setValuesChangesCount;
+    for(SetType type : src.getSetValues().keySet()) {
+      Float setChangeBy = (goal.getSetValues(type)[0] - src.getSetValues(type)[0])/setValuesChangesCount;
+      zeros = setChangeBy == 0 ? zeros + 1 : zeros;
       changeBy.put(type, setChangeBy);
+    }
+
+    // Divide each element by zeros count + 1 to get even distribution.
+    if(zeros != 0) {
+      for(SetType type : changeBy.keySet()) {
+        changeBy.put(type, changeBy.get(type)/(zeros + 1));
+      }
     }
 
     return changeBy;
@@ -110,7 +125,9 @@ public class Progress {
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
-            setValues.put(altType, cloneArray(src.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
+            if(altType != null) {
+              setValues.put(altType, cloneArray(src.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
+            }
             randomFinished = true;
             break;
           }

@@ -59,6 +59,10 @@ public class Exercise implements Serializable {
   /* Set type mappings to values. */
   private HashMap<SetType, float[]> setValues;
 
+  public Exercise(String name, int sets, SetType setType, float[] setTypeValues) {
+    this(name, sets, setType, null, setTypeValues, null);
+  }
+
   public Exercise(String name, int sets, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
     this.sets = sets;
