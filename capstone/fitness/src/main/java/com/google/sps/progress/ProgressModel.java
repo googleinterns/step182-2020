@@ -27,7 +27,7 @@ public class ProgressModel {
     size = updateSize(start);
   }
 
-  private int updateSize(Milestone start) {
+  private int updateSize(BananaNode start) {
     // Start counts as part of the size.
     int size = 1;
     while(start.getNext() != null) {
