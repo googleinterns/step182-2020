@@ -35,11 +35,9 @@ public class Progress {
     GoalStep current = new GoalStep(start);
     current = buildSupplementalGoalSteps(current);
     ProgressModel model = new ProgressModel(current);
-    System.out.println(setValuesDelta);
-
+    
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
-      System.out.println(model);
       GoalStep next = new GoalStep(createExercise(current.getExercise(), goal, setValuesDelta));
       next = buildSupplementalGoalSteps(next);
       model.addMainGoalStep(next);
@@ -121,13 +119,20 @@ public class Progress {
         // Increase set values.
           Object[] setTypes = setValues.keySet().toArray();
           SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
-          SetType altType = getAlternativeType(setTypes, type);
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
-            if(altType != null) {
-              setValues.put(altType, cloneArray(src.getSetValues(altType))); /* Copies array to avoid array mutation in other objects. */
+            
+            // Copy additional set values to avoid array mutations between various objects
+            ArrayList<SetType> usedTypes = new ArrayList<>();
+            usedTypes.add(type);
+            SetType altType = getAlternativeType(setTypes, usedTypes);
+            while(altType != null) {
+              setValues.put(altType, cloneArray(src.getSetValues(altType)));
+              usedTypes.add(altType);
+              altType = getAlternativeType(setTypes, usedTypes);
             }
+
             randomFinished = true;
             break;
           }
@@ -138,12 +143,11 @@ public class Progress {
     return new Exercise(name, sets, setValues);
   }
 
-  private SetType getAlternativeType(Object[] setTypes, SetType type) {
-    // Gets first set type that isn't the given set type.
+  private SetType getAlternativeType(Object[] setTypes, ArrayList<SetType> usedTypes) {
+    // Gets first set type that hasn't been used yet.
     for(Object obj : setTypes) {
-      SetType setType = (SetType) obj;
-      if(!setType.name().equals(type.name())) {
-        return setType;
+      if(!usedTypes.contains(obj)) {
+        return (SetType) obj;
       }
     }
     return null;
