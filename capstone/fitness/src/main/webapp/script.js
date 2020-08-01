@@ -32,7 +32,11 @@ function addRandomGreeting() {
 // DONE: get current date.
 async function getCalendarInfo(){
     console.log("fetching date");
-    const response = await fetch('/calendar-servlet');
+    const response = await fetch('/calendar');
     const date = await response.text();
     document.getElementById('week-container').innerText = `Planned events for the week of ${date}`;
+}
+
+function redirectToData(){
+    
 }

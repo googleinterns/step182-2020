@@ -19,4 +19,18 @@ public class TrainingSched {
   public void addWorkout(String eventID, String description){
       this.workouts.add(new Workout(eventID, description));
   }
+
+  //function createPln takes in info about user and uses it to populate the TrainingSched's 
+  // workouts array with the appropriate workouts
+  public void createPlan(int age, int wks, double goal, double currentMileTime){
+      
+      //workouts scheduled by week so this will just make it easier
+      int daysInAWeek = 7;
+
+      //number of how many of each workout in a week
+      int longRunNum; // # of "long runs" per week. Between 3 and 5. Depends on goal and # of weeks. 
+      
+
+
+  }
 }

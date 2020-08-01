@@ -13,6 +13,8 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+// package com.google.api.services.calendar;
+// package com.google.api.services.calendar.model;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -29,9 +31,10 @@ import java.util.Collections;
 import java.util.List;
 import com.google.gson.Gson;
 import java.util.Date;
+// import com.google.appengine.api.services.calendar;
 
 /** Servlet that will deal with calendar. */
-@WebServlet("/calendar-servlet")
+@WebServlet("/calendar")
 public class CalendarServlet extends HttpServlet {
   Gson gson = new Gson();
   Date date = new Date();
@@ -40,8 +43,6 @@ public class CalendarServlet extends HttpServlet {
     response.setContentType("text/html;");
     response.getWriter().println(date.toString());
   }
-  public void makeUserPlan(String username){
 
-  }
 
 }

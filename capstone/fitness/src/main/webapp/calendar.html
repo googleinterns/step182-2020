@@ -13,7 +13,6 @@
     <a class="active" href="/">Home</a>
     <a href="/calendar.html">Calendar</a>
     <a href="/">Progress</a>
-    <a href="/">Data</a>
   </div>
   <body onload="getCalendarInfo();">
     <div id="content">
@@ -24,6 +23,9 @@
     <!-- week-container loads in the current week from server using Java date function. -->
     <div id = "week-container">Planned events for the week of XX/XX/XXXX:</div>
     <!-- events-container loads in the workouts from API in JS. -->
+    <!-- loads in workouts for the current day and the next six days -->
     <div id = "events-container"> Workouts here. </div>
+    <!-- comp-workout button redirects to the data page, where the user can input their complete workout -->
+    <button id = "comp-workout"  href = "/">Complete a Workout!</button>
   </body>
 </html>
