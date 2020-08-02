@@ -31,21 +31,25 @@ public class ProgressTest {
   public void testUpdateGoalStepAllStaticSets() {
     // Note: This means the feature does not support only increasing in sets.
     
+    // Defines a start and goal that do not change in average value.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2, 2}, new float[] {600, 600});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Try to build internal ProgressModel, but fail.
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
   }
 
   @Test(expected = ArithmeticException.class)
   public void testUpdateGoalStepMismatchSets() {
+    // Fail to create exercise because the number of sets for one set type does not equal the other.
     Exercise exercise = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600, 600});
   }
 
   @Test(expected = ArithmeticException.class)
   public void testUpdateGoalStepMismatchSetsHashMap() {
+    // Fail to create exercise because the number of sets for one set type does not equal the other.
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.put(SetType.DISTANCE, new float[] {2}); 
     setValues.put(SetType.DURATION_DEC, new float[] {600, 600}); 
@@ -56,24 +60,29 @@ public class ProgressTest {
   public void testUpdateGoalStepLargerGoalInSets() {
     // Note: This means the feature does not support a reduction in sets as progress.
 
+    // Defines a start and goal that decrease in set count.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2, 2}, new float[] {600, 600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4}, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Try to build internal ProgressModel, but fail. 
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
   }
 
   @Test
   public void testUpdateGoalStepSingle() {
+    // Defines a start and goal with only a single set type changing.
     Exercise start = new Exercise(name, SetType.DURATION_DEC, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DURATION_DEC, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Build.
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
 
+    // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
@@ -81,14 +90,17 @@ public class ProgressTest {
 
   @Test
   public void testUpdateGoalStepOneStaticSet() {
+    // Defines a start and goal with a single set type changing and the other remaining the same.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Build.
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
 
+    // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
@@ -96,14 +108,17 @@ public class ProgressTest {
 
   @Test
   public void testUpdateGoalStepMulitpleSetTypes() {
+    // Defines a start and goal with multiple set and set type changes.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Build.
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
 
+    // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
@@ -111,37 +126,27 @@ public class ProgressTest {
 
   @Test
   public void testUpdateGoalStepWithPrevious() {
+    // Defines a start and goal with multiple set and set type changes.
     Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
     Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
     Data data = new Data(null, null, start, goal, daysAvailable);
 
+    // Build.
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
-    
-    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
-    assertTrue(model.getLast().getExercise().equalTo(goal));
-    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable);
 
+    // Mock new session.
     Session sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
     data = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
+    // Update GoalStep based of off mock session.
     mainGoalStep = progress.getUpdatedGoalStep(data);
-    model = new ProgressModel(mainGoalStep);
+    ProgressModel model = new ProgressModel(mainGoalStep);
 
+    // Test validity of updated dynamic model being a progression.
     boolean greaterThanInOneType = model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DISTANCE).orElse(false) ||
                                    model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DURATION_DEC).orElse(false); 
     assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSets() > start.getSets());
     assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 1);
-
-    sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
-    data = new Data(sess, mainGoalStep, null, null, daysAvailable);
-    
-    mainGoalStep = progress.getUpdatedGoalStep(data);
-    model = new ProgressModel(mainGoalStep);
-    greaterThanInOneType = model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DISTANCE).orElse(false) ||
-                                   model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DURATION_DEC).orElse(false); 
-    assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSets() > start.getSets());
-    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 2);
   }
 }
