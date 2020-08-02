@@ -145,24 +145,19 @@ public class Progress {
           }
         case 2:
         // Increase set values.
-          Object[] setTypes = setValues.keySet().toArray();
-          SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
+          SetType[] setTypes = objArrToSetTypeArr(setValues.keySet().toArray());
+          SetType type = setTypes[rand.nextInt(setTypes.length)];
 
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
             
             // Copy additional set values to avoid array mutations between various objects.
-            ArrayList<SetType> usedTypes = new ArrayList<>();
-            usedTypes.add(type);
-            SetType altType = getAlternativeType(setTypes, usedTypes);
-            
-            while(altType != null) {
-              setValues.put(altType, src.getSetValues(altType).clone());
-              usedTypes.add(altType);
-              altType = getAlternativeType(setTypes, usedTypes);
+            for(SetType altType : setTypes) {
+              if(altType != type) {
+                setValues.put(altType, src.getSetValues(altType).clone());
+              }
             }
-
             randomIncrementFinished = true;
             break;
           }
@@ -196,14 +191,12 @@ public class Progress {
     return copy;
   }
 
-  private SetType getAlternativeType(Object[] setTypes, ArrayList<SetType> usedTypes) {
-    // Gets first set type that hasn't been used yet.
-    for(Object obj : setTypes) {
-      if(!usedTypes.contains(obj)) {
-        return (SetType) obj;
-      }
+  private SetType[] objArrToSetTypeArr(Object[] setTypes) {
+    SetType[] types = new SetType[setTypes.length];
+    for(int i = 0; i < types.length; i++) {
+      types[i] = (SetType) setTypes[i];
     }
-    return null;
+    return types;
   }
 
   private GoalStep updateGoalStep(Data data, GoalStep goalStep) {
