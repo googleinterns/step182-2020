@@ -223,7 +223,7 @@ public class BananaNode implements Serializable {
    * @param peelQueueTag Tag to associated PeelQueue.
    * @return number of PeelNodes in the PeelQueue mapped to tag as an Optional object.
    */
-  public Optional<Integer> getPeelSize(String peelQueueTag) {
+  public Optional<Integer> getSize(String peelQueueTag) {
     Optional<Integer> opt = Optional.empty();
     if(peelQueueExists(peelQueueTag)) {
       opt = Optional.of(getPeelQueue(peelQueueTag).getSize());
