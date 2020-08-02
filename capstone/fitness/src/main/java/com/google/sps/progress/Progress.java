@@ -38,7 +38,12 @@ public class Progress {
     
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
-      GoalStep next = new GoalStep(createExercise(current.getExercise(), goal, setValuesDelta));
+      Exercise exercise = createExercise(current.getExercise(), goal, setValuesDelta);
+      if(exercise == null) {
+        break;
+      }
+
+      GoalStep next = new GoalStep(exercise);
       next = buildSupplementalGoalSteps(next);
       model.addMainGoalStep(next);
       current = next;
@@ -96,13 +101,17 @@ public class Progress {
   } 
 
   private Exercise createExercise(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
+    // If nothing from the src can change then we can stop creating exercises.
+    if(src.equalTo(goal) || src.greaterThan(goal)) {
+      return null;
+    }
+    
     // Prepare new Exercise variables.
     String name = goal.getName();
     int sets = src.getSets();
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.putAll(src.getSetValues());
 
-    // TODO(ijelue): Add backup plan if it gets stuck in loop.
     // The increment of the Exercise is based on randomness (66.7% set increase, 33.3% set value increase).
     // Using a switch statement allows priority to trickle down as changes are no longer applicable.
     Random rand = new Random(); 
