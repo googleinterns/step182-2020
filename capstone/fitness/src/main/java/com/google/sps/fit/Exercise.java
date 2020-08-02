@@ -1,10 +1,3 @@
-// Need: 
-// * comparisons
-// * ways to increment randomly
-// * ways to copy old (with boolean to increment randomly)
-//   * might not work because it should head towards goal
-//   * Maybe pseudo linear randomness
-
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,7 +43,7 @@ public class Exercise implements Serializable {
     }
   }
 
-  /* Exercise Name. */
+  /* Exercise name. */
   private String name;
 
   /* Sets per exercise. */
@@ -122,8 +115,8 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if average of Exercise values are greater than the given Exercise's average 
-   * values for the specific set type. An empty Optional object means the type wasn't in the set values hashmap.
+   * Returns Optional object holding true if average of Exercise values are greater than the given Exercise's average values for 
+   * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
@@ -131,29 +124,12 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are greater than the given one's for the specific set type.
    */
   public Optional<Boolean> greaterThan(Exercise exercise, SetType setType) {
-    Optional<Boolean> opt = Optional.empty();
-    boolean typePresent = false;
-    for(SetType type : setValues.keySet()) {
-      if(setType.name().equals(type.name())) {
-        typePresent = true;
-        if(!type.greaterThan(avg(getSetValues(type)), avg(exercise.getSetValues(type)))) {
-          opt = Optional.of(false);
-        }
-      }
-    }
-    opt = typePresent && !opt.isPresent() ? Optional.of(true) : opt; 
-    return opt;
-  }
-  
-  private float avg(float[] src) {
-    if(src == null) {
-      return 0;
-    }
-    float sum = 0;
-    for(int i = 0; i < src.length; i++) {
-      sum += src[i];
-    }
-    return sum/src.length;
+    float srcAvg = avg(getSetValues(setType));
+    float compAvg = avg(exercise.getSetValues(setType));
+    Optional<Boolean> opt = setType.greaterThan(srcAvg, compAvg) ? opt = Optional.of(true) : Optional.of(false);
+    
+    //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
+    return srcAvg == 0 ? Optional.empty() : opt;
   }
 
   /**
@@ -174,7 +150,7 @@ public class Exercise implements Serializable {
 
   /**
    * Returns Optional object holding true if Exercise is equal to given Exercise in terms of average value. 
-   * An empty Optional object means the type wasn't in the set values hashmap.
+   * An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
@@ -182,18 +158,24 @@ public class Exercise implements Serializable {
    * @return whether this Exercise is equal to the given one.
    */
   public Optional<Boolean> equalTo(Exercise exercise, SetType setType) {
-    Optional<Boolean> opt = Optional.empty();
-    boolean typePresent = false;
-    for(SetType type : setValues.keySet()) {
-      if(setType.name().equals(type.name())) {
-        typePresent = true;
-        if(avg(getSetValues(type)) != avg(exercise.getSetValues(type))) {
-          opt = Optional.of(false);
-        }
-      }
+    float srcAvg = avg(getSetValues(setType));
+    float compAvg = avg(exercise.getSetValues(setType));
+    Optional<Boolean> opt = srcAvg == compAvg ? opt = Optional.of(true) : Optional.of(false);
+    
+    //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
+    return srcAvg == 0 ? Optional.empty() : opt;
+  }
+
+  private float avg(float[] src) {
+    if(src == null) {
+      return 0;
     }
-    opt = typePresent && !opt.isPresent() ? Optional.of(true) : opt; 
-    return opt;
+    
+    float sum = 0;
+    for(int i = 0; i < src.length; i++) {
+      sum += src[i];
+    }
+    return sum/src.length;
   }
 
   public int getSets() {
@@ -220,10 +202,10 @@ public class Exercise implements Serializable {
 
   @Override
   public String toString() {
-    String formattedStr = "";
+    String formattedSetValues = "";
     for(SetType type : setValues.keySet()) {
-      formattedStr += String.format("Type: %s, Value: %s\n", type.name(), Arrays.toString(getSetValues(type)));
+      formattedSetValues += String.format("Type: %s, Value: %s\n", type.name(), Arrays.toString(getSetValues(type)));
     }
-    return String.format("Name: %s\nSets: %d\n%s", name, sets, formattedStr);
+    return String.format("Name: %s\nSets: %d\n%s", name, sets, formattedSetValues);
   }
 }

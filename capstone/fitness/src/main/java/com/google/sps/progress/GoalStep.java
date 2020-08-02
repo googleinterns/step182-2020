@@ -28,21 +28,12 @@ public class GoalStep extends BananaNode {
     this.exercise = exercise;
   }
 
-  /**
-   * Returns hashmap of supplemental goal steps. 
-   *
-   * @return hashmap of supplemental goal steps.
-   */
-  public HashMap<String, PeelQueue> getSupplementalGoalSteps() {
-    return getPeels();
+  public Exercise getExercise() {
+    return exercise;
   }
 
   public String getName() {
     return exercise.getName();
-  }
-
-  public Exercise getExercise() {
-    return exercise;
   }
 
   @Override

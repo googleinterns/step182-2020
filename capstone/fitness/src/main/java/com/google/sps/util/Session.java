@@ -31,5 +31,4 @@ public class Session {
   public Exercise[] getWorkout() {
     return workout;
   } 
-
 }

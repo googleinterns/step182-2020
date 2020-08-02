@@ -30,38 +30,37 @@ public class ProgressModel {
   private int updateSize(BananaNode start) {
     // "start" counts as part of the size.
     int size = 1;
-    while(start.getNext() != null) {
-      start = start.getNext();
+    BananaNode current = start;
+    while(current.getNext() != null) {
+      current = current.getNext();
       size++;
     }
     return size;
   }
 
-  public boolean progressSupplementalGoalStep(Exercise exercise) {
+  /**
+   * Advances to the next supplemental goal step if the given Exercise is greater than or equal to the current goal step.
+   *
+   * @param userExercise Exercise to evaluate.
+   * @return if the operation was successful.
+   */
+  public boolean progressSupplementalGoalStep(Exercise userExercise) {
     return false;
   }
-  
+
   /**
    * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
    *
-   * @param exercise Exercise to compare to.
+   * @param userExercise Exercise to evaluate.
    * @return if the operation was successful.
    */
-  public boolean progressMainGoalStep(Exercise exercise) {
-    Exercise currentExercise = head.getExercise();
-    if(exercise.greaterThan(currentExercise) || exercise.equalTo(currentExercise)) {
+  public boolean progressMainGoalStep(Exercise userExercise) {
+    Exercise exercise = head.getExercise();
+    if(userExercise.greaterThan(exercise) || userExercise.equalTo(exercise)) {
       progressMain();
       return true;
     }
     return false;
-  }
-
-  public boolean addMainGoalStep(GoalStep goalStep) {
-    boolean success = head.enqueue(goalStep);
-    if(success) {
-      size++;
-    }
-    return success;
   }
 
   public BananaNode progressMain() {
@@ -71,6 +70,14 @@ public class ProgressModel {
       head = (GoalStep) head.getNext();
     }
     return oldHead;
+  }
+
+  public boolean addMainGoalStep(GoalStep goalStep) {
+    boolean success = head.enqueue(goalStep);
+    if(success) {
+      size++;
+    }
+    return success;
   }
 
   public GoalStep getCurrentMainGoalStep() {
@@ -90,12 +97,12 @@ public class ProgressModel {
   }
 
   /**
-   * Array representation of all main milestones in the progress model.
+   * Array of all the main goal steps in the progress model.
    * 
-   * @return array representation of all main milestones in the progress model.
+   * @return array of all the main goal steps in the progress model.
    */
   public BananaNode[] toArray() {
-    // Get size from based on uncompleted nodes.
+    // Get size based on uncompleted nodes.
     int length = size;
     BananaNode firstGoalStep = head;
 

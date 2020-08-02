@@ -21,7 +21,16 @@ import java.util.*;
 
 /* Handler for ProgressModel updates. */
 public class Progress {
-  
+
+  public GoalStep getUpdatedGoalStep(Data data) {
+    GoalStep goalStep = data.getCurrentMainGoalStep();
+    if(goalStep == null) {
+      ProgressModel model = buildMainGoalSteps(data);
+      return model.getCurrentMainGoalStep();
+    }
+    return updateGoalStep(data, goalStep);
+  }
+
   private ProgressModel buildMainGoalSteps(Data data) {
     int changeCount = data.getDaysAvailable();
     Exercise start = data.getStart();
@@ -31,28 +40,26 @@ public class Progress {
     // Subtracts "1" to account for start being in progress model.
     HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount - 1, start, goal);
 
-    // Start BananaQueue as ProgressModel.
-    GoalStep current = new GoalStep(start);
-    current = buildSupplementalGoalSteps(current);
+    // Start ProgressModel with starting exercise and build supplemental goal steps on top of it.
+    GoalStep current = buildSupplementalGoalSteps(new GoalStep(start));
     ProgressModel model = new ProgressModel(current);
     
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
       Exercise exercise = createExercise(current.getExercise(), goal, setValuesDelta);
+      // Stop creating exercises if no more exercises can be created (early exit).
       if(exercise == null) {
         break;
       }
 
-      GoalStep next = new GoalStep(exercise);
-      next = buildSupplementalGoalSteps(next);
+      GoalStep next = buildSupplementalGoalSteps(new GoalStep(exercise));
       model.addMainGoalStep(next);
       current = next;
     }
 
-    // Add goal only if it's not the current last one (result of algorithm).
+    // Add goal only if it's not the current last one (can happen with a late exit).
     if(!current.getExercise().equalTo(goal)) {
-      GoalStep last = new GoalStep(goal);
-      last = buildSupplementalGoalSteps(last);
+      GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       model.addMainGoalStep(last);
     }
 
@@ -62,7 +69,7 @@ public class Progress {
   private HashMap<SetType, Float> getValuesChangeBy(int changeCount, Exercise src, Exercise goal) {
     HashMap<SetType, Float> changeBy = new HashMap<>();
 
-    // Determine how many changes needs to be done to sets. 
+    // Determine how many changes need to be done to sets. 
     int setDifference = goal.getSets() - src.getSets();
     if(setDifference < 0) {
       throw new ArithmeticException("Difference between goal and src sets is negative.");
@@ -71,7 +78,7 @@ public class Progress {
     // With this, the changes in the individual non-set parameters will never exceed the days available.
     float setValuesChangesCount = changeCount/(setDifference + 1);
     
-    // Splits the current available changes if Exercise is based on two quantitative types.
+    // Splits the current available changes across all set types.
     setValuesChangesCount /= src.getSetValues().size();
 
     // Counts the number of set types that don't change in value from src to goal.
@@ -85,12 +92,12 @@ public class Progress {
       changeBy.put(type, setChangeBy);
     }
     
-    // Ensure there's change between set values.
+    // Ensure there's change amongst the set values.
     if(zeros == changeBy.size()) {
       throw new ArithmeticException("No set values change.");
     }
 
-    // Divide each element by zeros count + 1 to get even distribution.
+    // Divide each element by zeros count "+1" to get even distribution.
     if(zeros != 0) {
       for(SetType type : changeBy.keySet()) {
         changeBy.put(type, changeBy.get(type)/(zeros + 1));
@@ -100,8 +107,13 @@ public class Progress {
     return changeBy;
   } 
 
+  private GoalStep buildSupplementalGoalSteps(GoalStep goalStep) {
+    // TODO(ijelue): Logic to add relevant supplemental goal steps.
+    return goalStep;
+  }
+
   private Exercise createExercise(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
-    // If nothing from the src can change then we can stop creating exercises.
+    // If nothing from the src can change in relation to the goal, then we shoudln't create a new exercise.
     if(src.equalTo(goal) || src.greaterThan(goal)) {
       return null;
     }
@@ -113,10 +125,10 @@ public class Progress {
     setValues.putAll(src.getSetValues());
 
     // The increment of the Exercise is based on randomness (66.7% set increase, 33.3% set value increase).
-    // Using a switch statement allows priority to trickle down as changes are no longer applicable.
+    // Using a switch statement allows priority to trickle down as changes are no longer applicable to the src.
     Random rand = new Random(); 
-    boolean randomFinished = false;
-    while(!randomFinished) {
+    boolean randomIncrementFinished = false;
+    while(!randomIncrementFinished) {
       int increment = rand.nextInt(3);
       switch(increment) {
         case 0:
@@ -125,30 +137,31 @@ public class Progress {
           if(src.getSets() < goal.getSets()) {
             sets++;
             for(SetType type : setValues.keySet()) {
-              setValues.put(type, copyAndAddValue(setValues.get(type)));
+              setValues.put(type, copyAndAddElement(setValues.get(type)));
             }
-            randomFinished = true;
+            randomIncrementFinished = true;
             break;
           }
         case 2:
         // Increase set values.
           Object[] setTypes = setValues.keySet().toArray();
           SetType type = (SetType) setTypes[rand.nextInt(setTypes.length)];
+
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
             
-            // Copy additional set values to avoid array mutations between various objects
+            // Copy additional set values to avoid array mutations between various objects.
             ArrayList<SetType> usedTypes = new ArrayList<>();
             usedTypes.add(type);
             SetType altType = getAlternativeType(setTypes, usedTypes);
             while(altType != null) {
-              setValues.put(altType, cloneArray(src.getSetValues(altType)));
+              setValues.put(altType, src.getSetValues(altType).clone());
               usedTypes.add(altType);
               altType = getAlternativeType(setTypes, usedTypes);
             }
 
-            randomFinished = true;
+            randomIncrementFinished = true;
             break;
           }
         default:
@@ -158,23 +171,15 @@ public class Progress {
     return new Exercise(name, setValues);
   }
 
-  private SetType getAlternativeType(Object[] setTypes, ArrayList<SetType> usedTypes) {
-    // Gets first set type that hasn't been used yet.
-    for(Object obj : setTypes) {
-      if(!usedTypes.contains(obj)) {
-        return (SetType) obj;
-      }
-    }
-    return null;
+  private float[] copyAndAddElement(float[] setValues) {
+    // Return array copy with an extra element to at the end that's equal to the original's last element.
+    float[] copy = Arrays.copyOf(setValues, setValues.length + 1);
+    copy[copy.length - 1] = copy[copy.length - 2];
+    return copy;
   }
 
-  private float[] cloneArray(float[] arr) {
-    return arr == null ? null : arr.clone();
-  } 
-
-  
   private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
-    // Invariant: setValues are in ascending or descending order.
+    // Invariant: setValues is ordered.
 
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
@@ -189,28 +194,26 @@ public class Progress {
     }
     return copy;
   }
-  
-  private float[] copyAndAddValue(float[] setValues) {
-    // Return array copy with an extra element to at the end that's equal to the original's last element.
-    float[] copy = Arrays.copyOf(setValues, setValues.length + 1);
-    copy[copy.length - 1] = copy[copy.length - 2];
-    return copy;
-  }
 
-  private GoalStep buildSupplementalGoalSteps(GoalStep goalStep) {
-    // TODO(ijelue): Logic to add relevant supplemental goal steps.
-    return goalStep;
+  private SetType getAlternativeType(Object[] setTypes, ArrayList<SetType> usedTypes) {
+    // Gets first set type that hasn't been used yet.
+    for(Object obj : setTypes) {
+      if(!usedTypes.contains(obj)) {
+        return (SetType) obj;
+      }
+    }
+    return null;
   }
 
   private GoalStep updateGoalStep(Data data, GoalStep goalStep) {
     // Set up model and lastest session.
     ProgressModel model = new ProgressModel(goalStep);
-    HashMap<String, PeelQueue> supplementalGoalSteps = goalStep.getSupplementalGoalSteps();
+    Set<String> supplementalGoalSteps = goalStep.getPeels().keySet();
     Exercise[] workout = data.getLastSession().getWorkout();
     
     // Progress model based on lastest session.
     for(Exercise exercise : workout) {
-      if(supplementalGoalSteps != null && supplementalGoalSteps.containsKey(exercise.getName())) {
+      if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
         model.progressSupplementalGoalStep(exercise);
       }
       else if(goalStep.getName().equals(exercise.getName())) {
@@ -219,14 +222,5 @@ public class Progress {
     }
 
     return model.getCurrentMainGoalStep();
-  }
-
-  public GoalStep getUpdatedGoalStep(Data data) {
-    GoalStep goalStep = data.getCurrentMainGoalStep();
-    if(goalStep == null) {
-      ProgressModel model = buildMainGoalSteps(data);
-      return model.getCurrentMainGoalStep();
-    }
-    return updateGoalStep(data, goalStep);
   }
 }

@@ -24,7 +24,9 @@ import java.util.*;
 
 public class ProgressTest {
 
+  /* Large enough to show algorithmic complexity. */
   private final int daysAvailable = 9;
+  
   private final String name = "test";
 
   @Test(expected = ArithmeticException.class)
