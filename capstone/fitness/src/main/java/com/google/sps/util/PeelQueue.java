@@ -14,8 +14,10 @@
 
 package com.google.sps.util;
 
+import java.io.Serializable;
+
 /* Queues referenced in BananaNodes. Holds PeelNodes. */
-public class PeelQueue {
+public class PeelQueue implements Serializable {
 
   private PeelNode head, foot;
   private int size;
