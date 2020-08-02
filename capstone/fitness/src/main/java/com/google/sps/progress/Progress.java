@@ -136,6 +136,7 @@ public class Progress {
         case 1:
           if(src.getSets() < goal.getSets()) {
             sets++;
+            // Update set values to include an extra element.
             for(SetType type : setValues.keySet()) {
               setValues.put(type, copyAndAddElement(setValues.get(type)));
             }
@@ -155,6 +156,7 @@ public class Progress {
             ArrayList<SetType> usedTypes = new ArrayList<>();
             usedTypes.add(type);
             SetType altType = getAlternativeType(setTypes, usedTypes);
+            
             while(altType != null) {
               setValues.put(altType, src.getSetValues(altType).clone());
               usedTypes.add(altType);
@@ -180,7 +182,6 @@ public class Progress {
 
   private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
     // Invariant: setValues is ordered.
-
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
       copy[0] += setValuesChangeBy;
