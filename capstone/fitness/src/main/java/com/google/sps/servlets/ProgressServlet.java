@@ -24,19 +24,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/update-progress")
-public class UpdateProgressServlet extends HttpServlet {
+@WebServlet("/progress")
+public class GetProgressServlet extends HttpServlet {
 
   static Gson gson = new Gson();
-  
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    // Display the complete session screen which then sends a POST to this server.
-    RequestDispatcher view = request.getRequestDispatcher("complete-session.html");
-    view.forward(request, response);
-  }
 
   @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    
+    // Get the users email
+    UserService userService = UserServiceFactory.getUserService();
+    String userEmail = userService.getCurrentUser().getEmail();
+ 
+    Entity user=DataHelper.getUser();
+
+    // Get the users progress from datastore
+    String progressString = (String) user.getProperty(DataHelper.PROGRESS_PROPERTY);
+
+    //Give the output in JSON format
+    response.setContentType("application/json");
+    response.getWriter().println(progressString);
+  }
+
+    @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
     Entity user=DataHelper.getUser();
@@ -91,7 +101,3 @@ public class UpdateProgressServlet extends HttpServlet {
     view.forward(request, response);
   }
 }
-
-
-
-
