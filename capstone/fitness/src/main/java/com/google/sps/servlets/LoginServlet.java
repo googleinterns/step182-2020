@@ -26,7 +26,8 @@ public class LoginServlet extends HttpServlet {
       String logoutUrl = userService.createLogoutURL(redirectUrl);
 
       // JSON string that will be read by JavaScript
-      String output = "[\""+ userEmail +"\",\""+logoutUrl+"\"]";
+      String output = "{\"email\": \""+ userEmail +"\",\"url\": \""+logoutUrl+"\"}";
+      System.out.println(output);
       response.getWriter().println(output);
     } 
     else {
@@ -34,7 +35,8 @@ public class LoginServlet extends HttpServlet {
       String loginUrl = userService.createLoginURL(redirectUrl);
       
       // JSON string that will be read by JavaScript
-      String output = "[\"stranger\",\""+loginUrl+"\"]";
+      String output = "{\"email\": \"stranger\",\"url\": \""+loginUrl+"\"}";
+      System.out.println(output);
       response.getWriter().println(output);
     }
 

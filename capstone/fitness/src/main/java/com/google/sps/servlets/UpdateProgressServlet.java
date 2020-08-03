@@ -8,8 +8,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;  
-import com.google.sps.servlets.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.sps.util.DataHelper;
 import com.google.sps.util.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,13 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/update-progress")
 public class UpdateProgressServlet extends HttpServlet {
 
-  static Gson gson;  
+  static Gson gson = new Gson();
   
-  @Override
-  public void init() {
-    gson = new Gson();
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     // Display the complete session screen which then sends a POST to this server.
@@ -43,35 +38,8 @@ public class UpdateProgressServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    
-    // Get the users email.
-    UserService userService = UserServiceFactory.getUserService();
-    String userEmail = userService.getCurrentUser().getEmail();
 
-    // Redirect if user not found.
-    if(userEmail == null) {
-      RequestDispatcher view = request.getRequestDispatcher("/");
-      view.forward(request, response);
-      System.out.println("user is null");
-    }
-
-    // Set up datastore and get query.
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query(CreateProfileServlet.USER_ENTITY);
-    PreparedQuery results = datastore.prepare(query);
-
-    // Get user from datastore
-    // I tried some other methods for getting the user but they were giving me problems.
-    // This approach is O(n) which should be the same as the built in methods.
-    Entity user=null;
-    loopThroughComments: 
-    for(Entity e : results.asIterable()) {
-        String key = e.getKey().toString();
-        if(!(key == null) && equalKeys(userEmail, key)) {
-          user = e;
-        }
-    }
-
+    Entity user=DataHelper.getUser();
     // Redirect if user not found.
     if(user == null) {
       RequestDispatcher view = request.getRequestDispatcher("/");
@@ -80,10 +48,10 @@ public class UpdateProgressServlet extends HttpServlet {
     }
 
     // Get the users current progress string (JSON format).
-    String progressJson = (String) (user.getProperty(CreateProfileServlet.PROGRESS_PROPERTY));
+    String progressJson = (String) (user.getProperty(DataHelper.PROGRESS_PROPERTY));
 
     // Get the users marathon length
-    double m = (Double) user.getProperty(CreateProfileServlet.MARATHON_LENGTH_PROPERTY);
+    double m = (Double) user.getProperty(DataHelper.MARATHON_LENGTH_PROPERTY);
     Float marathonLength = (float) m;
 
     // Should never happen if user is not null.
@@ -110,33 +78,18 @@ public class UpdateProgressServlet extends HttpServlet {
     MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
     sessions.add(curSession);
 
-    //Convert the sessions back to a JSON string
+    //Convert the sessions back to a JSON string.
     progressJson = gson.toJson(sessions);
 
-    // Putting new progress string.
-    user.setProperty(CreateProfileServlet.PROGRESS_PROPERTY, progressJson);
+    // Update new progress string in datastore.
+    user.setProperty(DataHelper.PROGRESS_PROPERTY, progressJson);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(user);
 
     // Redirect to home.
     RequestDispatcher view = request.getRequestDispatcher("/");
     view.forward(request, response);
   }
-
-
-  /**
-   * equalKeys checks if an email matches the key of a entity.
-   * Entity keys are in the format user("key"), so using the 
-   * substring gets rid of the 'user("' and '")' at both ends.
-   * The complexity of this is O(1)
-   *
-   * @param email - the email of the current user
-   * @param key - the key in the above mentioned format
-   * @return if the email matches the key.
-   */
-  public static boolean equalKeys(String  email, String key) {
-    return key.substring(6, key.length()-2).equals(email);
-  }
-
 }
 
 

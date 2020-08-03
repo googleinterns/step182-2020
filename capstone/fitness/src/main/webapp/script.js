@@ -62,9 +62,10 @@ async function loadDataChart() {
 async function displayLogIn() {
   const loginResponse = await fetch('/login');
   const loginInfo = await loginResponse.json();
+  console.log(loginInfo);
   
-  const userEmail = loginInfo[0]
-  const url = loginInfo[1];
+  const userEmail = loginInfo.email;
+  const url = loginInfo.url;
 
   const loginContainer = document.getElementById("login");
 
