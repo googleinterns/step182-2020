@@ -14,18 +14,22 @@
     <a href="/calendar.html">Calendar</a>
     <a href="/">Progress</a>
   </div>
-  <body onload="getCalendarInfo();">
+  <body onload="getCalendarInfo(); getDate();">
     <div id="content">
     <br><br>
     <h1 style="background-color:Tomato;">Your Calendar</h1>
-    <!-- p1 loads in user's nickname and a short message in Java -->
+    <!-- user-message loads in user's nickname and a short message in Java -->
+    <!-- TODO: use JS to fetch user nickname from datastore.  -->
     <p id = "user-message">Hi [User]!...</p>
     <!-- week-container loads in the current week from server using Java date function. -->
     <div id = "week-container">Planned events for the week of XX/XX/XXXX:</div>
     <!-- events-container loads in the workouts from API in JS. -->
     <!-- loads in workouts for the current day and the next six days -->
     <div id = "events-container"> Workouts here. </div>
-    <!-- comp-workout button redirects to the data page, where the user can input their complete workout -->
-    <button id = "comp-workout"  href = "/">Complete a Workout!</button>
+    <button onclick="getNextWeek();">Next</button>
+    <button onclick="getPreviousWeek();">Prev</button>
+    <!-- comp-workout link redirects to the data page, where the user can input their complete workout -->
+    <a id = "comp-workout"  href = "/">Complete a Workout!</button>
+    
   </body>
 </html>

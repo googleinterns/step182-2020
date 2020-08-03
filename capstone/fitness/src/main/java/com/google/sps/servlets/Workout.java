@@ -1,11 +1,17 @@
- 
+package com.google.sps.servlets;
+
+//Workout class. Stores info and eventID, which corresponds to the database.
+
 public class Workout {
-  String eventID;
-  String description;
+  String eventID; //generated ID from API.
+  String description; //description of the workout ie, "run x miles".
  
   public Workout(String eventID, String description){
     this.eventID=eventID;
     this.description=description;
+  }
+  public Workout(String description){
+      this.description = description;
   }
  
   public String toString(){

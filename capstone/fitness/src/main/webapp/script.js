@@ -12,31 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+//TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
+// get current date.
+async function getDate(){
+  console.log("fetching date");
+  const response = await fetch('/date');
+  const jsonDate = await response.json();
+  console.log("date is " + jsonDate);
+  document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;
 }
 
-// TODO: load in user information from LoginServlet.java
-// TODO: load in user's scheduled events from CalendarServlet.java
-// DONE: get current date.
+//Fetches JSON from server and displays.
 async function getCalendarInfo(){
-    console.log("fetching date");
-    const response = await fetch('/calendar');
-    const date = await response.text();
-    document.getElementById('week-container').innerText = `Planned events for the week of ${date}`;
+  console.log("fetching Workouts");
+  const response = await fetch('/calendar-creation');
+  const jsonArray = await response.json();
+  const eventsContainer = document.getElementById('events-container');
+  var daysInAWeek = 8; 
+  for(var i =0; i < daysInAWeek; i++) {
+    if(jsonArray[i]) {
+      eventsContainer.appendChild(appendEvent("[DAY]: " + jsonArray[i].description + " at [TIME]")); 
+      }
+    }
+  }
+
+// helper function for displaying workouts
+function appendEvent(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
 
-function redirectToData(){
+// These functions work with the prev and next buttons
+// TODO (@piercedw) : build these functions. fetch next week's workouts. change "week of".
+function getNextWeek(){
+
+}
+
+function getPreviousWeek(){
     
 }
+
+
