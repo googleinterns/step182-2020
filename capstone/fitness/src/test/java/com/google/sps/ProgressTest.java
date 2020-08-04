@@ -148,7 +148,7 @@ public class ProgressTest {
     // Test validity of updated dynamic model being a progression.
     boolean greaterThanInOneType = model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DISTANCE).orElse(false) ||
                                    model.getCurrentMainGoalStep().getExercise().greaterThan(start, SetType.DURATION_DEC).orElse(false); 
-    assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSets() > start.getSets());
+    assertTrue(greaterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSetCount() > start.getSetCount());
     assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 1);
   }
 }

@@ -46,8 +46,8 @@ public class Exercise implements Serializable {
   /* Exercise name. */
   private String name;
 
-  /* Sets per exercise. */
-  private int sets;
+  /* Set count per exercise. */
+  private int setCount;
 
   /* Set type mappings to values. */
   private HashMap<SetType, float[]> setValues;
@@ -58,7 +58,7 @@ public class Exercise implements Serializable {
 
   public Exercise(String name, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
     this.name = name;
-    this.sets = setType1Values.length;
+    this.setCount = setType1Values.length;
     setValues = new HashMap<>();
     setValues.put(setType1, setType1Values);
     if(setType2 != null) {
@@ -71,12 +71,12 @@ public class Exercise implements Serializable {
 
   public Exercise(String name, HashMap<SetType, float[]> setValues) {
     this.name = name;
-    int sets = 0;
+    int setCount = 0;
     for(SetType type : setValues.keySet()) {
-      sets = setValues.get(type).length;
+      setCount = setValues.get(type).length;
       break;
     }
-    this.sets = sets;
+    this.setCount = setCount;
     this.setValues = setValues;
     if(!validateSetValuesLength()) {
       throw new ArithmeticException("Set values are different lengths.");
@@ -178,8 +178,8 @@ public class Exercise implements Serializable {
     return sum/src.length;
   }
 
-  public int getSets() {
-    return sets;
+  public int getSetCount() {
+    return setCount;
   }
 
   public HashMap<SetType, float[]> getSetValues() {
@@ -201,9 +201,9 @@ public class Exercise implements Serializable {
   }
 
   public float[][] getPairedValues() {
-    float[][] pairedValues = new float[sets][setValues.size()];
+    float[][] pairedValues = new float[setCount][setValues.size()];
     Set<SetType> types = setValues.keySet();
-    for(int i = 0; i < sets; i++) {
+    for(int i = 0; i < setCount; i++) {
       int j = 0;
       for(SetType type : types) {
         pairedValues[i][j] = getSetValues(type)[i];
@@ -226,6 +226,6 @@ public class Exercise implements Serializable {
     for(float[] pair : pairedValues) {
       formattedSetValues += "\n" + Arrays.toString(pair);
     }
-    return String.format("Name: %s\nSets: %d\n%s\n", name, sets, formattedSetValues);
+    return String.format("Name: %s\nSets: %d\n%s\n", name, setCount, formattedSetValues);
   }
 }

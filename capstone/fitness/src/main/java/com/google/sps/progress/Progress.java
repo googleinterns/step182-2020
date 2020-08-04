@@ -70,7 +70,7 @@ public class Progress {
     HashMap<SetType, Float> changeBy = new HashMap<>();
 
     // Determine how many changes need to be done to sets. 
-    int setDifference = goal.getSets() - src.getSets();
+    int setDifference = goal.getSetCount() - src.getSetCount();
     if(setDifference < 0) {
       throw new ArithmeticException("Difference between goal and src sets is negative.");
     }
@@ -120,7 +120,7 @@ public class Progress {
     
     // Prepare new Exercise variables.
     String name = goal.getName();
-    int sets = src.getSets();
+    int setCount = src.getSetCount();
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.putAll(src.getSetValues());
 
@@ -134,8 +134,8 @@ public class Progress {
         case 0:
         // Increase sets.
         case 1:
-          if(src.getSets() < goal.getSets()) {
-            sets++;
+          if(src.getSetCount() < goal.getSetCount()) {
+            setCount++;
             // Update set values to include an extra element.
             for(SetType type : setValues.keySet()) {
               setValues.put(type, copyAndAddElement(setValues.get(type)));
