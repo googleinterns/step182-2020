@@ -15,7 +15,7 @@ import java.util.Date;
 import com.google.appengine.api.datastore.FetchOptions;
 
 
-public class UserHelper {
+public class DataHandler {
 
   // Constants used for datastore.
   public final static String USER_ENTITY = "user";
