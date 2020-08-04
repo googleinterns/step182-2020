@@ -15,31 +15,18 @@
 package com.google.sps.util;
 
 import com.google.sps.fit.*;
+import com.google.sps.fit.Exercise.SetType;
 import com.google.sps.progress.*;
 
-/* Mock Data Handler. */
-public class Data {
+public class MockData extends Data {
 
-  protected final Session lastSession;
-  protected final GoalStep goalStep;
-  protected final Exercise start;
-  protected final Exercise goal;
-  protected final int daysAvailable;
-
-  public Data(Session lastSession, GoalStep goalStep, Exercise start, Exercise goal, int daysAvailable) {
-    this.lastSession = lastSession;
-    this.goalStep = goalStep;
-    this.start = start;
-    this.goal = goal;
-    this.daysAvailable = daysAvailable;
+  public MockData(GoalStep goalStep) {
+    super(null, goalStep, null, null, 0);
   }
 
+  @Override
   public Session getLastSession() {
-    return lastSession;
-  }
-
-  public GoalStep getCurrentMainGoalStep() {
-    return goalStep;
+    return new Session(new Exercise[] {goalStep.getExercise()});
   }
 
   /**
@@ -47,16 +34,19 @@ public class Data {
    *
    * @return days available from the start to the goal inclusive.
    */
+  @Override
   public int getDaysAvailable() {
-    return daysAvailable;
+    return 9;
   }
 
+  @Override
   public Exercise getStart() {
-    return start;
+    return new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
   }
 
+  @Override
   public Exercise getGoal() {
-    return goal;
+    return new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
   }
 
 }
