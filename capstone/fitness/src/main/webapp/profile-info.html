@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Create Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      
+      <form action="/create-profile" method="POST">
+
+        <!-- Getting data for the progress plan-->
+
+        <div class="input-container">
+          <label for="name">Enter your preferred name:</label>
+          <textarea class="separator" name="name" placeholder="Enter your name" rows="1" cols="30" required></textarea>
+        </div>
+        <br>
+        <br>
+        
+        <div class="input-container">
+          <label for="age">Enter your age</label>
+          <input class="separator" type="number" name="age" min="1" max="128" required>
+        </div>
+        <br>
+        <br>
+        
+        <div class="input-container">
+          <label for="weeksToPrepare">Enter the number of weeks you have to train</label>
+          <input class="separator" type="number" name="weeksToTrain" min="10" required>
+        </div>
+        <br>
+        <br>
+        
+        <div class="input-container">
+          <label for="marathonLength">Enter how long your marathon is in kilometers</label>
+          <input class="separator" type="number" name="marathonLength" min="1" step="0.01" required>
+        </div>
+        <br>
+        <br>
+
+        <div class="input-container">
+          <label for="initialTime">How fast can you run this marathon currently in hours (enter 9999 if N/A)</label>
+          <input class="separator" type="number" name="initialTime" min="1" step="0.01" required>
+        </div>
+        <br>
+        <br>
+
+        <div class="input-container">
+          <label for="goalTime">How fast do you want to be able to run this marathon in hours</label>
+          <input class="separator" type="number" name="goalTime" min="1" step="0.01" required>
+        </div>
+        <br>
+        <br>
+
+        <input type="submit">
+      <form>
+
+    </div>
+  </body>
+</html>
