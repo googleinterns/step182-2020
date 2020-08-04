@@ -25,20 +25,17 @@ public class LoginServlet extends HttpServlet {
       String redirectUrl = "/";
       String logoutUrl = userService.createLogoutURL(redirectUrl);
 
-      // JSON string that will be read by JavaScript
+      // JSON string that will be read by JavaScript.
       String output = "{\"email\": \""+ userEmail +"\",\"url\": \""+logoutUrl+"\"}";
-      System.out.println(output);
       response.getWriter().println(output);
     } 
     else {
       String redirectUrl = "/create-profile";
       String loginUrl = userService.createLoginURL(redirectUrl);
       
-      // JSON string that will be read by JavaScript
+      // JSON string that will be read by JavaScript.
       String output = "{\"email\": \"stranger\",\"url\": \""+loginUrl+"\"}";
-      System.out.println(output);
       response.getWriter().println(output);
     }
-
   }
 }

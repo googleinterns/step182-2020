@@ -14,8 +14,8 @@ function initViewData() {
 }
 
 /**
- Function that fills in the charts div
- Retrieves sesssion data from datastore and displays it on the chart 
+ Function that fills in the charts div.
+ Retrieves sesssion data from datastore and displays it on the chart.
  */
 google.charts.load('current', {packages: ['corechart', 'line']});
 async function loadDataChart() {
@@ -28,17 +28,18 @@ async function loadDataChart() {
   // Gets the JSON object that holds all the sesssions.
   const progressData = await fetch('/progress');
   const dataJson = await progressData.json();
-
-  // Create matrix with sessions numbers and speeds
+  // Create matrix with sessions numbers and speeds.
   var dataRows = [];
-  var i;
-  i=0;
+  var i=0;
   while(dataJson[i]) {
     dataRows[i] = [i, dataJson[i].speed];
     i++;
   }
-  // Adds the data points to the chart 
+  // Adds the data points to the chart.
   data.addRows(dataRows);
+
+  //TODO(gabrieldg)
+  //  Get the initial and goal time to display as horizontal lines.
 
   // Customizing the chart
   var options = {
@@ -62,7 +63,6 @@ async function loadDataChart() {
 async function displayLogIn() {
   const loginResponse = await fetch('/login');
   const loginInfo = await loginResponse.json();
-  console.log(loginInfo);
   
   const userEmail = loginInfo.email;
   const url = loginInfo.url;
@@ -72,7 +72,7 @@ async function displayLogIn() {
   if(userEmail != "stranger") {
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "out");
   }
-  else if(userEmail == "stranger") {
+  else {
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "in");
   }
 }

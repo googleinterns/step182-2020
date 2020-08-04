@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
   This object stores a timespamp, time, and date.
   In the progress servet, it gets added to an arraylist, 
   and then GSON converts it into a JSON string of sessions
-  to be stored in datastore/ 
+  to be stored in datastore.
 */
 public class MarathonSession {
     
@@ -22,7 +22,7 @@ public class MarathonSession {
   private String date;
   
   /**
-   * Constructor for Marathon Session
+   * Constructor for Marathon Session.
    *
    * @param timestamp - the timestamp generated when the user completed the session.
    * @param speed - the time that the user took to complete the session (in hours).

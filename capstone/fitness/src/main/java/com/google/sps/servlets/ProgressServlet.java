@@ -25,17 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/progress")
-public class GetProgressServlet extends HttpServlet {
+public class ProgressServlet extends HttpServlet {
 
   static Gson gson = new Gson();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    // Get the users email
-    UserService userService = UserServiceFactory.getUserService();
-    String userEmail = userService.getCurrentUser().getEmail();
- 
     Entity user=DataHelper.getUser();
 
     // Get the users progress from datastore
@@ -50,39 +46,38 @@ public class GetProgressServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
     Entity user=DataHelper.getUser();
+
+    // TODO(gabrieldg@) change to throw exception.
     // Redirect if user not found.
     if(user == null) {
       RequestDispatcher view = request.getRequestDispatcher("/");
       view.forward(request, response);
-      System.out.println("user is null");
     }
 
     // Get the users current progress string (JSON format).
     String progressJson = (String) (user.getProperty(DataHelper.PROGRESS_PROPERTY));
 
-    // Get the users marathon length
-    double m = (Double) user.getProperty(DataHelper.MARATHON_LENGTH_PROPERTY);
-    Float marathonLength = (float) m;
+    // Get the users marathon length.
+    float marathonLength = (float) (double) user.getProperty(DataHelper.MARATHON_LENGTH_PROPERTY);
 
     // Should never happen if user is not null.
+    // TODO(@gabrieldg) throw actual exception.
     if(progressJson == null) {
       progressJson = "[]";
     }
 
     // Get parameters from progress update and calculate total time.
-    Float hours = Float.parseFloat(request.getParameter("hours"));
-    Float minutes = Float.parseFloat(request.getParameter("minutes"));
-    Float seconds = Float.parseFloat(request.getParameter("seconds"));
-    Float totalhours = hours + minutes/((float) 60) + seconds/((float) 3660);
+    float hours = Float.parseFloat(request.getParameter("hours"));
+    float minutes = Float.parseFloat(request.getParameter("minutes"));
+    float seconds = Float.parseFloat(request.getParameter("seconds"));
+    float totalhours = hours + minutes/((float) 60) + seconds/((float) 3660);
 
     // Convert progress JSON string into an arraylist of sessions.
-    ArrayList<MarathonSession> sessions;
-    sessions = gson.fromJson(progressJson, new TypeToken<List<MarathonSession>>(){}.getType());
+    ArrayList<MarathonSession> sessions = gson.fromJson(progressJson, new TypeToken<List<MarathonSession>>(){}.getType());
 
     // Get the date.
     long timestamp = System.currentTimeMillis();
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-    String date = formatter.format(new Date(timestamp));
+    String date = DataHelper.getDate(timestamp);
     
     // Add current session to the list of sessions.
     MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
