@@ -14,13 +14,12 @@
 
 const rightArrow = "<div class=\"col-sm\"><span>&#8594;</span></div>";
 const goalStepComplete = "<div class=\"col-sm step\"><p>progress</p></div>";
-const goalStepNotComplete = "<div class=\"col-sm step\"><a class=\"btn btn-secondary btn-sm\" href=\"#\" title=\"Goal Step\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"progress\">See Goal Step!</a></div>";
-
-$(document).ready(function(){
-  $('[data-toggle="popover"]').popover();
-});
+const goalStepNotComplete = "<div class=\"col-sm step\"><button type=\"button\" class=\"btn btn-secondary btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"bottom\" data-content=\"proggress\">See Goal Step!</button></div>";
 
 async function loadProgressModel() {
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+  });
   const response = await fetch("/pro");
   const progressList = await response.json();
   document.getElementById("model").innerHTML = "";
