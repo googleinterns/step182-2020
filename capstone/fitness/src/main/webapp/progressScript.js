@@ -12,6 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function getCalendarInfo(){
-  
+const rightArrow = "<div class=\"col-sm\"><span>&#8594;</span></div>";
+const goalStepComplete = "<div class=\"col-sm step\"><p>progress</p></div>";
+const goalStepNotComplete = "<div class=\"col-sm step\"><a class=\"btn btn-secondary btn-sm\" href=\"#\" title=\"Goal Step\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"progress\">See Goal Step!</a></div>";
+
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});
+
+async function loadProgressModel() {
+  const response = await fetch("/pro");
+  const progressList = await response.json();
+  document.getElementById("model").innerHTML = "";
+  for(let i = 0; i < progressList.length; i++) {
+    if(progressList[i].complete) {
+      document.getElementById("model").innerHTML += goalStepComplete.replace("progress", progressList[i].exerciseString);
+    }
+    else {
+      document.getElementById("model").innerHTML += goalStepNotComplete.replace("progress", progressList[i].exerciseString);
+    }
+    if(i != progressList.length - 1) {
+      document.getElementById("model").innerHTML += rightArrow;
+    }
+  }
 }

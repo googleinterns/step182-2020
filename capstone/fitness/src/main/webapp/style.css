@@ -7,3 +7,12 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.step {
+  transition: transform .2s;
+  margin: 0 auto;
+}
+
+.step:hover {
+  transform: scale(1.5); 
+}

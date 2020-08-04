@@ -15,7 +15,6 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
 import java.io.IOException;

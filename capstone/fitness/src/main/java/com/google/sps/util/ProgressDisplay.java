@@ -14,30 +14,15 @@
 
 package com.google.sps.util;
 
-import com.google.sps.fit.Exercise.SetType;
 import com.google.sps.progress.*;
-import java.util.*;
 
 public class ProgressDisplay {
 
-  private final String name;
   private final boolean complete;
-  private final SetType[] setTypes;
-  private final float[][] setTypeValues;
+  private final String exerciseString;
 
   public ProgressDisplay(GoalStep gs) {
-    this.name = gs.getName();
     this.complete = gs.isComplete();
-    Set<SetType> types = gs.getExercise().getSetValues().keySet();
-    SetType[] setTypes = new SetType[types.size()];
-    float[][] setTypeValues = new float[setTypes.length][gs.getExercise().getSets()];
-    int i = 0;
-    for(SetType setType : types) {
-      setTypes[i] = setType;
-      setTypeValues[i] = gs.getExercise().getSetValues(setType);
-      i++;
-    }  
-    this.setTypes = setTypes;
-    this.setTypeValues = setTypeValues;
+    this.exerciseString = gs.getExercise().toString().replaceAll("\n", "<br>"); 
   }
 }
