@@ -56,6 +56,8 @@ public class CreateProfileServlet extends HttpServlet {
     Integer age = Integer.parseInt(request.getParameter(DataHandler.AGE_PROPERTY));
     Integer weeksTotrain = Integer.parseInt(request.getParameter(DataHandler.WEEKS_TO_TRAIN_PROPERTY));
     Float lengthOfMarathon = Float.parseFloat(request.getParameter(DataHandler.MARATHON_LENGTH_PROPERTY));
+    //Divide by 60 to convert to hours
+    Float mileTime = Float.parseFloat(request.getParameter(DataHandler.MILE_TIME_PROPERTY))/60;
     Float initialTime = Float.parseFloat(request.getParameter(DataHandler.INITIAL_TIME_PROPERTY));
     Float goalTime = Float.parseFloat(request.getParameter(DataHandler.GOAL_TIME_PROPERTY));
 
@@ -65,6 +67,7 @@ public class CreateProfileServlet extends HttpServlet {
     newUser.setProperty(DataHandler.MARATHON_LENGTH_PROPERTY, lengthOfMarathon);
     newUser.setProperty(DataHandler.WEEKS_TO_TRAIN_PROPERTY, weeksTotrain);
     newUser.setProperty(DataHandler.PROGRESS_PROPERTY, "[]");
+    newUser.setProperty(DataHandler.MILE_TIME_PROPERTY, mileTime);
     newUser.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
     newUser.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
 
