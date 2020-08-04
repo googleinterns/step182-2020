@@ -9,7 +9,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.sps.util.DataHelper;
+import com.google.sps.util.UserHelper;
 import com.google.sps.util.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -32,10 +32,10 @@ public class ProgressServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    Entity user=DataHelper.getUser();
+    Entity user=UserHelper.getUser();
 
     // Get the users progress from datastore
-    String progressString = (String) user.getProperty(DataHelper.PROGRESS_PROPERTY);
+    String progressString = (String) user.getProperty(UserHelper.PROGRESS_PROPERTY);
 
     //Give the output in JSON format
     response.setContentType("application/json");
@@ -45,7 +45,7 @@ public class ProgressServlet extends HttpServlet {
     @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-    Entity user=DataHelper.getUser();
+    Entity user=UserHelper.getUser();
 
     // TODO(gabrieldg@) change to throw exception.
     // Redirect if user not found.
@@ -55,10 +55,10 @@ public class ProgressServlet extends HttpServlet {
     }
 
     // Get the users current progress string (JSON format).
-    String progressJson = (String) (user.getProperty(DataHelper.PROGRESS_PROPERTY));
+    String progressJson = (String) (user.getProperty(UserHelper.PROGRESS_PROPERTY));
 
     // Get the users marathon length.
-    float marathonLength = (float) (double) user.getProperty(DataHelper.MARATHON_LENGTH_PROPERTY);
+    float marathonLength = (float) (double) user.getProperty(UserHelper.MARATHON_LENGTH_PROPERTY);
 
     // Should never happen if user is not null.
     // TODO(@gabrieldg) throw actual exception.
@@ -77,7 +77,7 @@ public class ProgressServlet extends HttpServlet {
 
     // Get the date.
     long timestamp = System.currentTimeMillis();
-    String date = DataHelper.getDate(timestamp);
+    String date = UserHelper.getDate(timestamp);
     
     // Add current session to the list of sessions.
     MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
@@ -87,7 +87,7 @@ public class ProgressServlet extends HttpServlet {
     progressJson = gson.toJson(sessions);
 
     // Update new progress string in datastore.
-    user.setProperty(DataHelper.PROGRESS_PROPERTY, progressJson);
+    user.setProperty(UserHelper.PROGRESS_PROPERTY, progressJson);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(user);
 
