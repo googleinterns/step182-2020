@@ -200,12 +200,32 @@ public class Exercise implements Serializable {
     return name;
   }
 
+  public float[][] getPairedValues() {
+    float[][] pairedValues = new float[sets][setValues.size()];
+    Set<SetType> types = setValues.keySet();
+    for(int i = 0; i < sets; i++) {
+      int j = 0;
+      for(SetType type : types) {
+        pairedValues[i][j] = getSetValues(type)[i];
+        j++;
+      }
+    }
+    return pairedValues;
+  }
+
   @Override
   public String toString() {
-    String formattedSetValues = "";
+    String formattedSetValues = "[";
+    
     for(SetType type : setValues.keySet()) {
-      formattedSetValues += String.format("Type: %s, Value: %s\n", type.name(), Arrays.toString(getSetValues(type)));
+      formattedSetValues += String.format("%s, ", type.name());
     }
-    return String.format("Name: %s\nSets: %d\n%s", name, sets, formattedSetValues);
+    formattedSetValues = formattedSetValues.substring(0, formattedSetValues.length() - 2);
+    formattedSetValues += "]";
+    float[][] pairedValues = getPairedValues();
+    for(float[] pair : pairedValues) {
+      formattedSetValues += "\n" + Arrays.toString(pair);
+    }
+    return String.format("Name: %s\nSets: %d\n%s\n", name, sets, formattedSetValues);
   }
 }
