@@ -83,7 +83,7 @@ public class ProgressTest {
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
-
+    
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
@@ -101,7 +101,7 @@ public class ProgressTest {
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
-
+    
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
@@ -119,7 +119,7 @@ public class ProgressTest {
     Progress progress = new Progress();
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
     ProgressModel model = new ProgressModel(mainGoalStep);
-
+    
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
     assertTrue(model.getLast().getExercise().equalTo(goal));
