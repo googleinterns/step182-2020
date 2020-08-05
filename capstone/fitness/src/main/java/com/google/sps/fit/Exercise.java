@@ -29,13 +29,13 @@ public class Exercise implements Serializable {
     
     /**
      * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
-     * returning a "greater than" comparison for two numbers depending on if more of the stat is better.
+     * returning a "better than" comparison for two numbers depending on if more of the stat is better.
      *
      * @param src starting float
      * @param comp float to compare to
-     * @return if the starting float is "greater than" its comparison.
+     * @return if the starting float is better than its comparison.
      */
-    public boolean greaterThan(float src, float comp) {
+    public boolean betterThan(float src, float comp) {
       if(this.name().contains("_DEC")) {
         return src < comp;
       }
@@ -46,68 +46,85 @@ public class Exercise implements Serializable {
   /* Exercise name. */
   private String name;
 
-  /* Sets per exercise. */
-  private int sets;
+  /* Set count per exercise. */
+  private int setCount;
 
   /* Set type mappings to values. */
   private HashMap<SetType, float[]> setValues;
 
-  public Exercise(String name, SetType setType, float[] setTypeValues) {
-    this(name, setType, null, setTypeValues, null);
-  }
+  public static class Builder {
+    private final String name;
+    private final HashMap<SetType, float[]> setValues;
+    private int setCount;
 
-  public Exercise(String name, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
-    this.name = name;
-    this.sets = setType1Values.length;
-    setValues = new HashMap<>();
-    setValues.put(setType1, setType1Values);
-    if(setType2 != null) {
-      setValues.put(setType2, setType2Values);
+    public Builder(String name) {
+      this.name = name;
+      this.setValues = new HashMap<>();
+      setCount = -1;
     }
-    if(!validateSetValuesLength()) {
-      throw new ArithmeticException("Set values are different lengths.");
-    } 
-  }
 
-  public Exercise(String name, HashMap<SetType, float[]> setValues) {
-    this.name = name;
-    int sets = 0;
-    for(SetType type : setValues.keySet()) {
-      sets = setValues.get(type).length;
-      break;
+    public Builder addSetTypeWithValues(SetType type, float[] values) {
+      if(setValues.isEmpty()) {
+        setCount = values.length;
+      }
+
+      if(setCount != values.length) {
+        throw new ArithmeticException("Set values are different lengths.");
+      }
+      
+      if(type == null || values == null) {
+        throw new NullPointerException("Type or values is null.");
+      }
+      
+      setValues.put(type, values);
+      return this;
     }
-    this.sets = sets;
-    this.setValues = setValues;
-    if(!validateSetValuesLength()) {
-      throw new ArithmeticException("Set values are different lengths.");
-    } 
+
+    public Builder addSetValues(HashMap<SetType, float[]> setValues) {
+      if(setValues == null) {
+        throw new NullPointerException("Type or values is null.");
+      }
+      
+      for(SetType type : setValues.keySet()) {
+        float[] values = setValues.get(type);
+        
+        if(this.setValues.isEmpty()) {
+          setCount = values.length;
+        }
+
+        if(setCount != values.length) {
+          throw new ArithmeticException("Set values are different lengths.");
+        }
+        
+        this.setValues.put(type, values);
+      }
+      return this;
+    }
+
+    public Exercise build() {
+      Exercise exercise = new Exercise();
+      exercise.name = name;
+      exercise.setCount = setCount;
+      exercise.setValues = setValues;
+      return exercise;
+    }
   }
 
-  private boolean validateSetValuesLength() {
-    float prevLength = -1;
-    for(SetType type : setValues.keySet()) {
-      if(prevLength == -1) {
-        prevLength = getSetValues(type).length;
-        continue;
-      }
-      if(prevLength != getSetValues(type).length) {
-        return false;
-      }
-    } 
-    return true;
-  }
+  private Exercise(){}
 
   /**
-   * Returns true if average of Exercise values are greater than the given Exercise's average 
+   * Returns true if average of Exercise values are better than the given Exercise's average 
    * values in each type.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
-   * @return whether this Exercise's average values are greater than the given one's.
+   * @return whether this Exercise's average values are better than the given one's.
    */
-  public boolean greaterThan(Exercise exercise) {
+  public boolean betterThan(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      if(!type.greaterThan(avg(getSetValues(type)), avg(exercise.getSetValues(type)))) {
+      float srcAvg = avg(getSetValues(type));
+      float compAvg = avg(exercise.getSetValues(type));
+      if(!type.betterThan(srcAvg, compAvg)) {
         return false;
       }
     }
@@ -115,33 +132,37 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if average of Exercise values are greater than the given Exercise's average values for 
+   * Returns Optional object holding true if average of Exercise values are better than the given Exercise's average values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
-   * @return whether this Exercise's average values are greater than the given one's for the specific set type.
+   * @return whether this Exercise's average values are better than the given one's for the specific set type.
    */
-  public Optional<Boolean> greaterThan(Exercise exercise, SetType setType) {
+  public Optional<Boolean> betterThan(Exercise exercise, SetType setType) {
     float srcAvg = avg(getSetValues(setType));
     float compAvg = avg(exercise.getSetValues(setType));
-    Optional<Boolean> opt = setType.greaterThan(srcAvg, compAvg) ? opt = Optional.of(true) : Optional.of(false);
+    boolean comparison = setType.betterThan(srcAvg, compAvg);
+    Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
     return srcAvg == 0 ? Optional.empty() : opt;
   }
 
   /**
-   * Returns true if Exercise is equal to given Exercise in terms of average value.
+   * Returns true if the average of Exercise values are equal to the given Exercise's average 
+   * values in each type.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
-   * @return whether this Exercise is equal to the given one.
+   * @return whether this Exercise's average values are equal to the given one's.
    */
   public boolean equalTo(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      if(avg(getSetValues(type)) != avg(exercise.getSetValues(type))) {
+      float srcAvg = avg(getSetValues(type));
+      float compAvg = avg(exercise.getSetValues(type));
+      if(srcAvg != compAvg) {
         return false;
       }
     }
@@ -149,18 +170,19 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if Exercise is equal to given Exercise in terms of average value. 
-   * An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
+   * Returns Optional object holding true if average of Exercise values are equal to the given Exercise's average values for 
+   * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
-   * @return whether this Exercise is equal to the given one.
+   * @return whether this Exercise's average values are equal to the given one's for the specific set type.
    */
   public Optional<Boolean> equalTo(Exercise exercise, SetType setType) {
     float srcAvg = avg(getSetValues(setType));
     float compAvg = avg(exercise.getSetValues(setType));
-    Optional<Boolean> opt = srcAvg == compAvg ? opt = Optional.of(true) : Optional.of(false);
+    boolean comparison = srcAvg == compAvg;
+    Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
     return srcAvg == 0 ? Optional.empty() : opt;
@@ -178,8 +200,8 @@ public class Exercise implements Serializable {
     return sum/src.length;
   }
 
-  public int getSets() {
-    return sets;
+  public int getSetCount() {
+    return setCount;
   }
 
   public HashMap<SetType, float[]> getSetValues() {
@@ -201,9 +223,9 @@ public class Exercise implements Serializable {
   }
 
   public float[][] getPairedValues() {
-    float[][] pairedValues = new float[sets][setValues.size()];
+    float[][] pairedValues = new float[setCount][setValues.size()];
     Set<SetType> types = setValues.keySet();
-    for(int i = 0; i < sets; i++) {
+    for(int i = 0; i < setCount; i++) {
       int j = 0;
       for(SetType type : types) {
         pairedValues[i][j] = getSetValues(type)[i];
@@ -226,6 +248,6 @@ public class Exercise implements Serializable {
     for(float[] pair : pairedValues) {
       formattedSetValues += "\n" + Arrays.toString(pair);
     }
-    return String.format("Name: %s\nSets: %d\n%s\n", name, sets, formattedSetValues);
+    return String.format("Name: %s\nSets: %d\n%s\n", name, setCount, formattedSetValues);
   }
 }
