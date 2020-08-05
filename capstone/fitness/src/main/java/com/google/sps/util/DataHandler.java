@@ -33,6 +33,17 @@ public class DataHandler {
   public final static String GOAL_TIME_PROPERTY = "goalTime";
   public final static String PROGRESS_PROPERTY = "progress";
   public final static String MILE_TIME_PROPERTY = "mileTime";
+  static {
+    PROPERTIES.add(NAME_PROPERTY);
+    PROPERTIES.add(AGE_PROPERTY);
+    PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
+    PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
+    PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
+    PROPERTIES.add(INITIAL_TIME_PROPERTY);
+    PROPERTIES.add(GOAL_TIME_PROPERTY);
+    PROPERTIES.add(PROGRESS_PROPERTY);
+    PROPERTIES.add(MILE_TIME_PROPERTY);
+  }
  
 
   static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -95,5 +106,25 @@ public class DataHandler {
     return null;
   }
 
+ /**
+  * GetData returns a datapoint from datastore for a user
+  */
+  public static String getData(String property) throws Exception {
+    // Check if property exists
+    if(!PROPERTIES.contains(property)) {
+      throw new Exception("Invalid Property");
+    }
+    Entity user = getUser();
+    // Check if user is signed in
+    if(user == null) {
+      throw new Exception("Not signed in");
+    }
+
+    String data = (String) (user.getProperty(property));
+
+    return data;
+    
+  }
+}
  
 
