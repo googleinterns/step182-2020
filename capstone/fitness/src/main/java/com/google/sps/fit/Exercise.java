@@ -52,50 +52,65 @@ public class Exercise implements Serializable {
   /* Set type mappings to values. */
   private HashMap<SetType, float[]> setValues;
 
-  public Exercise(String name, SetType setType, float[] setTypeValues) {
-    this(name, setType, null, setTypeValues, null);
-  }
+  public static class Builder {
+    private final String name;
+    private final HashMap<SetType, float[]> setValues;
+    private int setCount;
 
-  public Exercise(String name, SetType setType1, SetType setType2, float[] setType1Values, float[] setType2Values) {
-    this.name = name;
-    this.setCount = setType1Values.length;
-    setValues = new HashMap<>();
-    setValues.put(setType1, setType1Values);
-    if(setType2 != null) {
-      setValues.put(setType2, setType2Values);
+    public Builder(String name) {
+      this.name = name;
+      this.setValues = new HashMap<>();
+      setCount = -1;
     }
-    if(!validateSetValuesLength()) {
-      throw new ArithmeticException("Set values are different lengths.");
-    } 
-  }
 
-  public Exercise(String name, HashMap<SetType, float[]> setValues) {
-    this.name = name;
-    int setCount = 0;
-    for(SetType type : setValues.keySet()) {
-      setCount = setValues.get(type).length;
-      break;
+    public Builder addSetTypeWithValues(SetType type, float[] values) {
+      if(setValues.isEmpty()) {
+        setCount = values.length;
+      }
+
+      if(setCount != values.length) {
+        throw new ArithmeticException("Set values are different lengths.");
+      }
+      
+      if(type == null || values == null) {
+        throw new NullPointerException("Type or values is null.");
+      }
+      
+      setValues.put(type, values);
+      return this;
     }
-    this.setCount = setCount;
-    this.setValues = setValues;
-    if(!validateSetValuesLength()) {
-      throw new ArithmeticException("Set values are different lengths.");
-    } 
+
+    public Builder addSetValues(HashMap<SetType, float[]> setValues) {
+      if(setValues == null) {
+        throw new NullPointerException("Type or values is null.");
+      }
+      
+      for(SetType type : setValues.keySet()) {
+        float[] values = setValues.get(type);
+        
+        if(this.setValues.isEmpty()) {
+          setCount = values.length;
+        }
+
+        if(setCount != values.length) {
+          throw new ArithmeticException("Set values are different lengths.");
+        }
+        
+        this.setValues.put(type, values);
+      }
+      return this;
+    }
+
+    public Exercise build() {
+      Exercise exercise = new Exercise();
+      exercise.name = name;
+      exercise.setCount = setCount;
+      exercise.setValues = setValues;
+      return exercise;
+    }
   }
 
-  private boolean validateSetValuesLength() {
-    float prevLength = -1;
-    for(SetType type : setValues.keySet()) {
-      if(prevLength == -1) {
-        prevLength = getSetValues(type).length;
-        continue;
-      }
-      if(prevLength != getSetValues(type).length) {
-        return false;
-      }
-    } 
-    return true;
-  }
+  private Exercise(){}
 
   /**
    * Returns true if average of Exercise values are better than the given Exercise's average 

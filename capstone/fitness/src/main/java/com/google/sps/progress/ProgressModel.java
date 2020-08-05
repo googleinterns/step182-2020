@@ -16,6 +16,7 @@ package com.google.sps.progress;
 
 import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
+import com.google.sps.fit.Exercise.Builder;
 import com.google.sps.util.*;
 import java.util.*;
 
@@ -167,7 +168,9 @@ public class ProgressModel {
           break;
       }
     }
-    return new Exercise(name, setValues);
+    return new Exercise.Builder(name)
+        .addSetValues(setValues)
+        .build();
   }
 
   private float[] copyAndAddElement(float[] setValues) {

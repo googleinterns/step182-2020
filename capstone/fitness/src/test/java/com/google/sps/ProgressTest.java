@@ -18,6 +18,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
+import com.google.sps.fit.Exercise.Builder;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
 import java.util.*;
@@ -34,8 +35,16 @@ public class ProgressTest {
     // Note: This means the feature does not support only increasing in sets.
     
     // Defines a start and goal that do not change in average value.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2, 2}, new float[] {600, 600});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
+
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2, 2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600, 600})
+        .build();
+
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Try to build internal ProgressModel, but fail.
@@ -45,16 +54,22 @@ public class ProgressTest {
   @Test(expected = ArithmeticException.class)
   public void testUpdateGoalStepMismatchSets() {
     // Fail to create exercise because the number of sets for one set type does not equal the other.
-    Exercise exercise = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600, 600});
+    Exercise exercise = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600, 600})
+        .build();
   }
 
   @Test(expected = ArithmeticException.class)
   public void testUpdateGoalStepMismatchSetsHashMap() {
-    // Fail to create exercise because the number of sets for one set type does not equal the other.
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.put(SetType.DISTANCE, new float[] {2}); 
     setValues.put(SetType.DURATION_DEC, new float[] {600, 600}); 
-    Exercise exercise = new Exercise(name, setValues);
+    
+    // Fail to create exercise because the number of sets for one set type does not equal the other.
+    Exercise exercise = new Exercise.Builder(name)
+        .addSetValues(setValues)
+        .build();
   }
 
   @Test(expected = ArithmeticException.class)
@@ -62,8 +77,16 @@ public class ProgressTest {
     // Note: This means the feature does not support a reduction in sets as progress.
 
     // Defines a start and goal that decrease in set count.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2, 2}, new float[] {600, 600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4}, new float[] {300});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2, 2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600, 600})
+        .build();
+
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {4})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
+        .build();
+
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Try to build internal ProgressModel, but fail. 
@@ -73,8 +96,14 @@ public class ProgressTest {
   @Test
   public void testUpdateGoalStepSingle() {
     // Defines a start and goal with only a single set type changing.
-    Exercise start = new Exercise(name, SetType.DURATION_DEC, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DURATION_DEC, new float[] {300});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
+    
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
+        .build();
+    
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
@@ -89,8 +118,16 @@ public class ProgressTest {
   @Test
   public void testUpdateGoalStepOneStaticSet() {
     // Defines a start and goal with a single set type changing and the other remaining the same.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {300});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
+
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
+        .build();
+
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
@@ -105,8 +142,16 @@ public class ProgressTest {
   @Test
   public void testUpdateGoalStepMulitpleSetTypes() {
     // Defines a start and goal with multiple set and set type changes.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
+    
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {4, 4})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
+        .build();
+
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
@@ -121,8 +166,16 @@ public class ProgressTest {
   @Test
   public void testUpdateGoalStepWithPrevious() {
     // Defines a start and goal with multiple set and set type changes.
-    Exercise start = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
-    Exercise goal = new Exercise(name, SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+    Exercise start = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
+    
+    Exercise goal = new Exercise.Builder(name)
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {4, 4})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
+        .build();
+    
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
