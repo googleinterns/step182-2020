@@ -21,6 +21,7 @@ const unCompletedButtonStyle = "btn-light";
 async function loadProgressModel() {
   const response = await fetch("/pro");
   const progressList = await response.json();
+  console.log(progressList);
   document.getElementById("model").innerHTML = "";
 
   for(let i = 0; i < progressList.length; i++) {

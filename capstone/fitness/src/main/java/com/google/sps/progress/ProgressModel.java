@@ -47,14 +47,14 @@ public class ProgressModel {
     // Start ProgressModel with starting exercise and build supplemental goal steps on top of it.
     GoalStep current = buildSupplementalGoalSteps(new GoalStep(start));
     head = current;
+    size++;
 
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
       Exercise marker = createMarker(current.getMarker(), goal, setValuesDelta);
       
       // Stop creating exercises if no more exercises can be created (early exit).
-      if(marker == null || marker.betterThan(goal) || marker.equalTo(goal)) {
-        System.out.println("Stops!!");
+      if(marker == null) {
         break;
       }
 
@@ -64,7 +64,7 @@ public class ProgressModel {
     }
 
     // Add goal only if it's not the current last one (can happen with a late exit).
-    if(!current.getMarker().betterThan(goal) && !current.getMarker().equalTo(goal)) {
+    if(!current.getMarker().equalTo(goal)) {
       GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       addMainGoalStep(last);
     }
