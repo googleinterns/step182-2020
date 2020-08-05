@@ -14,7 +14,7 @@
     <a href="/calendar.html">Calendar</a>
     <a href="/">Progress</a>
   </div>
-  <body onload="getCalendarInfo(); getDate();">
+  <body onload="getCalendarInfo(); getDate(); getUser();">
     <div id="content">
     <br><br>
     <h1 style="background-color:Tomato;">Your Calendar</h1>
@@ -26,8 +26,6 @@
     <!-- events-container loads in the workouts from API in JS. -->
     <!-- loads in workouts for the current day and the next four days -->
     <div id = "events-container"> Workouts here. </div>
-    <button onclick="getNextWeek();">Next</button>
-    <button onclick="getPreviousWeek();">Prev</button>
     <!-- comp-workout link redirects to the data page, where the user can input their complete workout -->
     <a id = "comp-workout"  href = "/">Complete a Workout!</button>
     

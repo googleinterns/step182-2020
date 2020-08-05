@@ -76,6 +76,7 @@ async function displayLogIn() {
   const url = loginInfo.url;
 
   const loginContainer = document.getElementById("login");
+  
 
   if(userEmail != "stranger") {
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "out");
@@ -98,24 +99,18 @@ function createLoginTemplate(name, url, type) {
   return template;
 }
 
-//Fetches JSON from server and displays.
+async function getUser(){
+  const loginResponse = await fetch('/login');
+  const loginInfo = await loginResponse.json();
+  
+  const userEmail = loginInfo.email;
+  usernameContainer = document.getElementById("user-message");
+  usernameContainer.innerHTML = "Hello " + userEmail + ".";
+}
+//TODO (@piercedw) :
+//Fetches JSON from server and displays exercises.
 async function getCalendarInfo(){
-  console.log("fetching Workouts");
-  const response = await fetch('/calendar-creation');
-  const jsonArray = await response.json();
-  const eventsContainer = document.getElementById('events-container');
-  var daysInAWeek = 8; 
-  for(var i =0; i < daysInAWeek; i++) {
-    if(jsonArray[i]) {
-      // TODO (@piercedw) : fetch day and time from servlet
-      eventsContainer.appendChild(appendEvent("[DAY]: " + jsonArray[i].description + " at [TIME]")); 
-      }
-    }
+  console.log("fetching exercises");
   }
 
-// helper function for displaying workouts
-function appendEvent(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
+

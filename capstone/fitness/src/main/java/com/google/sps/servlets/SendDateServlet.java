@@ -30,6 +30,7 @@ import java.util.Date;
 public class SendDateServlet extends HttpServlet {
   Gson gson = new Gson();
   Date date = new Date();
+  DateTime dateTimeFormat = new DateTime(date);
 
   // hardcoded values for user input for dev purposes. 
   // TODO (piercedw@) : Integrate with Gabriel's authentication feature and fetch user data from datastore.
