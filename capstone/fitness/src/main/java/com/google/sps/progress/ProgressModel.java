@@ -123,7 +123,6 @@ public class ProgressModel {
     
     // Prepare new Exercise variables.
     String name = goal.getName();
-    int setCount = src.getSetCount();
     HashMap<SetType, float[]> setValues = new HashMap<>();
     setValues.putAll(src.getSetValues());
 
@@ -138,7 +137,6 @@ public class ProgressModel {
         // Increase sets.
         case 1:
           if(src.getSetCount() < goal.getSetCount()) {
-            setCount++;
             // Update set values to include an extra element.
             for(SetType type : setValues.keySet()) {
               setValues.put(type, copyAndAddElement(setValues.get(type)));
