@@ -245,9 +245,11 @@ public class Exercise implements Serializable {
     formattedSetValues = formattedSetValues.substring(0, formattedSetValues.length() - 2);
     formattedSetValues += "]";
     float[][] pairedValues = getPairedValues();
+    int setCount = 1;
     for(float[] pair : pairedValues) {
-      formattedSetValues += "\n" + Arrays.toString(pair);
+      formattedSetValues += String.format("\n Set %d: %s", setCount, Arrays.toString(pair));
+      setCount++;
     }
-    return String.format("Name: %s\nSets: %d\n%s\n", name, setCount, formattedSetValues);
+    return String.format("Name: %s\n%s\n", name, formattedSetValues);
   }
 }

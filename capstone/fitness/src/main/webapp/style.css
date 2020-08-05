@@ -13,6 +13,7 @@
   margin: 0 auto auto auto;
 }
 
+/* TODO(ijelue): Fix visual error that occurs when goal step is close to left side of screen (or avoid it with margins). */
 .step:hover {
   transform: scale(1.5);
 }

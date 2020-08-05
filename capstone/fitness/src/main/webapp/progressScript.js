@@ -25,7 +25,7 @@ async function loadProgressModel() {
 
   for(let i = 0; i < progressList.length; i++) {
     let formattedStr = goalStep.replace("stepMessage", stepMessage).replace("stepMessage", stepMessage);
-    
+
     if(i == 0) {
       formattedStr = formattedStr.replace(stepMessage, "Start").replace(stepMessage, "Start"); 
     }
