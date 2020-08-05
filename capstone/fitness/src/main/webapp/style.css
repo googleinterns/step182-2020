@@ -10,9 +10,9 @@
 
 .step {
   transition: transform .2s;
-  margin: 0 auto;
+  margin: 0 auto auto auto;
 }
 
 .step:hover {
-  transform: scale(1.5); 
+  transform: scale(1.5);
 }

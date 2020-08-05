@@ -13,25 +13,43 @@
 // limitations under the License.
 
 const rightArrow = "<div class=\"col-sm\"><span>&#8594;</span></div>";
-const goalStepComplete = "<div class=\"col-sm step\"><p>progress</p></div>";
-const goalStepNotComplete = "<div class=\"col-sm step\"><button type=\"button\" class=\"btn btn-secondary btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"bottom\" data-content=\"proggress\">See Goal Step!</button></div>";
+const stepMessage = "Step number";
+const goalStep = "<div class=\"col-sm step\"><button title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"bottom\" data-content=\"progress\" data-html=\"true\">stepMessage</button></div>";
+const completedButtonStyle = "btn-dark";
+const unCompletedButtonStyle = "btn-light";
 
 async function loadProgressModel() {
-  $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
-  });
   const response = await fetch("/pro");
   const progressList = await response.json();
   document.getElementById("model").innerHTML = "";
+
   for(let i = 0; i < progressList.length; i++) {
-    if(progressList[i].complete) {
-      document.getElementById("model").innerHTML += goalStepComplete.replace("progress", progressList[i].exerciseString);
+    let formattedStr = goalStep.replace("stepMessage", stepMessage).replace("stepMessage", stepMessage);
+    
+    if(i == 0) {
+      formattedStr = formattedStr.replace(stepMessage, "Start").replace(stepMessage, "Start"); 
+    }
+    else if(i == progressList.length - 1) {
+      formattedStr = formattedStr.replace(stepMessage, "Goal").replace(stepMessage, "Goal");
     }
     else {
-      document.getElementById("model").innerHTML += goalStepNotComplete.replace("progress", progressList[i].exerciseString);
+      formattedStr = formattedStr.replace("number", i).replace("number", i);
     }
+
+    if(progressList[i].complete) {
+      formattedStr = formattedStr.replace("buttonType", completedButtonStyle);
+    }
+    else {
+      formattedStr = formattedStr.replace("buttonType", unCompletedButtonStyle);
+    }
+
+    formattedStr = formattedStr.replace("progress", progressList[i].exerciseString);
+    
+    document.getElementById("model").innerHTML += formattedStr;
+    
     if(i != progressList.length - 1) {
       document.getElementById("model").innerHTML += rightArrow;
     }
   }
+  $('[data-toggle="popover"]').popover();
 }

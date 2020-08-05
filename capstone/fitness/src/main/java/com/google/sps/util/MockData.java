@@ -31,7 +31,7 @@ public class MockData extends Data {
 
   @Override
   public int getDaysAvailable() {
-    return 9;
+    return 15;
   }
 
   @Override
