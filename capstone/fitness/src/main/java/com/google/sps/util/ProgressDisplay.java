@@ -23,6 +23,6 @@ public class ProgressDisplay {
 
   public ProgressDisplay(GoalStep gs) {
     this.complete = gs.isComplete();
-    this.exerciseString = gs.getExercise().toString().replaceAll("\n", "<br>"); 
+    this.exerciseString = gs.getMarker().toString().replaceAll("\n", "<br>"); 
   }
 }

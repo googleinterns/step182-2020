@@ -36,9 +36,7 @@ public class ProgressServlet extends HttpServlet {
   }
 
   private List<ProgressDisplay> getProgressDisplays(Data data) {
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
+    ProgressModel model = new ProgressModel(data);
     GoalStep[] goalSteps = bananaArrToGoalsArr(model.toArray());
     List<ProgressDisplay> display = new ArrayList<>();
     for(GoalStep goalStep : goalSteps) {

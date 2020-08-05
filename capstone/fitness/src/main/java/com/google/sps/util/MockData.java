@@ -26,14 +26,9 @@ public class MockData extends Data {
 
   @Override
   public Session getLastSession() {
-    return new Session(new Exercise[] {goalStep.getExercise()});
+    return new Session(new Exercise[] {goalStep.getMarker()});
   }
 
-  /**
-   * Returns days available from the start to the goal inclusive.
-   *
-   * @return days available from the start to the goal inclusive.
-   */
   @Override
   public int getDaysAvailable() {
     return 9;
@@ -41,12 +36,18 @@ public class MockData extends Data {
 
   @Override
   public Exercise getStart() {
-    return new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {2}, new float[] {600});
+    return new Exercise.Builder("test")
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
+        .build();
   }
 
   @Override
   public Exercise getGoal() {
-    return new Exercise("test", SetType.DISTANCE, SetType.DURATION_DEC, new float[] {4, 4}, new float[] {300, 300});
+    return new Exercise.Builder("test")
+        .addSetTypeWithValues(SetType.DISTANCE, new float[] {4, 4})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
+        .build();
   }
 
 }

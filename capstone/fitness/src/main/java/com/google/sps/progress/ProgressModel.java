@@ -16,7 +16,6 @@ package com.google.sps.progress;
 
 import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
-import com.google.sps.fit.Exercise.Builder;
 import com.google.sps.util.*;
 import java.util.*;
 
