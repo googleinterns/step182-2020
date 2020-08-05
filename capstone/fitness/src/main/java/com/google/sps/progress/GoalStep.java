@@ -21,23 +21,23 @@ import java.util.*;
 /* Progress marker that holds an Exercise. */
 public class GoalStep extends BananaNode {
 
-  private final Exercise exercise;
+  private final Exercise marker;
 
-  public GoalStep(Exercise exercise) {
+  public GoalStep(Exercise marker) {
     super();
-    this.exercise = exercise;
+    this.marker = marker;
   }
 
-  public Exercise getExercise() {
-    return exercise;
+  public Exercise getMarker() {
+    return marker;
   }
 
   public String getName() {
-    return exercise.getName();
+    return marker.getName();
   }
 
   @Override
   public String toString() {
-    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), exercise.toString());
+    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), marker.toString());
   }
 }

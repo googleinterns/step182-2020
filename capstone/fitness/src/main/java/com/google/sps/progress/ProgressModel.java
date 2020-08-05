@@ -55,8 +55,8 @@ public class ProgressModel {
    * @return if the operation was successful.
    */
   public boolean progressMainGoalStep(Exercise userExercise) {
-    Exercise exercise = head.getExercise();
-    if(userExercise.betterThan(exercise) || userExercise.equalTo(exercise)) {
+    Exercise marker = head.getMarker();
+    if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
       progressMain();
       return true;
     }

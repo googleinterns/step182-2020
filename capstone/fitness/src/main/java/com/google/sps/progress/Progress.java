@@ -46,19 +46,19 @@ public class Progress {
     
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
-      Exercise exercise = createExercise(current.getExercise(), goal, setValuesDelta);
+      Exercise marker = createMarker(current.getMarker(), goal, setValuesDelta);
       // Stop creating exercises if no more exercises can be created (early exit).
-      if(exercise == null) {
+      if(marker == null) {
         break;
       }
 
-      GoalStep next = buildSupplementalGoalSteps(new GoalStep(exercise));
+      GoalStep next = buildSupplementalGoalSteps(new GoalStep(marker));
       model.addMainGoalStep(next);
       current = next;
     }
 
     // Add goal only if it's not the current last one (can happen with a late exit).
-    if(!current.getExercise().betterThan(goal) || !current.getExercise().equalTo(goal)) {
+    if(!current.getMarker().betterThan(goal) || !current.getMarker().equalTo(goal)) {
       GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       model.addMainGoalStep(last);
     }
@@ -112,7 +112,7 @@ public class Progress {
     return goalStep;
   }
 
-  private Exercise createExercise(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
+  private Exercise createMarker(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
     // If nothing from the src can change in relation to the goal, then we shoudln't create a new exercise.
     if(src.betterThan(goal) || src.equalTo(goal)) {
       return null;

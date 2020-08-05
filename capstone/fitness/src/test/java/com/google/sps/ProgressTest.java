@@ -85,8 +85,8 @@ public class ProgressTest {
     ProgressModel model = new ProgressModel(mainGoalStep);
     
     // Test validity of dynamic model.
-    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
-    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
+    assertTrue(model.getLast().getMarker().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
   }
 
@@ -103,8 +103,8 @@ public class ProgressTest {
     ProgressModel model = new ProgressModel(mainGoalStep);
     
     // Test validity of dynamic model.
-    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
-    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
+    assertTrue(model.getLast().getMarker().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
   }
 
@@ -121,8 +121,8 @@ public class ProgressTest {
     ProgressModel model = new ProgressModel(mainGoalStep);
     
     // Test validity of dynamic model.
-    assertTrue(model.getCurrentMainGoalStep().getExercise().equalTo(start));
-    assertTrue(model.getLast().getExercise().equalTo(goal));
+    assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
+    assertTrue(model.getLast().getMarker().equalTo(goal));
     assertTrue(model.getSize() <= daysAvailable);
   }
 
@@ -138,7 +138,7 @@ public class ProgressTest {
     GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
 
     // Mock new session.
-    Session sess = new Session(new Exercise[] {mainGoalStep.getExercise()});
+    Session sess = new Session(new Exercise[] {mainGoalStep.getMarker()});
     data = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
     // Update GoalStep based of off mock session.
@@ -146,9 +146,9 @@ public class ProgressTest {
     ProgressModel model = new ProgressModel(mainGoalStep);
 
     // Test validity of updated dynamic model being a progression.
-    boolean betterThanInOneType = model.getCurrentMainGoalStep().getExercise().betterThan(start, SetType.DISTANCE).orElse(false) ||
-                                   model.getCurrentMainGoalStep().getExercise().betterThan(start, SetType.DURATION_DEC).orElse(false); 
-    assertTrue(betterThanInOneType || model.getCurrentMainGoalStep().getExercise().getSetCount() > start.getSetCount());
+    boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||
+                                   model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DURATION_DEC).orElse(false); 
+    assertTrue(betterThanInOneType || model.getCurrentMainGoalStep().getMarker().getSetCount() > start.getSetCount());
     assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 1);
   }
 }
