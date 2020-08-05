@@ -36,12 +36,14 @@ public class CreatePlanServlet extends HttpServlet {
   private final static int wks = 14; 
   private final static double goal = 26.2;
   private final static double mileTime = 11.0; 
+
+  private MockCalendar mock = new MockCalendar();
   
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
     
     TrainingSched training = new TrainingSched(email);
-    training.createPlan(age, wks, goal, mileTime);
+    training.createPlan(age, wks, goal, mileTime, mock);
     response.getWriter().println(gson.toJson(training.getWorkouts()));
   }
 }

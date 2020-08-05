@@ -6,6 +6,7 @@ public class TrainingSched {
   String username;
   // List of workouts that the user is supposed to complete. 
   List workouts;
+  String workoutTitle = "Calendar App Event";
   public TrainingSched(String username){
     this.username = username;
     this.workouts =  new ArrayList<Workout>(); 
@@ -27,7 +28,7 @@ public class TrainingSched {
   }
   //function createPlan takes in info about user and uses it to populate the TrainingSched's 
   // workouts array with the appropriate workouts
-  public void createPlan(int age, int wks, double goal, double currentMileTime){ 
+  public void createPlan(int age, int wks, double goal, double currentMileTime, MyAPI mock){ 
     String restString = "Rest Day. You earned it!"; // string to go with each rest day. 
     int longRunNum;
     int restNum;
@@ -55,10 +56,14 @@ public class TrainingSched {
       for (int b = 0; b<longRunNum; b++){
         this.addWorkout("run " + longRunLength + " miles");
         // TODO (piercedw@): Create as event in calendar and store eventID.
+        // How will I make them on the right date?
+        mock.CreateEvent(workoutTitle, "run " + longRunLength + " miles", new Date());
         }
     for (int b = 0; b<restNum; b++){
       this.addWorkout(restString);
       // TODO (piercedw@): Create as event in calendar and store eventID.
+      mock.CreateEvent(workoutTitle, restString, new Date());
+
     }
     longRunLength +=  Math.floor(goal/wks * 100) / 100; // increment the distance the user runs at the end of each week.
     }

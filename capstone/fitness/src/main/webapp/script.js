@@ -31,6 +31,7 @@ async function getCalendarInfo(){
   var daysInAWeek = 8; 
   for(var i =0; i < daysInAWeek; i++) {
     if(jsonArray[i]) {
+      // TODO (@piercedw) : fetch day and time from servlet
       eventsContainer.appendChild(appendEvent("[DAY]: " + jsonArray[i].description + " at [TIME]")); 
       }
     }
