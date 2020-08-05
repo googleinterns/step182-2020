@@ -39,8 +39,7 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Try to build internal ProgressModel, but fail.
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    ProgressModel model = new ProgressModel(data);
   }
 
   @Test(expected = ArithmeticException.class)
@@ -68,8 +67,7 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Try to build internal ProgressModel, but fail. 
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    ProgressModel model = new ProgressModel(data);
   }
 
   @Test
@@ -80,9 +78,7 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
+    ProgressModel model = new ProgressModel(data);
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -98,9 +94,7 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
+    ProgressModel model = new ProgressModel(data);
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -116,9 +110,7 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
+    ProgressModel model = new ProgressModel(data);
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -134,21 +126,20 @@ public class ProgressTest {
     Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
-    Progress progress = new Progress();
-    GoalStep mainGoalStep = progress.getUpdatedGoalStep(data);
+    ProgressModel model = new ProgressModel(data);
+    GoalStep mainGoalStep = model.getCurrentMainGoalStep();
 
     // Mock new session.
     Session sess = new Session(new Exercise[] {mainGoalStep.getMarker()});
     data = new Data(sess, mainGoalStep, null, null, daysAvailable);
     
     // Update GoalStep based of off mock session.
-    mainGoalStep = progress.getUpdatedGoalStep(data);
-    ProgressModel model = new ProgressModel(mainGoalStep);
+    model = new ProgressModel(data);
 
     // Test validity of updated dynamic model being a progression.
     boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||
                                    model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DURATION_DEC).orElse(false); 
     assertTrue(betterThanInOneType || model.getCurrentMainGoalStep().getMarker().getSetCount() > start.getSetCount());
-    assertTrue(new ProgressModel(mainGoalStep).getSize() <= daysAvailable - 1);
+    assertTrue(model.getSize() <= daysAvailable - 1);
   }
 }
