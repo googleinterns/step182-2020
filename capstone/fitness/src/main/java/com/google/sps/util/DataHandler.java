@@ -23,7 +23,7 @@ public class DataHandler {
   // TODO(@gabrieldg) 
   //  - make private and change to getters and setters.
   //  - Figure out why the identifiers do not work.
-  private static Set<String> PROPERTIES  = new HashSet<>();
+  public static Set<String> PROPERTIES  = new HashSet<>();
   public final static String USER_ENTITY = "user";
   public final static String NAME_PROPERTY = "name";
   public final static String AGE_PROPERTY = "age";
@@ -37,7 +37,6 @@ public class DataHandler {
     PROPERTIES.add(NAME_PROPERTY);
     PROPERTIES.add(AGE_PROPERTY);
     PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
-    PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
     PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
     PROPERTIES.add(INITIAL_TIME_PROPERTY);
     PROPERTIES.add(GOAL_TIME_PROPERTY);
@@ -107,7 +106,11 @@ public class DataHandler {
   }
 
  /**
-  * GetData returns a datapoint from datastore for a user
+  * GetData returns a datapoint from datastore for a user.
+  *
+  * @param property - The property that we want to get.
+  * @param user - The User entity we are dealing with.
+  * @return the value of the data as a String
   */
   public static String getData(String property, Entity user) throws Exception {
     // Check if property exists
@@ -121,8 +124,37 @@ public class DataHandler {
     }
 
     String data = (user.getProperty(property)).toString();
+    return data; 
+  }
 
-    return data;
-    
+  /**
+   * Jsonfy returns a json component in key-value format. It also accounts 
+   * for datapoints that are not strings
+   *
+   * @param property - the key for JSON
+   * @param value - the value for JSON
+   * @param isNumber - wheter or not the value should be wrapped in quoutes
+   * @return the JSON formatted string 
+   */
+  public static String Jsonfy(String property, String value, Boolean isNumber) {
+      // If it is a number we do not put quotes around the value.
+      if(isNumber) {
+        return "\"" + property + "\":"+value;
+      }
+      else {
+        return "\"" + property + "\":\""+value+"\"";
+      }
+  }
+
+  /**
+   * isNumber returns wheter or not a property is a number of not
+   *
+   * @param property - the property we are dealing with
+   * @return - wether or not it should be a number or string. 
+   */
+  public static boolean isNumber(String property) {
+      if(property.equals(NAME_PROPERTY) || property.equals(PROGRESS_PROPERTY))
+        return false;
+      return true;
   }
 }
