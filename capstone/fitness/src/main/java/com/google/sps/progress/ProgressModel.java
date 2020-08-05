@@ -31,8 +31,8 @@ public class ProgressModel {
     }
     else {
       updateGoalStep(data, head);
+      size = updateSize(head);
     }
-    size = updateSize(head);
   }
 
   private void buildMainGoalSteps(Data data) {
@@ -51,8 +51,10 @@ public class ProgressModel {
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
       Exercise marker = createMarker(current.getMarker(), goal, setValuesDelta);
+      
       // Stop creating exercises if no more exercises can be created (early exit).
-      if(marker == null) {
+      if(marker == null || marker.betterThan(goal) || marker.equalTo(goal)) {
+        System.out.println("Stops!!");
         break;
       }
 
@@ -62,7 +64,7 @@ public class ProgressModel {
     }
 
     // Add goal only if it's not the current last one (can happen with a late exit).
-    if(!current.getMarker().betterThan(goal) || !current.getMarker().equalTo(goal)) {
+    if(!current.getMarker().betterThan(goal) && !current.getMarker().equalTo(goal)) {
       GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       addMainGoalStep(last);
     }
@@ -150,7 +152,7 @@ public class ProgressModel {
 
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
           if(!src.betterThan(goal, type).orElse(true) || !src.equalTo(goal, type).orElse(true)) {
-            setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
+            setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type), goal.getSetValues(type)[0], type));
             
             // Copy additional set values to avoid array mutations between various objects.
             for(SetType altType : setTypes) {
@@ -177,20 +179,40 @@ public class ProgressModel {
     return copy;
   }
 
-  private float[] incrementSet(float[] setValues, float setValuesChangeBy) {
+  private float[] incrementSet(float[] setValues, float setValuesChangeBy, float clamp, SetType type) {
     // Invariant: setValues is ordered.
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
-      copy[0] += setValuesChangeBy;
+      if(type.isDec()) {
+        copy[0] = clamp(copy[0] + setValuesChangeBy, clamp, copy[0] + setValuesChangeBy); 
+      }
+      else {
+        copy[0] = clamp(copy[0] + setValuesChangeBy, copy[0] + setValuesChangeBy, clamp);
+      }
     }
     else {
       int i = 1;
       while(copy[0] == copy[i]) {
         i++;
       }
-      copy[i] += setValuesChangeBy;
+      if(type.isDec()) {
+        copy[i] = clamp(copy[i] + setValuesChangeBy, clamp, copy[i] + setValuesChangeBy); 
+      }
+      else {
+        copy[i] = clamp(copy[i] + setValuesChangeBy, copy[i] + setValuesChangeBy, clamp);
+      }
     }
     return copy;
+  }
+
+  private float clamp(float value, float min, float max) {
+    if(value < min) {
+      return min;
+    }
+    if(value > max) {
+      return max;
+    }
+    return value;
   }
 
   private SetType[] objArrToSetTypeArr(Object[] setTypes) {

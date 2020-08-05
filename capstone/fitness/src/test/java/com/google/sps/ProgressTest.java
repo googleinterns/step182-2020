@@ -25,7 +25,7 @@ import java.util.*;
 public class ProgressTest {
 
   /* Large enough to show algorithmic complexity. */
-  private final int daysAvailable = 9;
+  private final int daysAvailable = 15;
   
   private final String name = "test";
 

@@ -27,6 +27,10 @@ public class Exercise implements Serializable {
     REPS,
     WEIGHT;
     
+    public boolean isDec() {
+      return this.name().contains("_DEC");
+    }
+
     /**
      * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
      * returning a "better than" comparison for two numbers depending on if more of the stat is better.
@@ -36,7 +40,7 @@ public class Exercise implements Serializable {
      * @return if the starting float is better than its comparison.
      */
     public boolean betterThan(float src, float comp) {
-      if(this.name().contains("_DEC")) {
+      if(isDec()) {
         return src < comp;
       }
       return src > comp;
@@ -121,14 +125,13 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are better than the given one's.
    */
   public boolean betterThan(Exercise exercise) {
+    boolean betterThan = false;
     for(SetType type : setValues.keySet()) {
       float srcAvg = avg(getSetValues(type));
       float compAvg = avg(exercise.getSetValues(type));
-      if(!type.betterThan(srcAvg, compAvg)) {
-        return false;
-      }
+      betterThan |= type.betterThan(srcAvg, compAvg);
     }
-    return true;
+    return betterThan;
   }
 
   /**
