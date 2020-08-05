@@ -56,7 +56,7 @@ public class ProgressModel {
    */
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise exercise = head.getExercise();
-    if(userExercise.greaterThan(exercise) || userExercise.equalTo(exercise)) {
+    if(userExercise.betterThan(exercise) || userExercise.equalTo(exercise)) {
       progressMain();
       return true;
     }

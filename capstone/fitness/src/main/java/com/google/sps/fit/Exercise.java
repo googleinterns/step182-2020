@@ -29,13 +29,13 @@ public class Exercise implements Serializable {
     
     /**
      * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
-     * returning a "greater than" comparison for two numbers depending on if more of the stat is better.
+     * returning a "better than" comparison for two numbers depending on if more of the stat is better.
      *
      * @param src starting float
      * @param comp float to compare to
-     * @return if the starting float is "greater than" its comparison.
+     * @return if the starting float is better than its comparison.
      */
-    public boolean greaterThan(float src, float comp) {
+    public boolean betterThan(float src, float comp) {
       if(this.name().contains("_DEC")) {
         return src < comp;
       }
@@ -98,16 +98,18 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns true if average of Exercise values are greater than the given Exercise's average 
+   * Returns true if average of Exercise values are better than the given Exercise's average 
    * values in each type.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
-   * @return whether this Exercise's average values are greater than the given one's.
+   * @return whether this Exercise's average values are better than the given one's.
    */
-  public boolean greaterThan(Exercise exercise) {
+  public boolean betterThan(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      if(!type.greaterThan(avg(getSetValues(type)), avg(exercise.getSetValues(type)))) {
+      float srcAvg = avg(getSetValues(type));
+      float compAvg = avg(exercise.getSetValues(type));
+      if(!type.betterThan(srcAvg, compAvg)) {
         return false;
       }
     }
@@ -115,33 +117,37 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if average of Exercise values are greater than the given Exercise's average values for 
+   * Returns Optional object holding true if average of Exercise values are better than the given Exercise's average values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
-   * @return whether this Exercise's average values are greater than the given one's for the specific set type.
+   * @return whether this Exercise's average values are better than the given one's for the specific set type.
    */
-  public Optional<Boolean> greaterThan(Exercise exercise, SetType setType) {
+  public Optional<Boolean> betterThan(Exercise exercise, SetType setType) {
     float srcAvg = avg(getSetValues(setType));
     float compAvg = avg(exercise.getSetValues(setType));
-    Optional<Boolean> opt = setType.greaterThan(srcAvg, compAvg) ? opt = Optional.of(true) : Optional.of(false);
+    boolean comparison = setType.betterThan(srcAvg, compAvg);
+    Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
     return srcAvg == 0 ? Optional.empty() : opt;
   }
 
   /**
-   * Returns true if Exercise is equal to given Exercise in terms of average value.
+   * Returns true if the average of Exercise values are equal to the given Exercise's average 
+   * values in each type.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
-   * @return whether this Exercise is equal to the given one.
+   * @return whether this Exercise's average values are equal to the given one's.
    */
   public boolean equalTo(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      if(avg(getSetValues(type)) != avg(exercise.getSetValues(type))) {
+      float srcAvg = avg(getSetValues(type));
+      float compAvg = avg(exercise.getSetValues(type));
+      if(srcAvg != compAvg) {
         return false;
       }
     }
@@ -149,18 +155,19 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if Exercise is equal to given Exercise in terms of average value. 
-   * An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
+   * Returns Optional object holding true if average of Exercise values are equal to the given Exercise's average values for 
+   * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
-   * @return whether this Exercise is equal to the given one.
+   * @return whether this Exercise's average values are equal to the given one's for the specific set type.
    */
   public Optional<Boolean> equalTo(Exercise exercise, SetType setType) {
     float srcAvg = avg(getSetValues(setType));
     float compAvg = avg(exercise.getSetValues(setType));
-    Optional<Boolean> opt = srcAvg == compAvg ? opt = Optional.of(true) : Optional.of(false);
+    boolean comparison = srcAvg == compAvg;
+    Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
     return srcAvg == 0 ? Optional.empty() : opt;

@@ -58,7 +58,7 @@ public class Progress {
     }
 
     // Add goal only if it's not the current last one (can happen with a late exit).
-    if(!current.getExercise().equalTo(goal)) {
+    if(!current.getExercise().betterThan(goal) || !current.getExercise().equalTo(goal)) {
       GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       model.addMainGoalStep(last);
     }
@@ -114,7 +114,7 @@ public class Progress {
 
   private Exercise createExercise(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
     // If nothing from the src can change in relation to the goal, then we shoudln't create a new exercise.
-    if(src.equalTo(goal) || src.greaterThan(goal)) {
+    if(src.betterThan(goal) || src.equalTo(goal)) {
       return null;
     }
     
@@ -149,7 +149,7 @@ public class Progress {
           SetType type = setTypes[rand.nextInt(setTypes.length)];
 
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
-          if(!src.greaterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
+          if(!src.betterThan(goal, type).orElse(true) || !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type)));
             
             // Copy additional set values to avoid array mutations between various objects.
