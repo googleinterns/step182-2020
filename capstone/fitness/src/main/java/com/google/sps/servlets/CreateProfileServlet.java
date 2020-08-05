@@ -64,6 +64,7 @@ public class CreateProfileServlet extends HttpServlet {
     // Create a user entity that uses the email as the key.
     Entity newUser = new Entity(DataHandler.USER_ENTITY, userEmail);
     newUser.setProperty(DataHandler.NAME_PROPERTY, name);
+    newUser.setProperty(DataHandler.AGE_PROPERTY, age);
     newUser.setProperty(DataHandler.MARATHON_LENGTH_PROPERTY, lengthOfMarathon);
     newUser.setProperty(DataHandler.WEEKS_TO_TRAIN_PROPERTY, weeksTotrain);
     newUser.setProperty(DataHandler.PROGRESS_PROPERTY, "[]");

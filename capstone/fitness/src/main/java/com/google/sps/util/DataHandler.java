@@ -109,22 +109,20 @@ public class DataHandler {
  /**
   * GetData returns a datapoint from datastore for a user
   */
-  public static String getData(String property) throws Exception {
+  public static String getData(String property, Entity user) throws Exception {
     // Check if property exists
     if(!PROPERTIES.contains(property)) {
       throw new Exception("Invalid Property");
     }
-    Entity user = getUser();
+    //Entity user = getUser();
     // Check if user is signed in
     if(user == null) {
       throw new Exception("Not signed in");
     }
 
-    String data = (String) (user.getProperty(property));
+    String data = (user.getProperty(property)).toString();
 
     return data;
     
   }
 }
- 
-
