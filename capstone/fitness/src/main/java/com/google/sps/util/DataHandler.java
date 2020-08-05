@@ -13,11 +13,17 @@ import com.google.appengine.api.users.UserServiceFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.google.appengine.api.datastore.FetchOptions;
+import java.util.HashSet;
+import java.util.Set;
 
 
-public class UserHelper {
+public class DataHandler {
 
   // Constants used for datastore.
+  // TODO(@gabrieldg) 
+  //  - make private and change to getters and setters.
+  //  - Figure out why the identifiers do not work.
+  private static Set<String> PROPERTIES  = new HashSet<>();
   public final static String USER_ENTITY = "user";
   public final static String NAME_PROPERTY = "name";
   public final static String AGE_PROPERTY = "age";
@@ -26,6 +32,8 @@ public class UserHelper {
   public final static String INITIAL_TIME_PROPERTY = "initialTime";
   public final static String GOAL_TIME_PROPERTY = "goalTime";
   public final static String PROGRESS_PROPERTY = "progress";
+  public final static String MILE_TIME_PROPERTY = "mileTime";
+ 
 
   static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -86,4 +94,6 @@ public class UserHelper {
     }
     return null;
   }
-}
+
+ 
+
