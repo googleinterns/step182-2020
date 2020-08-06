@@ -151,7 +151,7 @@ public class ProgressModel {
           SetType type = setTypes[rand.nextInt(setTypes.length)];
 
           // Only increment the specific type if it doesn't equal/"exceed" the goal.
-          if(!src.betterThan(goal, type).orElse(true) || !src.equalTo(goal, type).orElse(true)) {
+          if(!src.betterThan(goal, type).orElse(true) && !src.equalTo(goal, type).orElse(true)) {
             setValues.put(type, incrementSet(src.getSetValues(type), setValuesChangeBy.get(type), goal.getSetValues(type)[0], type));
             
             // Copy additional set values to avoid array mutations between various objects.
