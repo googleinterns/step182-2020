@@ -24,14 +24,24 @@ public class ProgressModel {
   private GoalStep head;
   private int size;
 
+  public ProgressModel(GoalStep[] goalSteps) {
+    if(goalSteps == null) {
+      throw new NullPointerException("Cannot establish progress model with null goal steps and no data.");
+    }
+    else {
+      head = establishConnections(goalSteps);
+      size = updateSize();
+    }
+  }
+
   public ProgressModel(Data data) {
-    head = data.getCurrentMainGoalStep();
-    if(head == null) {
+    GoalStep[] goalSteps = data.getGoalSteps();
+    if(goalSteps == null) {
       buildMainGoalSteps(data);
     }
     else {
-      updateGoalStep(data, head);
-      size = updateSize(head);
+      head = establishConnections(goalSteps);
+      size = updateSize();
     }
   }
 
@@ -47,7 +57,7 @@ public class ProgressModel {
     // Start ProgressModel with starting exercise and build supplemental goal steps on top of it.
     GoalStep current = buildSupplementalGoalSteps(new GoalStep(start));
     head = current;
-    size++;
+    size = 1;
 
     // Build model.
     for(int i = 1; i < changeCount - 1; i++) {
@@ -223,9 +233,39 @@ public class ProgressModel {
     return types;
   }
 
-  private void updateGoalStep(Data data, GoalStep goalStep) {
+  // TODO(ijelue): Throw error for bad input or look higher for error
+  private GoalStep establishConnections(GoalStep[] goalSteps) {
+    if(goalSteps.length == 0) {
+      return null;
+    }
+
+    if(goalSteps.length == 1) {
+      return goalSteps[0];
+    }
+
+    for(GoalStep goalStep : goalSteps) {
+      goalStep.setNext(null);
+    }
+
+    for(int i = 1; i < goalSteps.length; i++) {
+      goalSteps[0].enqueue(goalSteps[i]);
+    }
+    
+    BananaNode goalStep = goalSteps[0];
+    while(!goalStep.isHead()) {
+      goalStep = goalStep.getNext();
+    }
+
+    return (GoalStep) goalStep;
+  }
+
+  public boolean updateGoalStep(Data data) {
+    if(head == null || data.getLastSession() == null) {
+      return false;
+    }
+
     // Set up model and lastest session.
-    Set<String> supplementalGoalSteps = goalStep.getPeels().keySet();
+    Set<String> supplementalGoalSteps = head.getPeels().keySet();
     Exercise[] workout = data.getLastSession().getWorkout();
     
     // Progress model based on lastest session.
@@ -233,10 +273,11 @@ public class ProgressModel {
       if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
         progressSupplementalGoalStep(exercise);
       }
-      else if(goalStep.getName().equals(exercise.getName())) {
-        progressMainGoalStep(exercise);
+      else if(head.getName().equals(exercise.getName())) {
+        System.out.println(progressMainGoalStep(exercise));
       }
     }
+    return true;
   }
 
   /**
@@ -258,6 +299,9 @@ public class ProgressModel {
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
     if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
+      System.out.println(String.format("Better Than: %b, Equal To: %b", userExercise.betterThan(marker), userExercise.equalTo(marker)));
+      System.out.println("Marker: " + marker);
+      System.out.println("User: " + userExercise);
       progressMain();
       return true;
     }
@@ -265,10 +309,13 @@ public class ProgressModel {
   }
 
   public BananaNode progressMain() {
+    if(head == null) {
+     return null;
+    }
     BananaNode oldHead = head.dequeue();
     if(oldHead != null) {
       size--;
-      head = (GoalStep) head.getNext();
+      head = (GoalStep) oldHead.getNext();
     }
     return oldHead;
   }
@@ -297,10 +344,14 @@ public class ProgressModel {
     return (GoalStep) last;
   }
 
-  private int updateSize(BananaNode start) {
-    // "start" counts as part of the size.
+  private int updateSize() {
+    if(head == null) {
+      return 0;
+    }
+
+    // "head" counts as part of the size.
     int size = 1;
-    BananaNode current = start;
+    BananaNode current = head;
     while(current.getNext() != null) {
       current = current.getNext();
       size++;
@@ -313,7 +364,7 @@ public class ProgressModel {
    * 
    * @return array of all the main goal steps in the progress model.
    */
-  public BananaNode[] toArray() {
+  public GoalStep[] toArray() {
     // Get size based on uncompleted nodes.
     int length = size;
     BananaNode firstGoalStep = head;
@@ -330,13 +381,21 @@ public class ProgressModel {
       goalSteps[i] = firstGoalStep;
       firstGoalStep = firstGoalStep.getNext();
     }
+    return bananaArrToGoalsArr(goalSteps);
+  }
+
+  private GoalStep[] bananaArrToGoalsArr(BananaNode[] src) {
+    GoalStep[] goalSteps = new GoalStep[src.length];
+    for(int i = 0; i < goalSteps.length; i++) {
+      goalSteps[i] = (GoalStep) src[i];
+    }
     return goalSteps;
   }
 
   @Override
   public String toString() {
     String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
-    BananaNode[] arr = toArray();
+    GoalStep[] arr = toArray();
     for(int i = 0; i < arr.length; i++) {
       str += arr[i] + "\n\n";
     }

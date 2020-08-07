@@ -20,14 +20,21 @@ import com.google.sps.progress.*;
 
 public class MockData extends Data {
 
-  public MockData(GoalStep goalStep) {
-    super(null, goalStep, null, null, 0);
+  public MockData(Session lastSession, GoalStep[] goalSteps) {
+    super(lastSession, goalSteps, null, null, 0);
   }
 
+  /*
   @Override
   public Session getLastSession() {
+    if(lastSession != null) {
+      return lastSession;
+    }
+    ProgressModel model = new ProgressModel(goalSteps);
+    GoalStep goalStep = model.getCurrentMainGoalStep();
     return new Session(new Exercise[] {goalStep.getMarker()});
   }
+  */
 
   @Override
   public int getDaysAvailable() {

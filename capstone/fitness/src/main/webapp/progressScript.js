@@ -14,14 +14,13 @@
 
 const rightArrow = "<div class=\"col-sm\"><span>&#8594;</span></div>";
 const stepMessage = "Step number";
-const goalStep = "<div class=\"col-sm step\"><button title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"bottom\" data-content=\"progress\" data-html=\"true\">stepMessage</button></div>";
+const goalStep = "<div class=\"row step\"><button title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-content=\"progress\" data-html=\"true\">stepMessage</button></div>";
 const completedButtonStyle = "btn-dark";
 const unCompletedButtonStyle = "btn-light";
 
 async function loadProgressModel() {
   const response = await fetch("/pro");
   const progressList = await response.json();
-  console.log(progressList);
   document.getElementById("model").innerHTML = "";
 
   for(let i = 0; i < progressList.length; i++) {

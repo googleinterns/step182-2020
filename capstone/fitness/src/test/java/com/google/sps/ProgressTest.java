@@ -183,10 +183,10 @@ public class ProgressTest {
 
     // Mock new session.
     Session sess = new Session(new Exercise[] {mainGoalStep.getMarker()});
-    data = new Data(sess, mainGoalStep, null, null, daysAvailable);
+    data = new Data(sess, null, null, null, daysAvailable);
     
     // Update GoalStep based of off mock session.
-    model = new ProgressModel(data);
+    model.updateGoalStep(data);
 
     // Test validity of updated dynamic model being a progression.
     boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||

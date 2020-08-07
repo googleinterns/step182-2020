@@ -19,10 +19,26 @@
   <a href="/progress.html">Progress</a>
   <a href="/">Data</a>
 </div>
-<body onload="loadProgressModel()">
-  <form action="/pro" id="rada">
-    <div id="model" class="row">
-    </div>
+<body onload="loadProgressModel()" id="content">
+  <div id="model">
   </div>
+  <form action="/pro" method="POST">
+    <button class="btn btn-primary btn-sm">Reset Model</button>
+  </form>
+  <form action="/subsess" method="POST">
+    <button class="btn btn-info btn-sm">Go!</button><br>
+    
+    <label id="distance1" for="distance1">Distance 1: </label>
+    <input type="number" id="distance1" name="distance1"><br>
+    
+    <label id="distance2" for="distance2">Distance 2: </label>
+    <input type="number" id="distance2" name="distance2"><br>
+
+    <label id="duration1" for="duration1">Duration 1: </label>
+    <input type="number" id="duration1" name="duration1"><br>
+    
+    <label id="duration2" for="duration2">Duration 2: </label>
+    <input type="number" id="duration2" name="duration2">
+  </form>
 </body>
 </html>

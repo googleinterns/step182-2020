@@ -125,11 +125,11 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are better than the given one's.
    */
   public boolean betterThan(Exercise exercise) {
-    boolean betterThan = false;
+    boolean betterThan = true;
     for(SetType type : setValues.keySet()) {
       float srcAvg = avg(getSetValues(type));
       float compAvg = avg(exercise.getSetValues(type));
-      betterThan |= type.betterThan(srcAvg, compAvg);
+      betterThan &= (type.betterThan(srcAvg, compAvg) || equalTo(exercise, type).orElse(false));
     }
     return betterThan;
   }
@@ -156,16 +156,15 @@ public class Exercise implements Serializable {
   /**
    * Returns true if the average of Exercise values are equal to the given Exercise's average 
    * values in each type.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @return whether this Exercise's average values are equal to the given one's.
    */
   public boolean equalTo(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      float srcAvg = avg(getSetValues(type));
-      float compAvg = avg(exercise.getSetValues(type));
-      if(srcAvg != compAvg) {
+      float srcSum = sum(getSetValues(type));
+      float compSum = sum(exercise.getSetValues(type));
+      if(srcSum != compSum) {
         return false;
       }
     }
@@ -175,23 +174,26 @@ public class Exercise implements Serializable {
   /**
    * Returns Optional object holding true if average of Exercise values are equal to the given Exercise's average values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
    * @return whether this Exercise's average values are equal to the given one's for the specific set type.
    */
   public Optional<Boolean> equalTo(Exercise exercise, SetType setType) {
-    float srcAvg = avg(getSetValues(setType));
-    float compAvg = avg(exercise.getSetValues(setType));
-    boolean comparison = srcAvg == compAvg;
+    float srcSum = sum(getSetValues(setType));
+    float compSum = sum(exercise.getSetValues(setType));
+    boolean comparison = srcSum == compSum;
     Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
-    return srcAvg == 0 ? Optional.empty() : opt;
+    return srcSum == 0 ? Optional.empty() : opt;
   }
 
   private float avg(float[] src) {
+    return sum(src)/src.length;
+  }
+
+  private float sum(float[] src) {
     if(src == null) {
       return 0;
     }
@@ -200,7 +202,7 @@ public class Exercise implements Serializable {
     for(int i = 0; i < src.length; i++) {
       sum += src[i];
     }
-    return sum/src.length;
+    return sum;
   }
 
   public int getSetCount() {

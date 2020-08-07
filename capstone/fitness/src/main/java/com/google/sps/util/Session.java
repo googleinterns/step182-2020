@@ -15,12 +15,13 @@
 package com.google.sps.util;
 
 import com.google.sps.fit.*;
+import java.io.Serializable;
 
 /*
  * Mock Session object. 
  * Meant to hold workout done by the user during a scheduled event.
  */
-public class Session {
+public class Session implements Serializable {
 
   private Exercise[] workout;
 

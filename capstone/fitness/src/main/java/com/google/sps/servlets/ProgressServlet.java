@@ -20,6 +20,7 @@ import com.google.sps.util.*;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,28 +30,40 @@ public class ProgressServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Data data = new MockData(null);
-    List<ProgressDisplay> display = getProgressDisplays(data);
+    HttpSession session = request.getSession();
+    GoalStep[] goalSteps = (GoalStep[]) session.getAttribute("goalSteps");
+    Session lastSession = (Session) session.getAttribute("lastSession");
+    Session current = (Session) session.getAttribute("lastSessionCurrent");
+    if(Objects.deepEquals(lastSession, current)) {
+      lastSession = null;
+    }
+    else {
+      session.setAttribute("lastSessionCurrent", lastSession);
+    }
+    Data data = new MockData(lastSession, goalSteps);
+    ProgressModel model = new ProgressModel(data);
+    if(goalSteps != null) {
+      model.updateGoalStep(data);
+    } 
+    session.setAttribute("goalSteps", model.toArray());
+    List<ProgressDisplay> display = getProgressDisplays(model.toArray());
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));
   }
 
-  private List<ProgressDisplay> getProgressDisplays(Data data) {
-    ProgressModel model = new ProgressModel(data);
-    GoalStep[] goalSteps = bananaArrToGoalsArr(model.toArray());
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpSession session = request.getSession();
+    session.setAttribute("goalSteps", null); 
+    response.sendRedirect("/progress.html");
+  }
+
+  private List<ProgressDisplay> getProgressDisplays(GoalStep[] goalSteps) {
     List<ProgressDisplay> display = new ArrayList<>();
     for(GoalStep goalStep : goalSteps) {
       display.add(new ProgressDisplay(goalStep));
     }
     return display;
-  }
-
-  private GoalStep[] bananaArrToGoalsArr(BananaNode[] src) {
-    GoalStep[] goalSteps = new GoalStep[src.length];
-    for(int i = 0; i < goalSteps.length; i++) {
-      goalSteps[i] = (GoalStep) src[i];
-    }
-    return goalSteps;
   }
 
   private String getJson(List<ProgressDisplay> display) {
