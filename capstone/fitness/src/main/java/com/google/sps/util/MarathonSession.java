@@ -22,13 +22,13 @@ public class MarathonSession {
   private String date;
   
   /**
-   * Constructor for Marathon Session.
-   *
-   * @param timestamp - the timestamp generated when the user completed the session.
-   * @param speed - the time that the user took to complete the session (in hours).
-   * @param date - the date that the user completed the session. It will be in format YYYY/MM/DD.
-   * @return a Marathon session object.
-   */
+  * Constructor for Marathon Session.
+  *
+  * @param  timestamp   The timestamp generated when the user completed the session.
+  * @param  speed       The time that the user took to complete the session (in hours).
+  * @param  date        The date that the user completed the session. It will be in format YYYY/MM/DD.
+  * @return             A Marathon session object.
+  */
   public MarathonSession(long timestamp, float speed, String date) {
     this.timestamp = timestamp;
     this.speed = speed;

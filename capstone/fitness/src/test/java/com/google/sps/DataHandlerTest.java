@@ -40,7 +40,7 @@ public class DataHandlerTest {
   }
 
   @Test
-  public void testGetDataProper() throws Exception {
+  public void testGetData() throws Exception {
 
     DataHandler dh = new DataHandler();
 
@@ -67,14 +67,5 @@ public class DataHandlerTest {
     assertTrue(dh.getData(dh.MILE_TIME_PROPERTY, e).equals("0.2"));
 
     datastore.delete(e.getKey());
-  }
-
-  @Test
-  public void testJsonfy() {
-      DataHandler dh = new DataHandler();
-      String test0 = dh.Jsonfy("prop0","4.0", true);
-      assertTrue(test0.equals("\"prop0\":4.0"));
-      String test1 = dh.Jsonfy("prop1","John", false);
-      assertTrue(test1.equals("\"prop1\":\"John\""));
   }
 }
