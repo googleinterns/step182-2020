@@ -117,9 +117,9 @@ public class Exercise implements Serializable {
   private Exercise(){}
 
   /**
-   * Returns true if average of Exercise values are better than the given Exercise's average 
-   * values in each type.
-   * Note: Uses average to ignore set count.
+   * Returns true if Exercise's values are better than or overall equal to the given Exercise's 
+   * values in each type. Uses average if values should decrement, uses summation if not. The equal
+   * to demonstrates that an exercise cannot become better in all ways.
    * 
    * @param exercise Exercise to compare to.
    * @return whether this Exercise's average values are better than the given one's.
@@ -127,9 +127,13 @@ public class Exercise implements Serializable {
   public boolean betterThan(Exercise exercise) {
     boolean betterThan = true;
     for(SetType type : setValues.keySet()) {
-      float srcAvg = avg(getSetValues(type));
-      float compAvg = avg(exercise.getSetValues(type));
-      betterThan &= (type.betterThan(srcAvg, compAvg) || equalTo(exercise, type).orElse(false));
+      float src = avg(getSetValues(type));
+      float comp = avg(exercise.getSetValues(type));
+      if(!type.isDec()) {
+        src *= getSetValues(type).length;
+        comp *= exercise.getSetValues(type).length;
+      } 
+      betterThan &= (type.betterThan(src, comp) || equalTo(exercise, type).orElse(false));
     }
     return betterThan;
   }
@@ -137,7 +141,6 @@ public class Exercise implements Serializable {
   /**
    * Returns Optional object holding true if average of Exercise values are better than the given Exercise's average values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
@@ -154,7 +157,7 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns true if the average of Exercise values are equal to the given Exercise's average 
+   * Returns true if the summation of Exercise values are equal to the given Exercise's summation 
    * values in each type.
    * 
    * @param exercise Exercise to compare to.
@@ -172,7 +175,7 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if average of Exercise values are equal to the given Exercise's average values for 
+   * Returns Optional object holding true if summation of Exercise values are equal to the given Exercise's summation values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
    * 
    * @param exercise Exercise to compare to.

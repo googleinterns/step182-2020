@@ -128,7 +128,7 @@ public class ProgressModel {
 
   private Exercise createMarker(Exercise src, Exercise goal, HashMap<SetType, Float> setValuesChangeBy) {
     // If nothing from the src can change in relation to the goal, then we shoudln't create a new exercise.
-    if(src.betterThan(goal) || src.equalTo(goal)) {
+    if(src.betterThan(goal)) {
       return null;
     }
     
@@ -274,7 +274,7 @@ public class ProgressModel {
         progressSupplementalGoalStep(exercise);
       }
       else if(head.getName().equals(exercise.getName())) {
-        System.out.println(progressMainGoalStep(exercise));
+        progressMainGoalStep(exercise);
       }
     }
     return true;
@@ -299,9 +299,6 @@ public class ProgressModel {
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
     if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
-      System.out.println(String.format("Better Than: %b, Equal To: %b", userExercise.betterThan(marker), userExercise.equalTo(marker)));
-      System.out.println("Marker: " + marker);
-      System.out.println("User: " + userExercise);
       progressMain();
       return true;
     }
