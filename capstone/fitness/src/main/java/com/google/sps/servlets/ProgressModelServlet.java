@@ -20,7 +20,6 @@ import com.google.sps.util.*;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,20 +39,13 @@ public class ProgressModelServlet extends HttpServlet {
       model = new ProgressModel.Builder()
                   .setJsonGoalSteps(goalStepsJson)
                   .build();
-      if(model.updateGoalStep()) {
+      if(model.updateModel()) {
         DataHandler.setGoalSteps(model.toJson());
       }
     }
     List<ProgressDisplay> display = getProgressDisplays(model.toArray());
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));
-  }
-
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    session.setAttribute("goalSteps", null); 
-    response.sendRedirect("/progress.html");
   }
 
   private List<ProgressDisplay> getProgressDisplays(GoalStep[] goalSteps) {

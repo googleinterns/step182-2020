@@ -346,7 +346,6 @@ public class ProgressModel {
         progressSupplementalGoalStep(exercise);
       }
       else if(head.getName().equals(exercise.getName())) {
-        System.out.println(exercise);
         progressMainGoalStep(exercise);
       }
     }
@@ -354,11 +353,10 @@ public class ProgressModel {
   }
 
   /**
-   * For direct session injection.
+   * Updates model based on direct session injection.
    * Note: Used for testing.
    */
   public boolean updateModel(Session latestSess) {
-    Session latestSess = data.getLastSession();
     if(head == null || latestSess == null) {
       return false;
     }
@@ -414,7 +412,7 @@ public class ProgressModel {
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
     if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
-      System.out.println(progressMain());
+      progressMain();
       return true;
     }
     return false;

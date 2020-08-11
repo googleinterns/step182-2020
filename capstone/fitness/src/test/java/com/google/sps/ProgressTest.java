@@ -174,7 +174,7 @@ public class ProgressTest {
   }
 
   @Test
-  public void testUpdateGoalStepWithPrevious() {
+  public void testUpdateModelWithPrevious() {
     // Defines a start and goal with multiple set and set type changes.
     Exercise start = new Exercise.Builder(name)
         .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
@@ -197,10 +197,9 @@ public class ProgressTest {
 
     // Mock new session.
     Session sess = new Session(new Exercise[] {mainGoalStep.getMarker()});
-    Data data = new Data(sess, null, null, null, weeks);
     
     // Update GoalStep based of off mock session.
-    model.updateGoalStep(data);
+    model.updateModel(sess);
 
     // Test validity of updated dynamic model being a progression.
     boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||
