@@ -2,25 +2,25 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>View Data</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  
-  <body onload="initIndex();">
+  <body onload="initViewData();">
     <div id="content">
+      
       <!-- basic navbar for navigation during development. can be stylized later. -->
       <div class="topnav">
-        <a class="active" href="/">Home</a>
+        <a href="/">Home</a>
         <a href="/calendar.html">Calendar</a>
         <a href="/">Progress</a>
-        <a href="/view-data.html">Data</a>
+        <a class="active" href="/view-data.html">Data</a>
       </div>
       
       <div id="login"></div>
-      <a href="complete-session.html"> Click to complete session. </a>
-      <br>
-      <a href="view-data.html"> Click to view your data. </a>
+      <div id="data-chart"></div>
+      <a href="index.html"> Click to go back home.</a>
     </div>
   </body>
 </html>
