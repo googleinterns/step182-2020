@@ -32,10 +32,9 @@ public class Session implements Serializable {
   }
 
   public Session(MarathonSession ms) {
-    Exercise exercise = new Exercise.Builder("Running For " + ms.getTotalHours() * ms.getSpeed() + " km")
-                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {ms.getTotalHours()})
+    Exercise exercise = new Exercise.Builder("Running")
+                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {ms.getSpeed()})
                           .build();
-    System.out.println("Session Exercise: " + exercise + "\n");
     this.workout = new Exercise[] {exercise};
   }
 

@@ -95,7 +95,7 @@ public class ProgressServlet extends HttpServlet {
     String date = DataHandler.getDate(timestamp);
     
     // Add current session to the list of sessions.
-    MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date, totalhours);
+    MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
     sessions.add(curSession);
 
     //Convert the sessions back to a JSON string.

@@ -33,13 +33,13 @@ public class ProgressModel {
     private int daysAvailable;
 
     public Builder() {
-      String name = "Running for";
+      String name = "Running";
       goalSteps = null;
       // Throw errors instead of default values
-      start = new Exercise.Builder(name + " 1 unit")
+      start = new Exercise.Builder(name)
                   .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {1000})
                   .build();
-      goal = new Exercise.Builder(name + " 1 unit")
+      goal = new Exercise.Builder(name)
                   .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {500})
                   .build();
       daysAvailable = 9;
@@ -59,19 +59,19 @@ public class ProgressModel {
       return this;
     }
 
-    public Builder setDurationDecrementStart(String name, String start) {
+    public Builder setDurationIncrementStart(String name, String start) {
       if(start != null) {
         this.start = new Exercise.Builder(name)
-                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {Float.parseFloat(start)})
+                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(start)})
                           .build();
       }
       return this;
     }
 
-    public Builder setDurationDecrementGoal(String name, String goal) {
+    public Builder setDurationIncrementGoal(String name, String goal) {
       if(goal != null) {
         this.goal = new Exercise.Builder(name)
-                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {Float.parseFloat(goal)})
+                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(goal)})
                           .build();
       }
       return this;
@@ -330,15 +330,15 @@ public class ProgressModel {
     return (GoalStep) goalStep;
   }
 
-  public boolean updateGoalStep() {
-    Session sess = getLastSession();
-    if(head == null || sess == null) {
+  public boolean updateModel() {
+    Session latestSess = getLastSession();
+    if(head == null || latestSess == null) {
       return false;
     }
 
     // Set up model and lastest session.
     Set<String> supplementalGoalSteps = head.getPeels().keySet();
-    Exercise[] workout = sess.getWorkout();
+    Exercise[] workout = latestSess.getWorkout();
     
     // Progress model based on lastest session.
     for(Exercise exercise : workout) {
@@ -346,21 +346,26 @@ public class ProgressModel {
         progressSupplementalGoalStep(exercise);
       }
       else if(head.getName().equals(exercise.getName())) {
+        System.out.println(exercise);
         progressMainGoalStep(exercise);
       }
     }
     return true;
   }
 
-  public boolean updateGoalStep(Data data) {
-    Session sess = data.getLastSession();
-    if(head == null || sess == null) {
+  /**
+   * For direct session injection.
+   * Note: Used for testing.
+   */
+  public boolean updateModel(Session latestSess) {
+    Session latestSess = data.getLastSession();
+    if(head == null || latestSess == null) {
       return false;
     }
 
     // Set up model and lastest session.
     Set<String> supplementalGoalSteps = head.getPeels().keySet();
-    Exercise[] workout = sess.getWorkout();
+    Exercise[] workout = latestSess.getWorkout();
     
     // Progress model based on lastest session.
     for(Exercise exercise : workout) {
@@ -410,7 +415,6 @@ public class ProgressModel {
     Exercise marker = head.getMarker();
     if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
       System.out.println(progressMain());
-      System.out.println(toString());
       return true;
     }
     return false;

@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println(output);
     } 
     else {
-      String redirectUrl = "/profile-info.html";
+      String redirectUrl = "/create-profile";
       String loginUrl = userService.createLoginURL(redirectUrl);
       
       // JSON string that will be read by JavaScript.

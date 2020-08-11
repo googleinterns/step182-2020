@@ -20,8 +20,6 @@ public class MarathonSession {
   private long timestamp;
   private float speed;
   private String date;
-  private float totalHours;
-  
   /**
   * Constructor for Marathon Session.
   *
@@ -30,15 +28,10 @@ public class MarathonSession {
   * @param  date        The date that the user completed the session. It will be in format YYYY/MM/DD.
   * @return             A Marathon session object.
   */
-  public MarathonSession(long timestamp, float speed, String date, float totalHours) {
+  public MarathonSession(long timestamp, float speed, String date) {
     this.timestamp = timestamp;
     this.speed = speed;
     this.date = date;
-    this.totalHours = totalHours;
-  }
-  
-  public float getTotalHours() {
-    return totalHours;
   }
 
   public float getSpeed() {

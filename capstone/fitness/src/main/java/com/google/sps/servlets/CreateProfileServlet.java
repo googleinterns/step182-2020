@@ -76,11 +76,11 @@ public class CreateProfileServlet extends HttpServlet {
     newUser.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
     newUser.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
 
-    String exerciseName = "Running For " + lengthOfMarathon + " km";
+    String exerciseName = "Running";
     newUser.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
                                                             .setDaysAvailable("" + weeksTotrain)
-                                                            .setDurationDecrementStart(exerciseName, "" + initialTime)
-                                                            .setDurationDecrementGoal(exerciseName, "" + goalTime)
+                                                            .setDurationIncrementStart(exerciseName, "" + lengthOfMarathon/initialTime)
+                                                            .setDurationIncrementGoal(exerciseName, "" + lengthOfMarathon/goalTime)
                                                             .build()
                                                             .toJson()));
 

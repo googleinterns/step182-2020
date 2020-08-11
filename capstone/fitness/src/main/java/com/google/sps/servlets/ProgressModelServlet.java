@@ -40,7 +40,9 @@ public class ProgressModelServlet extends HttpServlet {
       model = new ProgressModel.Builder()
                   .setJsonGoalSteps(goalStepsJson)
                   .build();
-      model.updateGoalStep();
+      if(model.updateGoalStep()) {
+        DataHandler.setGoalSteps(model.toJson());
+      }
     }
     List<ProgressDisplay> display = getProgressDisplays(model.toArray());
     response.setContentType("application/json");

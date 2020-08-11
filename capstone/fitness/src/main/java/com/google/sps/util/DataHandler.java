@@ -137,6 +137,13 @@ public class DataHandler {
   }
 
 
+  public static void setGoalSteps(String json) {
+    Entity user = getUser();
+    user.setProperty(GOAL_STEPS_PROPERTY, new Text(json));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(user);
+  }
+
   /**
   * isNumber returns wheter or not a property is a number of not
   *
