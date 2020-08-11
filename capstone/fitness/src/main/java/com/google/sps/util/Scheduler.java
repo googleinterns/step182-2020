@@ -21,14 +21,10 @@ import java.util.*;
 // class scheduler uses the user's free/busy information and the duration of an exercise to find a time in a user's day when
 // the user could do an exercise
 public class Scheduler {
-//   private final ScheduleAdapter scheduleAdapter;
-//   private final CalendarAdapter calendarAdapter;
   private final long exerciseDuration;
 
 
-  public Scheduler(/*ScheduleAdapter scheduleAdapter, CalendarAdapter calendarAdapter,*/ long exerciseDuration) {
-    // this.scheduleAdapter = scheduleAdapter;
-    // this.calendarAdapter = calendarAdapter;
+  public Scheduler(long exerciseDuration) {
     this.exerciseDuration =exerciseDuration;
   }
  

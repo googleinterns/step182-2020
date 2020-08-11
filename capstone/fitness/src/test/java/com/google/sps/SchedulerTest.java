@@ -31,11 +31,8 @@ public class SchedulerTest {
   @Test
   public void SpaceAfterEventsInWindow() {
     Collection<Event> events = new ArrayList<Event>();
-    // events.add(new EasyEvent(15, 50));
-    // events.add(new EasyEvent(70,100));
 
     Event b = new Event();
-    // DateTime d = new DateTime("2020-08-10T10:00:00-04:00");
     b.setStart(new EventDateTime().setDateTime(new DateTime("2020-08-10T10:00:00-04:00")));
     b.setEnd(new EventDateTime().setDateTime(new DateTime("2020-08-10T10:30:00-04:00")));
 
