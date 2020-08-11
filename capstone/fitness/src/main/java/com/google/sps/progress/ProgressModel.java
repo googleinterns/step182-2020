@@ -14,6 +14,8 @@
 
 package com.google.sps.progress;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
 import com.google.sps.util.*;
@@ -24,35 +26,104 @@ public class ProgressModel {
   private GoalStep head;
   private int size;
 
-  public ProgressModel(GoalStep[] goalSteps) {
-    if(goalSteps == null) {
-      throw new NullPointerException("Cannot establish progress model with null goal steps and no data.");
+  public static class Builder {
+    private GoalStep[] goalSteps;
+    private Exercise start;
+    private Exercise goal;
+    private int daysAvailable;
+
+    public Builder() {
+      String name = "Running for";
+      goalSteps = null;
+      // Throw errors instead of default values
+      start = new Exercise.Builder(name + " 1 unit")
+                  .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {1000})
+                  .build();
+      goal = new Exercise.Builder(name + " 1 unit")
+                  .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {500})
+                  .build();
+      daysAvailable = 9;
     }
-    else {
-      head = establishConnections(goalSteps);
-      size = updateSize();
+
+    public Builder setGoal(Exercise goal) {
+      if(goal != null) {
+        this.goal = goal;
+      }
+      return this;
+    }
+
+    public Builder setStart(Exercise start) {
+      if(start != null) {
+        this.start = start;
+      }
+      return this;
+    }
+
+    public Builder setDurationDecrementStart(String name, String start) {
+      if(start != null) {
+        this.start = new Exercise.Builder(name)
+                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {Float.parseFloat(start)})
+                          .build();
+      }
+      return this;
+    }
+
+    public Builder setDurationDecrementGoal(String name, String goal) {
+      if(goal != null) {
+        this.goal = new Exercise.Builder(name)
+                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {Float.parseFloat(goal)})
+                          .build();
+      }
+      return this;
+    }
+
+    public Builder setDaysAvailable(String weeks) {
+      if(weeks != null) {
+        this.daysAvailable = Integer.parseInt(weeks) * 3;
+      }
+      return this;
+    }
+
+    public Builder setDaysAvailable(int weeks) {
+      this.daysAvailable = weeks * 3;
+      return this;
+    }
+
+    public Builder setGoalSteps(GoalStep[] goalSteps) {
+      this.goalSteps = goalSteps;
+      return this;
+    }
+
+    public Builder setJsonGoalSteps(String json) {
+      Gson gson = new Gson();
+      List<JsonGoalStep> jsonGoalSteps = gson.fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
+      GoalStep[] goalSteps = new GoalStep[jsonGoalSteps.size()];
+      for(int i = 0; i < goalSteps.length; i++) {
+        goalSteps[i] = new GoalStep(jsonGoalSteps.get(i));
+      }
+      this.goalSteps = goalSteps;
+      return this;
+    }
+
+    public ProgressModel build() {
+      ProgressModel model = new ProgressModel();
+      if(goalSteps == null) {
+        model.buildMainGoalSteps(daysAvailable, start, goal);
+      }
+      else {
+        model.head = model.establishConnections(goalSteps);
+        model.size = model.updateSize();
+      }
+      return model;
     }
   }
 
-  public ProgressModel(Data data) {
-    GoalStep[] goalSteps = data.getGoalSteps();
-    if(goalSteps == null) {
-      buildMainGoalSteps(data);
-    }
-    else {
-      head = establishConnections(goalSteps);
-      size = updateSize();
-    }
-  }
+  private ProgressModel() {}
 
-  private void buildMainGoalSteps(Data data) {
-    int changeCount = data.getDaysAvailable();
-    Exercise start = data.getStart();
-    Exercise goal = data.getGoal();
-
+  private void buildMainGoalSteps(int daysAvailable, Exercise start, Exercise goal) {
     // Values to change sets by.
     // Subtracts "1" to account for start being in progress model.
-    HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(changeCount - 1, start, goal);
+    HashMap<SetType, Float> setValuesDelta = getValuesChangeBy(daysAvailable - 1, start, goal);
 
     // Start ProgressModel with starting exercise and build supplemental goal steps on top of it.
     GoalStep current = buildSupplementalGoalSteps(new GoalStep(start));
@@ -60,7 +131,7 @@ public class ProgressModel {
     size = 1;
 
     // Build model.
-    for(int i = 1; i < changeCount - 1; i++) {
+    for(int i = 1; i < daysAvailable - 1; i++) {
       Exercise marker = createMarker(current.getMarker(), goal, setValuesDelta);
       
       // Stop creating exercises if no more exercises can be created (early exit).
@@ -259,14 +330,15 @@ public class ProgressModel {
     return (GoalStep) goalStep;
   }
 
-  public boolean updateGoalStep(Data data) {
-    if(head == null || data.getLastSession() == null) {
+  public boolean updateGoalStep() {
+    Session sess = getLastSession();
+    if(head == null || sess == null) {
       return false;
     }
 
     // Set up model and lastest session.
     Set<String> supplementalGoalSteps = head.getPeels().keySet();
-    Exercise[] workout = data.getLastSession().getWorkout();
+    Exercise[] workout = sess.getWorkout();
     
     // Progress model based on lastest session.
     for(Exercise exercise : workout) {
@@ -278,6 +350,44 @@ public class ProgressModel {
       }
     }
     return true;
+  }
+
+  public boolean updateGoalStep(Data data) {
+    Session sess = data.getLastSession();
+    if(head == null || sess == null) {
+      return false;
+    }
+
+    // Set up model and lastest session.
+    Set<String> supplementalGoalSteps = head.getPeels().keySet();
+    Exercise[] workout = sess.getWorkout();
+    
+    // Progress model based on lastest session.
+    for(Exercise exercise : workout) {
+      if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
+        progressSupplementalGoalStep(exercise);
+      }
+      else if(head.getName().equals(exercise.getName())) {
+        progressMainGoalStep(exercise);
+      }
+    }
+    return true;
+  }
+
+  private Session getLastSession() {
+    String sessionsJson = DataHandler.getData(DataHandler.PROGRESS_PROPERTY, DataHandler.getUser());
+    if(sessionsJson != null) {
+      ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
+      if(sessions.isEmpty()) {
+        return null;
+      }
+      return new Session(sessions.get(sessions.size() - 1));
+    }
+    return new Session(
+        new Exercise[] {
+          new Exercise.Builder("Marathon Session")
+              .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {500})
+              .build()}); 
   }
 
   /**
@@ -299,7 +409,8 @@ public class ProgressModel {
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
     if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
-      progressMain();
+      System.out.println(progressMain());
+      System.out.println(toString());
       return true;
     }
     return false;
@@ -387,6 +498,17 @@ public class ProgressModel {
       goalSteps[i] = (GoalStep) src[i];
     }
     return goalSteps;
+  }
+
+  public String toJson() {
+    GoalStep[] goalSteps = toArray();
+    List<JsonGoalStep> jsonGoalSteps = new ArrayList<>();
+    for(GoalStep goalStep : goalSteps) {
+      jsonGoalSteps.add(new JsonGoalStep(goalStep));
+    }
+    Gson gson = new Gson();
+    String json = gson.toJson(jsonGoalSteps);
+    return json;
   }
 
   @Override

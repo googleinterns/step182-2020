@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String userEmail = userService.getCurrentUser().getEmail();
-      String redirectUrl = "/";
+      String redirectUrl = "/index.html";
       String logoutUrl = userService.createLogoutURL(redirectUrl);
 
       // JSON string that will be read by JavaScript.
@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println(output);
     } 
     else {
-      String redirectUrl = "/create-profile";
+      String redirectUrl = "/profile-info.html";
       String loginUrl = userService.createLoginURL(redirectUrl);
       
       // JSON string that will be read by JavaScript.

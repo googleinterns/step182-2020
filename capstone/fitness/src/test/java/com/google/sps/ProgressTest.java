@@ -25,7 +25,8 @@ import java.util.*;
 public class ProgressTest {
 
   /* Large enough to show algorithmic complexity. */
-  private final int daysAvailable = 15;
+  private final int weeks = 5;
+  private final int daysAvailable = weeks * 3;
   
   private final String name = "test";
 
@@ -44,10 +45,12 @@ public class ProgressTest {
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600, 600})
         .build();
 
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
     // Try to build internal ProgressModel, but fail.
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
   }
 
   @Test(expected = ArithmeticException.class)
@@ -86,10 +89,12 @@ public class ProgressTest {
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
         .build();
 
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
     // Try to build internal ProgressModel, but fail. 
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
   }
 
   @Test
@@ -102,11 +107,13 @@ public class ProgressTest {
     Exercise goal = new Exercise.Builder(name)
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
         .build();
-    
-    Data data = new Data(null, null, start, goal, daysAvailable);
 
     // Build.
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -127,10 +134,12 @@ public class ProgressTest {
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
         .build();
 
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
     // Build.
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -151,10 +160,12 @@ public class ProgressTest {
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
         .build();
 
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
     // Build.
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
 
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -175,15 +186,18 @@ public class ProgressTest {
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
         .build();
     
-    Data data = new Data(null, null, start, goal, daysAvailable);
-
     // Build.
-    ProgressModel model = new ProgressModel(data);
+    ProgressModel model = new ProgressModel.Builder()
+                              .setDaysAvailable(weeks)
+                              .setStart(start)
+                              .setGoal(goal)
+                              .build();
+
     GoalStep mainGoalStep = model.getCurrentMainGoalStep();
 
     // Mock new session.
     Session sess = new Session(new Exercise[] {mainGoalStep.getMarker()});
-    data = new Data(sess, null, null, null, daysAvailable);
+    Data data = new Data(sess, null, null, null, weeks);
     
     // Update GoalStep based of off mock session.
     model.updateGoalStep(data);

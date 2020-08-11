@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,28 +21,27 @@ import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/pro")
-public class ProgressServlet extends HttpServlet {
+public class ProgressModelServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    GoalStep[] goalSteps = (GoalStep[]) session.getAttribute("goalSteps");
-    Session lastSession = (Session) session.getAttribute("lastSession");
-    Session current = (Session) session.getAttribute("lastSessionCurrent");
-    if(Objects.deepEquals(lastSession, current)) {
-      lastSession = null;
+    String goalStepsJson = DataHandler.getGoalSteps();
+    ProgressModel model;
+    if(goalStepsJson == null) {
+      model = new ProgressModel.Builder()
+                  .build();
     }
     else {
-      session.setAttribute("lastSessionCurrent", lastSession);
+      model = new ProgressModel.Builder()
+                  .setJsonGoalSteps(goalStepsJson)
+                  .build();
+      model.updateGoalStep();
     }
-    Data data = new MockData(lastSession, goalSteps);
-    ProgressModel model = new ProgressModel(data);
-    if(goalSteps != null) {
-      model.updateGoalStep(data);
-    } 
-    session.setAttribute("goalSteps", model.toArray());
     List<ProgressDisplay> display = getProgressDisplays(model.toArray());
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));

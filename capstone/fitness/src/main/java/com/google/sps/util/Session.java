@@ -15,6 +15,7 @@
 package com.google.sps.util;
 
 import com.google.sps.fit.*;
+import com.google.sps.fit.Exercise.SetType;
 import java.io.Serializable;
 
 /*
@@ -22,11 +23,20 @@ import java.io.Serializable;
  * Meant to hold workout done by the user during a scheduled event.
  */
 public class Session implements Serializable {
+  private static final long serialVersionUID = 208302144072029362L;     
 
   private Exercise[] workout;
 
   public Session(Exercise[] workout) {
     this.workout = workout;
+  }
+
+  public Session(MarathonSession ms) {
+    Exercise exercise = new Exercise.Builder("Running For " + ms.getTotalHours() * ms.getSpeed() + " km")
+                          .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {ms.getTotalHours()})
+                          .build();
+    System.out.println("Session Exercise: " + exercise + "\n");
+    this.workout = new Exercise[] {exercise};
   }
 
   public Exercise[] getWorkout() {

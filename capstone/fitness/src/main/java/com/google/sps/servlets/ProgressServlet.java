@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +46,8 @@ public class ProgressServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    Entity user=DataHandler.getUser();
+    Entity user = DataHandler.getUser();
+    
 
     // Get the users progress from datastore
     String progressString = (String) user.getProperty(DataHandler.PROGRESS_PROPERTY);
@@ -95,7 +95,7 @@ public class ProgressServlet extends HttpServlet {
     String date = DataHandler.getDate(timestamp);
     
     // Add current session to the list of sessions.
-    MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
+    MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date, totalhours);
     sessions.add(curSession);
 
     //Convert the sessions back to a JSON string.

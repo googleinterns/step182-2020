@@ -24,27 +24,14 @@ public class MockData extends Data {
     super(lastSession, goalSteps, null, null, 0);
   }
 
-  /*
-  @Override
-  public Session getLastSession() {
-    if(lastSession != null) {
-      return lastSession;
-    }
-    ProgressModel model = new ProgressModel(goalSteps);
-    GoalStep goalStep = model.getCurrentMainGoalStep();
-    return new Session(new Exercise[] {goalStep.getMarker()});
-  }
-  */
-
   @Override
   public int getDaysAvailable() {
-    return 15;
+    return 9;
   }
 
   @Override
   public Exercise getStart() {
     return new Exercise.Builder("test")
-        .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {600})
         .build();
   }
@@ -52,8 +39,7 @@ public class MockData extends Data {
   @Override
   public Exercise getGoal() {
     return new Exercise.Builder("test")
-        .addSetTypeWithValues(SetType.DISTANCE, new float[] {4, 4})
-        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300, 300})
+        .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
         .build();
   }
 
