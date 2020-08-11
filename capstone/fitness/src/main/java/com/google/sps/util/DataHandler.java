@@ -23,7 +23,7 @@ public class DataHandler {
   // TODO(@gabrieldg) 
   //  - make private and change to getters and setters.
   //  - Figure out why the identifiers do not work.
-  private static Set<String> PROPERTIES  = new HashSet<>();
+  public static Set<String> PROPERTIES  = new HashSet<>();
   public final static String USER_ENTITY = "user";
   public final static String NAME_PROPERTY = "name";
   public final static String AGE_PROPERTY = "age";
@@ -33,31 +33,41 @@ public class DataHandler {
   public final static String GOAL_TIME_PROPERTY = "goalTime";
   public final static String PROGRESS_PROPERTY = "progress";
   public final static String MILE_TIME_PROPERTY = "mileTime";
+  static {
+    PROPERTIES.add(NAME_PROPERTY);
+    PROPERTIES.add(AGE_PROPERTY);
+    PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
+    PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
+    PROPERTIES.add(INITIAL_TIME_PROPERTY);
+    PROPERTIES.add(GOAL_TIME_PROPERTY);
+    PROPERTIES.add(PROGRESS_PROPERTY);
+    PROPERTIES.add(MILE_TIME_PROPERTY);
+  }
  
 
   static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
- /**
+  /**
   * equalKeys checks if an email matches the key of a entity.
   * Entity keys are in the format user("key"), so using the 
   * substring gets rid of the 'user("' and '")' at both ends.
   * The complexity of this is O(1).
   *
-  * @param email - the email of the current user.
-  * @param key - the key in the above mentioned format.
-  * @return if the email matches the key.
+  * @param   email   The email of the current user.
+  * @param   key     The key in the above mentioned format.
+  * @return          If the email matches the key.
   */
   public static boolean equalKeys(String  email, String key) {
     return key.substring(6, key.length()-2).equals(email);
   }
 
 
- /**
+  /**
   * getDate returns a data in the format yyyy/MM/dd
   * using the timestamp provided.
   *
-  * @param timestamp - the timestamp generated.
-  * @return a String data in the format yyyy/MM/dd.
+  * @param   timestamp   The timestamp generated.
+  * @return              A String data in the format yyyy/MM/dd.
   */
   public static String getDate(long timestamp) {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -65,12 +75,12 @@ public class DataHandler {
   }
 
 
- /**
+  /**
   * getUser return the Entity associated with the email
   * that is signed in at the moment. If nobody is signed in,
   * it returns null.
   *
-  * @return - The Entity associated with the email or null.
+  * @return     The Entity associated with the email or null.
   */
   public static Entity getUser() {
     // Get the users email.
@@ -95,5 +105,34 @@ public class DataHandler {
     return null;
   }
 
- 
+  /**
+  * GetData returns a datapoint from datastore for a user.
+  *
+  * @param  property    The property that we want to get.
+  * @param  user        The User entity we are dealing with.
+  * @return             The value of the data as a String
+  */
+  public static String getData(String property, Entity user) {
+    //Entity user = getUser();
+    // Check if user is signed in
+    if(user == null) {
+      return null;
+    }
 
+    String data = (user.getProperty(property)).toString();
+    return data; 
+  }
+
+  /**
+  * isNumber returns wheter or not a property is a number of not
+  *
+  * @param  property    The property we are dealing with
+  * @return             Wether or not it should be a number or string. 
+  */
+  public static boolean isNumber(String property) {
+      if(property.equals(NAME_PROPERTY) || property.equals(PROGRESS_PROPERTY)) {
+        return false;
+      } 
+      return true;
+  }
+}
