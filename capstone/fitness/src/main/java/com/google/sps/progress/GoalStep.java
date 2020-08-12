@@ -20,12 +20,21 @@ import java.util.*;
 
 /* Progress marker that holds an Exercise. */
 public class GoalStep extends BananaNode {
+  private static final long serialVersionUID = -2478810042129355868L;     
 
   private final Exercise marker;
 
   public GoalStep(Exercise marker) {
     super();
     this.marker = marker;
+  }
+
+  public GoalStep(JsonGoalStep jgs) {
+    super();
+    this.marker = new Exercise.Builder(jgs.getName())
+                      .addSetValues(jgs.getSetValues())
+                      .build();
+    setComplete(jgs.isComplete());
   }
 
   public Exercise getMarker() {
