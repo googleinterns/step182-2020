@@ -1,5 +1,13 @@
-
 package com.google.sps.servlets;
+
+
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import java.io.IOException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse; 
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -43,39 +51,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
+// import com.google.api.services.calendar.model.Calendar;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
 
-@WebServlet("/oauth2callback")
-public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeServlet {
-      private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
-  // on success, redirct back to /schedule-exercises
-//   @Override
-  protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
-      throws ServletException, IOException, GeneralSecurityException {
-    // resp.sendRedirect("/calendar-handler");
-    // Calendar calendar = OAuthHelper.loadCalendarClient();
+// import com.google.api.services.calendar.model.Calendar;
+// import com.google.api.services.calendar.model.CalendarList;
+// import com.google.api.services.calendar.model.CalendarListEntry;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-  }
 
-  // on failure, print a simple error message 
-//   @Override
-  protected void onError(HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse) throws ServletException, IOException {
-      resp.setContentType("text/html;");
-      resp.getWriter().println("OAuth2 Failed");
-
-      }
-  // need to implement redirect URI and authorization codeflow
-    @Override
-  protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-      return "http://localhost:8080/calendar-handler";
-  }
-
+@WebServlet("/calendar-handler")
+public class CalendarHandlerServlet extends HttpServlet { 
+  
   @Override
-  protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    return OAuthHelper.newFlow();
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    response.setContentType("text/html;");
+    response.getWriter().println("We Made It!");
+    Calendar calendar = OAuthHelper.loadCalendarClient();
+  
   }
 }

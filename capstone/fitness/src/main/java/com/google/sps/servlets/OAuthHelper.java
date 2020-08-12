@@ -31,7 +31,7 @@ class OAuthHelper {
   
   /** Global instance of the HTTP transport. */
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
-
+  static final String APPLICATION_NAME = "MarathonApp"
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -66,7 +66,7 @@ class OAuthHelper {
   static Calendar loadCalendarClient() throws IOException {
     String userId = UserServiceFactory.getUserService().getCurrentUser().getUserId();
     Credential credential = newFlow().loadCredential(userId);
-    return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).build();
+    return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
   }
 
   /**
