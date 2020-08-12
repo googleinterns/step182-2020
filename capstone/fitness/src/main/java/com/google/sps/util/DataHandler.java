@@ -3,8 +3,6 @@ package com.google.sps.util;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.sps.progress.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -128,14 +126,12 @@ public class DataHandler {
     return goalSteps; 
   }
 
-
   public static void setGoalSteps(String goalStepsJson) {
     Entity user = getUser();
     user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(user);
   }
-
 
   /**
   * isNumber returns wheter or not a property is a number of not

@@ -78,8 +78,7 @@ public class ProgressModel {
     }
 
     public Builder setJsonGoalSteps(String json) {
-      Gson gson = new Gson();
-      List<JsonGoalStep> jsonGoalSteps = gson.fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
+      List<JsonGoalStep> jsonGoalSteps = new Gson().fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
       GoalStep[] goalSteps = new GoalStep[jsonGoalSteps.size()];
       for(int i = 0; i < goalSteps.length; i++) {
         goalSteps[i] = new GoalStep(jsonGoalSteps.get(i));
@@ -225,8 +224,7 @@ public class ProgressModel {
     for(GoalStep goalStep : goalSteps) {
       jsonGoalSteps.add(new JsonGoalStep(goalStep));
     }
-    Gson gson = new Gson();
-    String json = gson.toJson(jsonGoalSteps);
+    String json = new Gson().toJson(jsonGoalSteps);
     return json;
   } 
 
@@ -393,9 +391,9 @@ public class ProgressModel {
       while(copy[0] == copy[i]) {
         i++;
       }
-      float min = type.isDec() ? clamp : copy[0] + setValuesChangeBy;
-      float max = type.isDec() ? copy[0] + setValuesChangeBy : clamp;
-      copy[0] = clamp(copy[0] + setValuesChangeBy, min, max);
+      float min = type.isDec() ? clamp : copy[i] + setValuesChangeBy;
+      float max = type.isDec() ? copy[i] + setValuesChangeBy : clamp;
+      copy[i] = clamp(copy[i] + setValuesChangeBy, min, max);
     }
     return copy;
   }
