@@ -15,7 +15,7 @@ function initViewData() {
 
 //TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
 // get current date.
-async function getDate(){
+async function getTrainingSchedule(){
   console.log("fetching date");
   const response = await fetch('/date');
   const jsonDate = await response.json();
@@ -107,10 +107,5 @@ async function getUser(){
   usernameContainer = document.getElementById("user-message");
   usernameContainer.innerHTML = "Hello " + userEmail + ".";
 }
-//TODO (@piercedw) :
-//Fetches JSON from server and displays exercises.
-async function getCalendarInfo(){
-  console.log("fetching exercises");
-  }
 
 
