@@ -14,18 +14,25 @@
 
 package com.google.sps.servlets;
 
-import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 
-import com.google.gson.Gson;
+import java.io.IOException;
+
+
+  // hardcoded values for user input for dev purposes. 
+  // TODO (piercedw@) : Integrate with Gabriel's authentication feature and fetch user data from datastore.
+  // ex. private final static String username = entity.getproperty, etc...
+  
 
 @WebServlet("/schedule-exercises")
 public class ScheduleExerciseServlet extends HttpServlet {
-  Gson gson = new Gson();
-
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
   }

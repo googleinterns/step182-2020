@@ -22,7 +22,7 @@ import java.util.*;
 // the user could do an exercise
 public class Scheduler {
   private final long exerciseDuration;
- 
+
   public Scheduler(long exerciseDuration) {
     this.exerciseDuration =exerciseDuration;
   }
@@ -54,8 +54,7 @@ public class Scheduler {
     if (Time.eventDateTimeToMilliseconds(now) > Time.eventDateTimeToMilliseconds(end) - (exerciseMilliseconds)) {
       return null;
      }  
-    
- 
+
     // TODO (@piercedw) : Implement builder pattern for creating event here. 
     Event event = new Event();
     event.setStart(now);

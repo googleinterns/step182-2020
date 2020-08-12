@@ -30,7 +30,7 @@ public class SchedulerTest {
   public static long getMillisecondsBetween(EventDateTime a, EventDateTime b){
     return b.getDateTime().getValue() - a.getDateTime().getValue();
   }
- 
+
   // tests a scenario where there is space after all of the events and before maxSpan. 
   @Test
   public void SpaceAfterEventsInWindow() {
@@ -60,7 +60,7 @@ public class SchedulerTest {
     
     //tests that exercise ends 30 minutes after it starts. 
     assertEquals(this.getMillisecondsBetween(exerciseTime.getStart(),exerciseTime.getEnd()), duration * Time.minutesToMilliseconds);
- 
+    
     // tests that exercise is not after and maxSpan.
     assertThat(this.getMillisecondsBetween(exerciseTime.getEnd(),maxSpan), greaterThan(0L));
     
