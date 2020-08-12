@@ -31,7 +31,7 @@ class OAuthHelper {
   
   /** Global instance of the HTTP transport. */
   static final HttpTransport HTTP_TRANSPORT = new UrlFetchTransport();
-  static final String APPLICATION_NAME = "MarathonApp"
+  static final String APPLICATION_NAME = "MarathonApp";
   /** Global instance of the JSON factory. */
   static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 

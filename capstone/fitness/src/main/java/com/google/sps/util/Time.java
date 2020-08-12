@@ -15,7 +15,4 @@ public class Time{
     return e.getDateTime().getValue();
   }
 
-  public static long getMillisecondsBetween(EventDateTime a, EventDateTime b){
-    return b.getDateTime().getValue() - a.getDateTime().getValue();
-  }
 }
