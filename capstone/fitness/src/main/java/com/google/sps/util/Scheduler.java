@@ -23,14 +23,13 @@ import java.util.*;
 public class Scheduler {
   private final long exerciseDuration;
 
-
   public Scheduler(long exerciseDuration) {
     this.exerciseDuration =exerciseDuration;
   }
  
   // minSpan and maxSpan are the boundaries for when a workout could be scheduled on a particular day e.g 7:00 AM to 9:00 PM
   // events is the user's free/busy information.
-  public Event GetFreeTime(/*EventDateTime day,*/ EventDateTime minSpan, EventDateTime maxSpan, Collection<Event> events) {
+  public Event GetFreeTime( EventDateTime minSpan, EventDateTime maxSpan, Collection<Event> events) {
     
     // initial capacity of eventsQueue is 1 larger than the size of events so that it can handle the case
     // where there are no events. 
