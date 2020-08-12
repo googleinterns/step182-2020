@@ -26,17 +26,6 @@ import com.google.gson.Gson;
 public class ScheduleExerciseServlet extends HttpServlet {
   Gson gson = new Gson();
 
-  // hardcoded values for user input for dev purposes. 
-  // TODO (piercedw@) : Integrate with Gabriel's authentication feature and fetch user data from datastore.
-  // ex. private final static String username = entity.getproperty, etc...
-
-  private final static String email = "norville_rogers@example.com"; 
-  private final static String nickname = "Shaggy";
-  private final static int age = 19;
-  private final static int wks = 14; 
-  private final static double goal = 26.2;
-  private final static double mileTime = 11.0; 
-  
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
   }

@@ -26,15 +26,11 @@ import com.google.gson.Gson;
 import java.util.Date;
 
 // servlet that sends the date to calendar.html. 
-@WebServlet("/date")
-public class SendDateServlet extends HttpServlet {
+@WebServlet("/calendar-events")
+public class CalendarEventsServlet extends HttpServlet {
   Gson gson = new Gson();
   Date date = new Date();
   DateTime dateTimeFormat = new DateTime(date);
-
-  // hardcoded values for user input for dev purposes. 
-  // TODO (piercedw@) : Integrate with Gabriel's authentication feature and fetch user data from datastore.
-  // ex. private final static String username = entity.getproperty, etc...
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
