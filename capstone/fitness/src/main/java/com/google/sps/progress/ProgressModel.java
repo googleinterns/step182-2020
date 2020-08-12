@@ -411,11 +411,12 @@ public class ProgressModel {
    */
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
-    if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
+    boolean progressed = false;
+    while(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
       progressMain();
-      return true;
+      marker = head.getMarker();
     }
-    return false;
+    return progressed;
   }
 
   public BananaNode progressMain() {
