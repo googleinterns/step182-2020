@@ -50,28 +50,17 @@ public class ProgressModel {
       return this;
     }
 
-    public Builder setDurationIncrementStart(String name, String start) {
-      if(start != null) {
-        this.start = new Exercise.Builder(name)
-                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(start)})
+    public Builder setDurationIncrementStart(String name, float start) {
+      this.start = new Exercise.Builder(name)
+                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {start})
                         .build();
-      }
       return this;
     }
 
-    public Builder setDurationIncrementGoal(String name, String goal) {
-      if(goal != null) {
-        this.goal = new Exercise.Builder(name)
-                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(goal)})
+    public Builder setDurationIncrementGoal(String name, float goal) {
+      this.goal = new Exercise.Builder(name)
+                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {goal})
                         .build();
-      }
-      return this;
-    }
-
-    public Builder setDaysAvailable(String weeks, String daysPerWeek) {
-      if(weeks != null && daysPerWeek != null) {
-        return setDaysAvailable(Integer.parseInt(weeks), Integer.parseInt(daysPerWeek));
-      }
       return this;
     }
 
