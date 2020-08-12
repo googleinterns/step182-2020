@@ -9,7 +9,6 @@
   <packaging>war</packaging>
 
   <properties>
-    <!-- This project uses Java 8 -->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,6 +60,11 @@
       <artifactId>appengine-api-labs</artifactId>
       <version>1.9.59</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20180130</version>
     </dependency>
   </dependencies>
 
