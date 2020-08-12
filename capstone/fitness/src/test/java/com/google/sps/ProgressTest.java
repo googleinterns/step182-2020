@@ -48,10 +48,10 @@ public class ProgressTest {
 
     // Try to build internal ProgressModel, but fail.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
   }
 
   @Test(expected = ArithmeticException.class)
@@ -92,10 +92,10 @@ public class ProgressTest {
 
     // Try to build internal ProgressModel, but fail. 
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
   }
 
   @Test
@@ -111,10 +111,10 @@ public class ProgressTest {
     
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -137,10 +137,10 @@ public class ProgressTest {
 
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -163,10 +163,10 @@ public class ProgressTest {
 
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
     
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -189,11 +189,10 @@ public class ProgressTest {
     
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks, daysPerWeek)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
-    System.out.println(model);
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
     GoalStep mainGoalStep = model.getCurrentMainGoalStep();
 
     // Mock new session.
@@ -201,7 +200,6 @@ public class ProgressTest {
     
     // Update GoalStep based of off mock session.
     model.updateModel(sess);
-    System.out.println(model);
 
     // Test validity of updated dynamic model being a progression.
     boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||

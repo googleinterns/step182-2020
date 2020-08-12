@@ -116,7 +116,7 @@ public class Exercise implements Serializable {
 
   private Exercise(){}
 
-   /**
+  /**
    * Returns true if Exercise's values are better than or overall equal to the given Exercise's 
    * values in each type. Uses average if values should decrement, uses summation if not. The equal
    * to demonstrates that an exercise cannot become better in all ways.

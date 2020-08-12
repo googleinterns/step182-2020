@@ -1,7 +1,6 @@
 package com.google.sps.util;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
@@ -121,7 +120,6 @@ public class DataHandler {
 
   public static String getGoalSteps() {
     Entity user = getUser();
-    // Check if user is signed in
     if(user == null) {
       return null;
     }
@@ -131,9 +129,9 @@ public class DataHandler {
   }
 
 
-  public static void setGoalSteps(String json) {
+  public static void setGoalSteps(String goalStepsJson) {
     Entity user = getUser();
-    user.setProperty(GOAL_STEPS_PROPERTY, new Text(json));
+    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(user);
   }
