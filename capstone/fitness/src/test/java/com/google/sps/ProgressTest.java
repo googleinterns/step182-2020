@@ -139,7 +139,7 @@ public class ProgressTest {
   }
 
   @Test
-  public void testUpdateGoalStepMulitpleSetTypes() {
+  public void testUpdateGoalStepMultipleSetTypes() {
     // Defines a start and goal with multiple set and set type changes.
     Exercise start = new Exercise.Builder(name)
         .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})
