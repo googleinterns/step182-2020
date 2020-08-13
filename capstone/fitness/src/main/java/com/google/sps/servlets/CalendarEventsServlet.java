@@ -13,35 +13,28 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+import com.google.api.client.util.DateTime;
 
-import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
+
 import com.google.gson.Gson;
 import java.util.Date;
 
-/** Servlet that will deal with calendar. */
-@WebServlet("/calendar-servlet")
-public class CalendarServlet extends HttpServlet {
+// servlet that sends the date to calendar.html. 
+@WebServlet("/calendar-events")
+public class CalendarEventsServlet extends HttpServlet {
   Gson gson = new Gson();
   Date date = new Date();
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  DateTime dateTimeFormat = new DateTime(date);
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
-    response.getWriter().println(date.toString());
+    String jsonDate = gson.toJson(date.getMonth() + "/" + date.getDay() + "/" + (date.getYear()+1900));
+    response.getWriter().println(jsonDate);
   }
-  public void makeUserPlan(String username){
-
-  }
-
 }

@@ -13,6 +13,14 @@ function initViewData() {
   displayLogIn();
 }
 
+//TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
+// get current date.
+async function getCalendarInfo(){
+  console.log("fetching date");
+  const response = await fetch('/calendar-events');
+  const jsonDate = await response.json();
+  console.log("date is " + jsonDate);
+  document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;}
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
@@ -68,6 +76,7 @@ async function displayLogIn() {
   const url = loginInfo.url;
 
   const loginContainer = document.getElementById("login");
+  
 
   if(userEmail != "stranger") {
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "out");
@@ -90,12 +99,13 @@ function createLoginTemplate(name, url, type) {
   return template;
 }
 
-// TODO: load in user information from LoginServlet.java
-// TODO: load in user's scheduled events from CalendarServlet.java
-// DONE: get current date.
-async function getCalendarInfo(){
-    console.log("fetching date");
-    const response = await fetch('/calendar-servlet');
-    const date = await response.text();
-    document.getElementById('week-container').innerText = `Planned events for the week of ${date}`;
+async function getUser(){
+  const loginResponse = await fetch('/login');
+  const loginInfo = await loginResponse.json();
+  
+  const userEmail = loginInfo.email;
+  usernameContainer = document.getElementById("user-message");
+  usernameContainer.innerHTML = "Hello " + userEmail + ".";
 }
+
+
