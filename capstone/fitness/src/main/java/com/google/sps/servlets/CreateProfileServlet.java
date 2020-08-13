@@ -27,8 +27,8 @@ import java.util.*;
 @WebServlet("/create-profile")
 public class CreateProfileServlet extends HttpServlet {
   
-  private final String exerciseName = "Running";
-  private final int daysPerWeek = 3;
+  private static final String EXERCISE_NAME = "Running";
+  private static final int DAYS_PER_WEEK = 3;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -79,9 +79,9 @@ public class CreateProfileServlet extends HttpServlet {
     newUser.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
     newUser.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
     newUser.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
-                                                            .setDaysAvailable(weeksTotrain, daysPerWeek)
-                                                            .setDurationIncrementStart(exerciseName, lengthOfMarathon/initialTime)
-                                                            .setDurationIncrementGoal(exerciseName, lengthOfMarathon/goalTime)
+                                                            .setDaysAvailable(weeksTotrain, DAYS_PER_WEEK)
+                                                            .setDurationIncrementStart(EXERCISE_NAME, lengthOfMarathon/initialTime)
+                                                            .setDurationIncrementGoal(EXERCISE_NAME, lengthOfMarathon/goalTime)
                                                             .build()
                                                             .toJson()));
 
