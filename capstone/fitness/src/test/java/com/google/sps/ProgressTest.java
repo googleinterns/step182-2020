@@ -25,9 +25,10 @@ import java.util.*;
 public class ProgressTest {
 
   /* Large enough to show algorithmic complexity. */
-  private final int weeks = 5;
-  private final int daysAvailable = weeks * 3;
-  
+  private final int weeks = 3;
+  private final int daysPerWeek = 3;
+  private final int daysAvailable = weeks * daysPerWeek;
+
   private final String name = "test";
 
   @Test(expected = ArithmeticException.class)
@@ -47,10 +48,10 @@ public class ProgressTest {
 
     // Try to build internal ProgressModel, but fail.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
   }
 
   @Test(expected = ArithmeticException.class)
@@ -91,10 +92,10 @@ public class ProgressTest {
 
     // Try to build internal ProgressModel, but fail. 
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
   }
 
   @Test
@@ -107,14 +108,14 @@ public class ProgressTest {
     Exercise goal = new Exercise.Builder(name)
         .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {300})
         .build();
-
+    
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
-    
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
+
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
     assertTrue(model.getLast().getMarker().equalTo(goal));
@@ -136,11 +137,11 @@ public class ProgressTest {
 
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
-    
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
+
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
     assertTrue(model.getLast().getMarker().equalTo(goal));
@@ -162,10 +163,10 @@ public class ProgressTest {
 
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
 
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
@@ -188,11 +189,10 @@ public class ProgressTest {
     
     // Build.
     ProgressModel model = new ProgressModel.Builder()
-                              .setDaysAvailable(weeks)
-                              .setStart(start)
-                              .setGoal(goal)
-                              .build();
-
+                            .setDaysAvailable(weeks, daysPerWeek)
+                            .setStart(start)
+                            .setGoal(goal)
+                            .build();
     GoalStep mainGoalStep = model.getCurrentMainGoalStep();
 
     // Mock new session.

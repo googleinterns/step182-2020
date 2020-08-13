@@ -6,9 +6,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.progress.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class DataHandler {
 
@@ -116,6 +113,23 @@ public class DataHandler {
 
     String data = (user.getProperty(property)).toString();
     return data; 
+  }
+
+  public static String getGoalSteps() {
+    Entity user = getUser();
+    if(user == null) {
+      return null;
+    }
+
+    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
+    return goalSteps; 
+  }
+
+  public static void setGoalSteps(String goalStepsJson) {
+    Entity user = getUser();
+    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(user);
   }
 
   /**

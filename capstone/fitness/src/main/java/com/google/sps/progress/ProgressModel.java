@@ -35,57 +35,40 @@ public class ProgressModel {
     public Builder() {
       String name = "Running";
       goalSteps = null;
-      // Throw errors instead of default values
-      start = new Exercise.Builder(name)
-                  .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {1000})
-                  .build();
-      goal = new Exercise.Builder(name)
-                  .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {500})
-                  .build();
-      daysAvailable = 9;
+      start = null;
+      goal = null;
+      daysAvailable = 0;
     }
 
     public Builder setGoal(Exercise goal) {
-      if(goal != null) {
-        this.goal = goal;
-      }
+      this.goal = goal;
       return this;
     }
 
     public Builder setStart(Exercise start) {
-      if(start != null) {
-        this.start = start;
-      }
+      this.start = start;
       return this;
     }
 
-    public Builder setDurationIncrementStart(String name, String start) {
-      if(start != null) {
-        this.start = new Exercise.Builder(name)
-                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(start)})
-                          .build();
-      }
+    public Builder setDurationIncrementStart(String name, float start) {
+      this.start = new Exercise.Builder(name)
+                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {start})
+                        .build();
       return this;
     }
 
-    public Builder setDurationIncrementGoal(String name, String goal) {
-      if(goal != null) {
-        this.goal = new Exercise.Builder(name)
-                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {Float.parseFloat(goal)})
-                          .build();
-      }
+    public Builder setDurationIncrementGoal(String name, float goal) {
+      this.goal = new Exercise.Builder(name)
+                        .addSetTypeWithValues(SetType.DURATION_INC, new float[] {goal})
+                        .build();
       return this;
     }
 
-    public Builder setDaysAvailable(String weeks) {
-      if(weeks != null) {
-        this.daysAvailable = Integer.parseInt(weeks) * 3;
+    public Builder setDaysAvailable(int weeks, int daysPerWeek) {
+      int daysAvailable = weeks * daysPerWeek;
+      if(daysAvailable > 2) {
+        this.daysAvailable = daysAvailable;
       }
-      return this;
-    }
-
-    public Builder setDaysAvailable(int weeks) {
-      this.daysAvailable = weeks * 3;
       return this;
     }
 
@@ -95,8 +78,7 @@ public class ProgressModel {
     }
 
     public Builder setJsonGoalSteps(String json) {
-      Gson gson = new Gson();
-      List<JsonGoalStep> jsonGoalSteps = gson.fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
+      List<JsonGoalStep> jsonGoalSteps = new Gson().fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
       GoalStep[] goalSteps = new GoalStep[jsonGoalSteps.size()];
       for(int i = 0; i < goalSteps.length; i++) {
         goalSteps[i] = new GoalStep(jsonGoalSteps.get(i));
@@ -108,6 +90,17 @@ public class ProgressModel {
     public ProgressModel build() {
       ProgressModel model = new ProgressModel();
       if(goalSteps == null) {
+        if(daysAvailable == 0) {
+          throw new NullPointerException("Cannot build model because the days available has not been set.");
+        }
+        
+        if(start == null) {
+          throw new NullPointerException("Cannot build model because the start is null.");
+        }
+
+        if(goal == null) {
+          throw new NullPointerException("Cannot build model because the goal is null.");
+        }
         model.buildMainGoalSteps(daysAvailable, start, goal);
       }
       else {
@@ -121,6 +114,22 @@ public class ProgressModel {
   private ProgressModel() {}
 
   /**
+   * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
+   *
+   * @param userExercise Exercise to evaluate.
+   * @return if the operation was successful.
+   */
+  public boolean progressMainGoalStep(Exercise userExercise) {
+    Exercise marker = head.getMarker();
+    boolean progressed = false;
+    while(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
+      progressed = progressMain();
+      marker = head.getMarker();
+    }
+    return progressed;
+  }
+
+  /**
    * Advances to the next supplemental goal step if the given Exercise is greater than or equal to the current goal step.
    *
    * @param userExercise Exercise to evaluate.
@@ -130,35 +139,41 @@ public class ProgressModel {
     return false;
   }
 
-  /**
-   * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
-   *
-   * @param userExercise Exercise to evaluate.
-   * @return if the operation was successful.
-   */
-  public boolean progressMainGoalStep(Exercise userExercise) {
-    Exercise marker = head.getMarker();
-    if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
-      progressMain();
-      return true;
-    }
-    return false;
-  }
-
-  public void progressMain() {
-    BananaNode oldHead = head.dequeue();
-    if(oldHead != null) {
-      size--;
-      head = (GoalStep) head.getNext();
-    }
-  }
-
   public boolean addMainGoalStep(GoalStep goalStep) {
     boolean success = head.enqueue(goalStep);
     if(success) {
       size++;
     }
     return success;
+  }
+
+  public boolean updateModel() {
+    return updateModel(getLastSession());
+  }
+
+  /**
+   * Updates model based on direct session injection.
+   * Note: Used for testing.
+   */
+  public boolean updateModel(Session latestSess) {
+    if(head == null || latestSess == null) {
+      return false;
+    }
+
+    // Set up model and lastest session.
+    Set<String> supplementalGoalSteps = head.getPeels().keySet();
+    Exercise[] workout = latestSess.getWorkout();
+    
+    // Progress model based on lastest session.
+    for(Exercise exercise : workout) {
+      if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
+        progressSupplementalGoalStep(exercise);
+      }
+      else if(head.getName().equals(exercise.getName())) {
+        progressMainGoalStep(exercise);
+      }
+    }
+    return true;
   }
 
   public GoalStep getCurrentMainGoalStep() {
@@ -182,7 +197,7 @@ public class ProgressModel {
    * 
    * @return array of all the main goal steps in the progress model.
    */
-  public BananaNode[] toArray() {
+  public GoalStep[] toArray() {
     // Get size based on uncompleted nodes.
     int length = size;
     BananaNode firstGoalStep = head;
@@ -199,13 +214,23 @@ public class ProgressModel {
       goalSteps[i] = firstGoalStep;
       firstGoalStep = firstGoalStep.getNext();
     }
-    return goalSteps;
+    return bananaArrToGoalsArr(goalSteps);
   }
+  
+  public String toJson() {
+    GoalStep[] goalSteps = toArray();
+    List<JsonGoalStep> jsonGoalSteps = new ArrayList<>();
+    for(GoalStep goalStep : goalSteps) {
+      jsonGoalSteps.add(new JsonGoalStep(goalStep));
+    }
+    String json = new Gson().toJson(jsonGoalSteps);
+    return json;
+  } 
 
   @Override
   public String toString() {
     String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
-    BananaNode[] arr = toArray();
+    GoalStep[] arr = toArray();
     for(int i = 0; i < arr.length; i++) {
       str += arr[i] + "\n\n";
     }
@@ -282,7 +307,7 @@ public class ProgressModel {
     }
 
     return changeBy;
-  } 
+  }
 
   private GoalStep buildSupplementalGoalSteps(GoalStep goalStep) {
     // TODO(ijelue): Logic to add relevant supplemental goal steps.
@@ -356,24 +381,18 @@ public class ProgressModel {
     // Invariant: setValues is ordered.
     float[] copy = setValues.clone();
     if(copy[0] == copy[copy.length - 1]) {
-      if(type.isDec()) {
-        copy[0] = clamp(copy[0] + setValuesChangeBy, clamp, copy[0] + setValuesChangeBy); 
-      }
-      else {
-        copy[0] = clamp(copy[0] + setValuesChangeBy, copy[0] + setValuesChangeBy, clamp);
-      }
+      float min = type.isDec() ? clamp : copy[0] + setValuesChangeBy;
+      float max = type.isDec() ? copy[0] + setValuesChangeBy : clamp;
+      copy[0] = clamp(copy[0] + setValuesChangeBy, min, max);
     }
     else {
       int i = 1;
       while(copy[0] == copy[i]) {
         i++;
       }
-      if(type.isDec()) {
-        copy[i] = clamp(copy[i] + setValuesChangeBy, clamp, copy[i] + setValuesChangeBy); 
-      }
-      else {
-        copy[i] = clamp(copy[i] + setValuesChangeBy, copy[i] + setValuesChangeBy, clamp);
-      }
+      float min = type.isDec() ? clamp : copy[i] + setValuesChangeBy;
+      float max = type.isDec() ? copy[i] + setValuesChangeBy : clamp;
+      copy[i] = clamp(copy[i] + setValuesChangeBy, min, max);
     }
     return copy;
   }
@@ -396,14 +415,9 @@ public class ProgressModel {
     return types;
   }
 
-  // TODO(ijelue): Throw error for bad input or look higher for error
   private GoalStep establishConnections(GoalStep[] goalSteps) {
-    if(goalSteps.length == 0) {
-      return null;
-    }
-
-    if(goalSteps.length == 1) {
-      return goalSteps[0];
+    if(goalSteps == null || goalSteps.length < 2) {
+      throw new NullPointerException("Cannot establish connections because goal steps are null or short in length.");
     }
 
     for(GoalStep goalStep : goalSteps) {
@@ -422,53 +436,6 @@ public class ProgressModel {
     return (GoalStep) goalStep;
   }
 
-  public boolean updateModel() {
-    Session latestSess = getLastSession();
-    if(head == null || latestSess == null) {
-      return false;
-    }
-
-    // Set up model and lastest session.
-    Set<String> supplementalGoalSteps = head.getPeels().keySet();
-    Exercise[] workout = latestSess.getWorkout();
-    
-    // Progress model based on lastest session.
-    for(Exercise exercise : workout) {
-      if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
-        progressSupplementalGoalStep(exercise);
-      }
-      else if(head.getName().equals(exercise.getName())) {
-        progressMainGoalStep(exercise);
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Updates model based on direct session injection.
-   * Note: Used for testing.
-   */
-  public boolean updateModel(Session latestSess) {
-    if(head == null || latestSess == null) {
-      return false;
-    }
-
-    // Set up model and lastest session.
-    Set<String> supplementalGoalSteps = head.getPeels().keySet();
-    Exercise[] workout = latestSess.getWorkout();
-    
-    // Progress model based on lastest session.
-    for(Exercise exercise : workout) {
-      if(supplementalGoalSteps != null && supplementalGoalSteps.contains(exercise.getName())) {
-        progressSupplementalGoalStep(exercise);
-      }
-      else if(head.getName().equals(exercise.getName())) {
-        progressMainGoalStep(exercise);
-      }
-    }
-    return true;
-  }
-
   private Session getLastSession() {
     String sessionsJson = DataHandler.getData(DataHandler.PROGRESS_PROPERTY, DataHandler.getUser());
     if(sessionsJson != null) {
@@ -478,73 +445,20 @@ public class ProgressModel {
       }
       return new Session(sessions.get(sessions.size() - 1));
     }
-    return new Session(
-        new Exercise[] {
-          new Exercise.Builder("Marathon Session")
-              .addSetTypeWithValues(SetType.DURATION_DEC, new float[] {500})
-              .build()}); 
+    return null;
   }
 
-  /**
-   * Advances to the next supplemental goal step if the given Exercise is greater than or equal to the current goal step.
-   *
-   * @param userExercise Exercise to evaluate.
-   * @return if the operation was successful.
-   */
-  public boolean progressSupplementalGoalStep(Exercise userExercise) {
-    return false;
-  }
-
-  /**
-   * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
-   *
-   * @param userExercise Exercise to evaluate.
-   * @return if the operation was successful.
-   */
-  public boolean progressMainGoalStep(Exercise userExercise) {
-    Exercise marker = head.getMarker();
-    boolean progressed = false;
-    while(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
-      progressMain();
-      marker = head.getMarker();
-    }
-    return progressed;
-  }
-
-  public BananaNode progressMain() {
+  private boolean progressMain() {
     if(head == null) {
-     return null;
+      return false;
     }
+    
     BananaNode oldHead = head.dequeue();
     if(oldHead != null) {
       size--;
-      head = (GoalStep) oldHead.getNext();
+      head = (GoalStep) head.getNext();
     }
-    return oldHead;
-  }
-
-  public boolean addMainGoalStep(GoalStep goalStep) {
-    boolean success = head.enqueue(goalStep);
-    if(success) {
-      size++;
-    }
-    return success;
-  }
-
-  public GoalStep getCurrentMainGoalStep() {
-    return head;
-  }
-
-  public int getSize() {
-    return size;
-  }
-
-  public GoalStep getLast() {
-    BananaNode last = head;
-    while(last.getNext() != null) {
-        last = last.getNext();
-    }
-    return (GoalStep) last;
+    return true;
   }
 
   private int updateSize() {
@@ -561,57 +475,11 @@ public class ProgressModel {
     return size;
   }
 
-  /**
-   * Array of all the main goal steps in the progress model.
-   * 
-   * @return array of all the main goal steps in the progress model.
-   */
-  public GoalStep[] toArray() {
-    // Get size based on uncompleted nodes.
-    int length = size;
-    BananaNode firstGoalStep = head;
-
-    // Get the true size of queue based on the first ever node.
-    while(firstGoalStep.getPrev() != null) {
-      firstGoalStep = firstGoalStep.getPrev();
-      length++;
-    }
-
-    // Add all nodes that ever existed in queue to array.
-    BananaNode[] goalSteps = new BananaNode[length];
-    for(int i = 0; i < length; i++) {
-      goalSteps[i] = firstGoalStep;
-      firstGoalStep = firstGoalStep.getNext();
-    }
-    return bananaArrToGoalsArr(goalSteps);
-  }
-
   private GoalStep[] bananaArrToGoalsArr(BananaNode[] src) {
     GoalStep[] goalSteps = new GoalStep[src.length];
     for(int i = 0; i < goalSteps.length; i++) {
       goalSteps[i] = (GoalStep) src[i];
     }
     return goalSteps;
-  }
-
-  public String toJson() {
-    GoalStep[] goalSteps = toArray();
-    List<JsonGoalStep> jsonGoalSteps = new ArrayList<>();
-    for(GoalStep goalStep : goalSteps) {
-      jsonGoalSteps.add(new JsonGoalStep(goalStep));
-    }
-    Gson gson = new Gson();
-    String json = gson.toJson(jsonGoalSteps);
-    return json;
-  }
-
-  @Override
-  public String toString() {
-    String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
-    GoalStep[] arr = toArray();
-    for(int i = 0; i < arr.length; i++) {
-      str += arr[i] + "\n\n";
-    }
-    return str;
   }
 }

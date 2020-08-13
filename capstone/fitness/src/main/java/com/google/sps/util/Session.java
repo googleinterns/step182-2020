@@ -33,8 +33,8 @@ public class Session implements Serializable {
 
   public Session(MarathonSession ms) {
     Exercise exercise = new Exercise.Builder("Running")
-                          .addSetTypeWithValues(SetType.DURATION_INC, new float[] {ms.getSpeed()})
-                          .build();
+                            .addSetTypeWithValues(SetType.DURATION_INC, new float[] {ms.getSpeed()})
+                            .build();
     this.workout = new Exercise[] {exercise};
   }
 

@@ -125,17 +125,14 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are better than the given one's.
    */
   public boolean betterThan(Exercise exercise) {
-    boolean betterThan = true;
+    boolean betterThanOverall = true;
+    boolean betterThanAtLeastOnce = false;
     for(SetType type : setValues.keySet()) {
-      float src = avg(getSetValues(type));
-      float comp = avg(exercise.getSetValues(type));
-      if(!type.isDec()) {
-        src *= getSetValues(type).length;
-        comp *= exercise.getSetValues(type).length;
-      } 
-      betterThan &= (type.betterThan(src, comp) || equalTo(exercise, type).orElse(false));
+      boolean betterThan = betterThan(exercise, type).orElse(false);
+      betterThanAtLeastOnce |= betterThan;
+      betterThanOverall &= betterThan || equalTo(exercise, type).orElse(false);
     }
-    return betterThan;
+    return betterThanAtLeastOnce && betterThanOverall;
   }
 
   /**
@@ -147,13 +144,17 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are better than the given one's for the specific set type.
    */
   public Optional<Boolean> betterThan(Exercise exercise, SetType setType) {
-    float srcAvg = avg(getSetValues(setType));
-    float compAvg = avg(exercise.getSetValues(setType));
-    boolean comparison = setType.betterThan(srcAvg, compAvg);
+    float src = avg(getSetValues(setType));
+    float comp = avg(exercise.getSetValues(setType));
+    if(!setType.isDec()) {
+      src *= getSetValues(setType).length;
+      comp *= exercise.getSetValues(setType).length;
+    }
+    boolean comparison = setType.betterThan(src, comp);
     Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
-    return srcAvg == 0 ? Optional.empty() : opt;
+    return src == 0 ? Optional.empty() : opt;
   }
 
   /**
@@ -165,9 +166,7 @@ public class Exercise implements Serializable {
    */
   public boolean equalTo(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      float srcSum = sum(getSetValues(type));
-      float compSum = sum(exercise.getSetValues(type));
-      if(srcSum != compSum) {
+      if(!equalTo(exercise, type).orElse(false)) {
         return false;
       }
     }
