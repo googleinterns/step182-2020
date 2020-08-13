@@ -120,6 +120,98 @@ public class ProgressModel {
 
   private ProgressModel() {}
 
+  /**
+   * Advances to the next supplemental goal step if the given Exercise is greater than or equal to the current goal step.
+   *
+   * @param userExercise Exercise to evaluate.
+   * @return if the operation was successful.
+   */
+  public boolean progressSupplementalGoalStep(Exercise userExercise) {
+    return false;
+  }
+
+  /**
+   * Advances to the next goal step if the given Exercise is greater than or equal to the current goal step.
+   *
+   * @param userExercise Exercise to evaluate.
+   * @return if the operation was successful.
+   */
+  public boolean progressMainGoalStep(Exercise userExercise) {
+    Exercise marker = head.getMarker();
+    if(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
+      progressMain();
+      return true;
+    }
+    return false;
+  }
+
+  public void progressMain() {
+    BananaNode oldHead = head.dequeue();
+    if(oldHead != null) {
+      size--;
+      head = (GoalStep) head.getNext();
+    }
+  }
+
+  public boolean addMainGoalStep(GoalStep goalStep) {
+    boolean success = head.enqueue(goalStep);
+    if(success) {
+      size++;
+    }
+    return success;
+  }
+
+  public GoalStep getCurrentMainGoalStep() {
+    return head;
+  }
+
+  public int getSize() {
+    return size;
+  }
+
+  public GoalStep getLast() {
+    BananaNode last = head;
+    while(last.getNext() != null) {
+        last = last.getNext();
+    }
+    return (GoalStep) last;
+  }
+
+  /**
+   * Array of all the main goal steps in the progress model.
+   * 
+   * @return array of all the main goal steps in the progress model.
+   */
+  public BananaNode[] toArray() {
+    // Get size based on uncompleted nodes.
+    int length = size;
+    BananaNode firstGoalStep = head;
+
+    // Get the true size of queue based on the first ever node.
+    while(firstGoalStep.getPrev() != null) {
+      firstGoalStep = firstGoalStep.getPrev();
+      length++;
+    }
+
+    // Add all nodes that ever existed in queue to array.
+    BananaNode[] goalSteps = new BananaNode[length];
+    for(int i = 0; i < length; i++) {
+      goalSteps[i] = firstGoalStep;
+      firstGoalStep = firstGoalStep.getNext();
+    }
+    return goalSteps;
+  }
+
+  @Override
+  public String toString() {
+    String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
+    BananaNode[] arr = toArray();
+    for(int i = 0; i < arr.length; i++) {
+      str += arr[i] + "\n\n";
+    }
+    return str;
+  }
+
   private void buildMainGoalSteps(int daysAvailable, Exercise start, Exercise goal) {
     // Values to change sets by.
     // Subtracts "1" to account for start being in progress model.
@@ -459,7 +551,6 @@ public class ProgressModel {
     if(head == null) {
       return 0;
     }
-
     // "head" counts as part of the size.
     int size = 1;
     BananaNode current = head;

@@ -22,8 +22,8 @@ public class Exercise implements Serializable {
   
   public enum SetType {
     DISTANCE,
-    DURATION_INC,
     DURATION_DEC,
+    DURATION_INC,
     REPS,
     WEIGHT;
     
@@ -64,7 +64,7 @@ public class Exercise implements Serializable {
     public Builder(String name) {
       this.name = name;
       this.setValues = new HashMap<>();
-      setCount = -1;
+      setCount = 0;
     }
 
     public Builder addSetTypeWithValues(SetType type, float[] values) {

@@ -98,7 +98,7 @@ public class DataHandler {
         }
     }
     return null;
-  }
+  }}
 
   /**
   * GetData returns a datapoint from datastore for a user.
