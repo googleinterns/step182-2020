@@ -95,7 +95,7 @@ public class DataHandler {
         }
     }
     return null;
-  }}
+  }
 
   /**
   * GetData returns a datapoint from datastore for a user.
@@ -128,32 +128,6 @@ public class DataHandler {
   public static void setGoalSteps(String goalStepsJson) {
     Entity user = getUser();
     user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
-  }
-
-  /**
-  * GetData returns a datapoint from datastore for a user.
-  *
-  * @param  property    The property that we want to get.
-  * @param  user        The User entity we are dealing with.
-  * @return             The value of the data as a String
-  */
-  public static String getGoalSteps() {
-    Entity user = getUser();
-    // Check if user is signed in
-    if(user == null) {
-      return null;
-    }
-
-    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
-    return goalSteps; 
-  }
-
-
-  public static void setGoalSteps(String json) {
-    Entity user = getUser();
-    user.setProperty(GOAL_STEPS_PROPERTY, new Text(json));
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(user);
   }

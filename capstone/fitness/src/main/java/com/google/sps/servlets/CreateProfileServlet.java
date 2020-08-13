@@ -85,14 +85,6 @@ public class CreateProfileServlet extends HttpServlet {
                                                             .build()
                                                             .toJson()));
 
-    String exerciseName = "Running";
-    newUser.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
-                                                            .setDaysAvailable("" + weeksTotrain)
-                                                            .setDurationIncrementStart(exerciseName, "" + lengthOfMarathon/initialTime)
-                                                            .setDurationIncrementGoal(exerciseName, "" + lengthOfMarathon/goalTime)
-                                                            .build()
-                                                            .toJson()));
-
     // Put user in datastore.
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(newUser);
