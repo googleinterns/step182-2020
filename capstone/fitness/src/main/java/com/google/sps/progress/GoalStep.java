@@ -12,21 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package com.google.sps.progress;
 
-import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.google.sps.fit.*;
+import com.google.sps.util.*;
+import java.util.*;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+/* Progress marker that holds an Exercise. */
+public class GoalStep extends BananaNode {
+
+  private final Exercise marker;
+
+  public GoalStep(Exercise marker) {
+    super();
+    this.marker = marker;
+  }
+
+  public Exercise getMarker() {
+    return marker;
+  }
+
+  public String getName() {
+    return marker.getName();
+  }
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+  public String toString() {
+    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), marker.toString());
   }
 }
