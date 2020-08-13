@@ -28,8 +28,7 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
       throws ServletException, IOException {
     resp.sendRedirect("/abstract");
     resp.getWriter().print( nickname + " is logged in and has given access to their calendar.");
-    System.out.println( nickname + " is logged in.");
-
+    System.out.println("CALLBAcK "  + nickname + " is logged in.");
   }
   
   //On error, meaning that the user chose not to grant access, it prints this simple error message.
@@ -37,7 +36,7 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
   protected void onError(
       HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
       throws ServletException, IOException {
-    System.out.println(nickname + " is not logged in");
+    System.out.println("CALLBAcK " + nickname + " is not logged in");
     resp.getWriter().print( nickname + " has not given access to their calendar. Why not? :(");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
@@ -45,13 +44,13 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
 
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-    System.out.println(nickname + " redirected on callback servlet");
+    System.out.println("CALLBAcK " + nickname + " redirected on callback servlet");
     return Utils.getRedirectUri(req);
   }
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    System.out.println(nickname + " initialized a new flow on callback servlet");
+    System.out.println("CALLBAcK " + nickname + " initialized a new flow on callback servlet");
     return Utils.newFlow();
   }
 }
