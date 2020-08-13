@@ -16,6 +16,9 @@ import javax.servlet.ServletException;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 
+import com.google.sps.util.*;
+
+// AbstractAuthServlet initializes the OAuth process. 
 @WebServlet("/abstract")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();

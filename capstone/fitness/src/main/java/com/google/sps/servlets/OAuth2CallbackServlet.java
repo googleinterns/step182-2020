@@ -14,10 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.google.sps.util.*;
+
+
+// OAuth2CallbackServlet handles the callback for users granting access to their calendars. 
 @WebServlet("/oauth2callback")
 public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCallbackServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
 
+  // On success, meaning that the user has given access, it just redirects back to the original abstract servlet
   @Override
   protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
       throws ServletException, IOException {
@@ -26,13 +31,14 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
     System.out.println( nickname + " is logged in.");
 
   }
-
+  
+  //On error, meaning that the user chose not to grant access, it prints this simple error message.
   @Override
   protected void onError(
       HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
       throws ServletException, IOException {
     System.out.println(nickname + " is not logged in");
-    resp.getWriter().print( nickname + " has not given access to their calendar.");
+    resp.getWriter().print( nickname + " has not given access to their calendar. Why not? :(");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
   }
