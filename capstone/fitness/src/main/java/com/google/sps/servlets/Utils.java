@@ -51,9 +51,8 @@ class Utils {
     return clientSecrets;
   }
   static String getRedirectUri(HttpServletRequest req) {
-    GenericUrl url = new GenericUrl(req.getRequestURL().toString());
-    url.setRawPath("/oauth2callback");
-    return url.build();
+    // TODO (@piercedw) : this redirect URI will not work when webapp is deployed. Also needs to be changed in API console.
+    return "https://8080-b7796e94-2ff5-4c18-b6c4-2c972cdc0627.us-central1.cloudshell.dev/oauth2callback";
   }
 
   static GoogleAuthorizationCodeFlow newFlow() throws IOException {
