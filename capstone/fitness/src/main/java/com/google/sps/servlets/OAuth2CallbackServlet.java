@@ -36,7 +36,6 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
   protected void onError(
       HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
       throws ServletException, IOException {
-    System.out.println("CALLBAcK " + nickname + " is not logged in");
     resp.getWriter().print( nickname + " has not given access to their calendar. Why not? :(");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
@@ -44,13 +43,11 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
 
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-    System.out.println("CALLBAcK " + nickname + " redirected on callback servlet");
     return Utils.getRedirectUri(req);
   }
 
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    System.out.println("CALLBAcK " + nickname + " initialized a new flow on callback servlet");
     return Utils.newFlow();
   }
 }
