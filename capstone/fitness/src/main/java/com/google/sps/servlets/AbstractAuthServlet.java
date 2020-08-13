@@ -17,13 +17,11 @@ import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineA
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 
 import com.google.sps.util.*;
-// import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.Calendar;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-// import com.google.api.services.calendar.model.Events.List;
 
 
 import java.util.*;
