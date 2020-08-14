@@ -14,7 +14,7 @@ import com.google.sps.util.*;
 import java.util.*;
 
 // AbstractAuthServlet initializes the OAuth process. 
-@WebServlet("/abstract")
+@WebServlet("/auth-servlet")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
 
