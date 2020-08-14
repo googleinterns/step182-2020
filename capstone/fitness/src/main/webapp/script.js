@@ -16,11 +16,19 @@ function initViewData() {
 //TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
 // get current date.
 async function getCalendarInfo(){
-  console.log("fetching date");
-  const response = await fetch('/calendar-events');
-  const jsonDate = await response.json();
-  console.log("date is " + jsonDate);
-  document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;}
+//   console.log("fetching date");
+//   const response = await fetch('/calendar-events');
+//   const jsonDate = await response.json();
+//   console.log("date is " + jsonDate);
+//   document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=piercedw@google.com&ctz=America%2FNew_York";
+
+//   console.log("fetching username");
+//   const response = await fetch('/abstract');
+//   console.log("response" + response);
+//   const jsonID = await response.json();
+//   console.log("username is " + jsonID);
+  }
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.

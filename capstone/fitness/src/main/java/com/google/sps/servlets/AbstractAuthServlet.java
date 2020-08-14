@@ -21,7 +21,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
 import com.google.api.client.auth.oauth2.Credential;
- 
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.gson.Gson;
+import com.google.api.services.calendar.model.CalendarListEntry;
+
 // AbstractAuthServlet initializes the OAuth process. 
 @WebServlet("/abstract")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
@@ -33,72 +36,97 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
 
   long exerciseDuration = 30;
   
+  Gson gson = new Gson();
 
-
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    response.setContentType("text/html;");
-    response.getWriter().println(nickname + " has authorized this app.");
+    response.setContentType("text/json;");
     
-    scheduler = new Scheduler(exerciseDuration);
-
+    // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
-    
     calendar = new Calendar.Builder(
-            new UrlFetchTransport(),
-            new JacksonFactory(),
-            credential).setApplicationName(APPLICATION_NAME).build();
-    
-        // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
-        DateTime then = new DateTime("2020-08-14T22:00:00+00:00");
-        Events events = calendar.events().list("primary")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        
-        
-        List<Event> items = events.getItems();
-        Event event = scheduler.getFreeTime(now, then, items);
-        event.setSummary("Test from webapp");
-        System.out.println(event.getStart().getDateTime());
-        
-        // do this in a loop
-        this.insertEvent(event);
-        
-        System.out.println("done");
+    new UrlFetchTransport(),
+    new JacksonFactory(),
+    credential).setApplicationName(APPLICATION_NAME).build();
 
-        // if (items.isEmpty()) {
-        //     System.out.println("No upcoming events found.");
-        // } else {
-        //     System.out.println("Upcoming events");
-        //     for (Event event : items) {
-        //         DateTime start = event.getStart().getDateTime();
-        //         if (start == null) {
-        //             start = event.getStart().getDate();
-        //         }
-        //         System.out.printf("%s (%s)\n", event.getSummary(), start);
-        //     }
-        // }
+    com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
+    listRequest.setFields("items(id)").setMaxResults(1);
+    CalendarList feed = listRequest.execute();
+   
+    ArrayList<String> result = new ArrayList<String>();
+      if (feed.getItems() != null) {
+        for (CalendarListEntry entry : feed.getItems()) {
+          result.add(entry.getId());
+        }}
+    String jsonItems = gson.toJson(result);
+    response.getWriter().println(jsonItems);    
+ 
+    scheduler = new Scheduler(exerciseDuration);
+    
+    //TODO (@piercedw) : Get from datastore using getData().
+    int daysAvailable = 14;
+
+    // TODO (@piercedw) : Get from datastore using getData(). 
+    List<String> exercises = new ArrayList<String>();
+    exercises.add("Scheduled Exercise 1");
+    exercises.add("Scheduled Exercise 2");
+    exercises.add("Scheduled Exercise 3");
+    exercises.add("Scheduled Exercise 4");
+    exercises.add("Scheduled Exercise 5");
+    exercises.add("Scheduled Exercise 6");
+    exercises.add("Scheduled Exercise 7");
+    
+    int timesPerWeek = daysAvailable/ exercises.size(); 
+
+    // Hardcoded as 8:00 AM today. 
+    // TODO (@piercedw) : Make this just the start of the next day. 
+    DateTime minSpan = new DateTime("2020-08-14T12:00:00+00:00");
+
+    // Hardcoded as 8:00 PM today. 
+    //TODO (@piercedw) : Same as above.
+    DateTime maxSpan = new DateTime("2020-08-15T00:00:00+00:00");
+    
+    int y = 0;
+    for (int x = 0; x<daysAvailable; x+=timesPerWeek){
+        List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
+        Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
+        exerciseEvent.setSummary(exercises.get(y));
+        exerciseEvent.setColorId("4");
+        this.insertEvent(exerciseEvent);
+    // Increment minSpan and maxSpan by one day. 
+        y++;
+        minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+        maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+    }
+    
+    response.sendRedirect("/calendar.html");
   }
  
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
-    System.out.println("Nickname redirected " + nickname);
-    System.out.println("req url " + req);
     return Utils.getRedirectUri(req);
   }
  
   @Override
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
-    System.out.println("Nickname initialized " + nickname);
     return Utils.newFlow();
   }
+  
+  public List<Event> getEventsInTimespan(DateTime minSpan, DateTime maxSpan) throws IOException{
+    Events events = calendar.events().list("primary")
+                .setTimeMin(minSpan)
+                .setTimeMax(maxSpan)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+    List<Event> items = events.getItems();
+    return items;
+  }
 
-  public void insertEvent(Event event){
+  // Method for putting an event on the user's calendar. 
+  public void insertEvent(Event event) throws IOException{
     Event myNewEvent = calendar.events().insert("primary", event).execute();
   }
 }
