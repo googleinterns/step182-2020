@@ -26,26 +26,33 @@ import com.google.api.client.auth.oauth2.Credential;
 @WebServlet("/abstract")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
- 
+  String APPLICATION_NAME = "Marathon App";
+
+  Calendar calendar;
+  Scheduler scheduler;
+
+  long exerciseDuration = 30;
+  
+
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     response.setContentType("text/html;");
     response.getWriter().println(nickname + " has authorized this app.");
     
-    String APPLICATION_NAME = "Marathon App";
-    Scheduler scheduler = new Scheduler(30);
-    
-
+    scheduler = new Scheduler(exerciseDuration);
 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
-    Calendar calendar = new Calendar.Builder(
+    
+    calendar = new Calendar.Builder(
             new UrlFetchTransport(),
             new JacksonFactory(),
             credential).setApplicationName(APPLICATION_NAME).build();
     
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
+        DateTime then = new DateTime("2020-08-14T22:00:00+00:00");
         Events events = calendar.events().list("primary")
                 .setMaxResults(10)
                 .setTimeMin(now)
@@ -55,18 +62,27 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         
         
         List<Event> items = events.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
-            }
-        }
+        Event event = scheduler.getFreeTime(now, then, items);
+        event.setSummary("Test from webapp");
+        System.out.println(event.getStart().getDateTime());
+        
+        // do this in a loop
+        this.insertEvent(event);
+        
+        System.out.println("done");
+
+        // if (items.isEmpty()) {
+        //     System.out.println("No upcoming events found.");
+        // } else {
+        //     System.out.println("Upcoming events");
+        //     for (Event event : items) {
+        //         DateTime start = event.getStart().getDateTime();
+        //         if (start == null) {
+        //             start = event.getStart().getDate();
+        //         }
+        //         System.out.printf("%s (%s)\n", event.getSummary(), start);
+        //     }
+        // }
   }
  
   @Override
@@ -80,6 +96,10 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
   protected AuthorizationCodeFlow initializeFlow() throws IOException {
     System.out.println("Nickname initialized " + nickname);
     return Utils.newFlow();
+  }
+
+  public void insertEvent(Event event){
+    Event myNewEvent = calendar.events().insert("primary", event).execute();
   }
 }
  
