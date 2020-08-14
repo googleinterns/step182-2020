@@ -41,7 +41,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    response.setContentType("text/json;");
+    response.setContentType("application/json;");
     
     // Build calendar. 
     String userId = getUserId(request);
@@ -60,8 +60,11 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         for (CalendarListEntry entry : feed.getItems()) {
           result.add(entry.getId());
         }}
-    String jsonItems = gson.toJson(result);
-    response.getWriter().println(jsonItems);    
+
+    String id = gson.toJson(result.get(0));
+    String jsonID = gson.toJson(id);
+
+    response.getWriter().println(jsonID);    
  
     scheduler = new Scheduler(exerciseDuration);
     

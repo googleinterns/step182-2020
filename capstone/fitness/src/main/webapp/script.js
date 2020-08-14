@@ -23,11 +23,11 @@ async function getCalendarInfo(){
 //   document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;
   document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=piercedw@google.com&ctz=America%2FNew_York";
 
-//   console.log("fetching username");
-//   const response = await fetch('/abstract');
-//   console.log("response" + response);
-//   const jsonID = await response.json();
-//   console.log("username is " + jsonID);
+  console.log("fetching username");
+  const response = await fetch('/abstract');
+  console.log("response" + response);
+  const jsonID = await response.json();
+  console.log("username is " + jsonID);
   }
 /**
  Function that fills in the charts div.
