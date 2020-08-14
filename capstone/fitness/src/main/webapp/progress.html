@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Portfolio</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="progress_disp.js"></script>
+</head>
+
+<div class="topnav">
+  <a class="active" href="/">Home</a>
+  <a href="/calendar.html">Calendar</a>
+  <a class="active" href="/progress.html">Progress</a>
+  <a href="/view-data.html">Data</a>
+</div>
+
+<body id="container">
+  <div class="row">
+    <div class="col-sm">
+      <div class="row">
+        <!-- Pagination -->
+        <div class="col-sm">
+          <!-- Sorting -->  
+          <input type="radio" id="uncomplete" name="sorting" value="uncomplete">
+          <label for="uncomplete">Show Uncomplete</label><br>
+          <input type="radio" id="all" name="sorting" value="all">
+          <label for="all">Show All</label><br>
+          <input type="radio" id="complete" name="sorting" value="complete">
+          <label for="complete">Show Complete</label><br>
+
+          <!-- Submit Session -->
+          <button type="button" class="btn btn-primary btn-sm">Submit Session</button>  
+        </div>
+        <div class="col-sm">
+          <!-- Goal Step Count Per Page -->
+          <button class="btn btn-info btn-sm">Go!</button>
+          <input type="number" id="count" name="count" min="1" max="10">
+          <label for="count">Goal Steps Per Page</label><br>
+
+          <!-- Prev/Next Page Stuffs -->
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Goal Steps -->
+        <div id="model">
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="row">
+        <!-- Current -->
+        <div class="mb-4">
+          <div class="bg-white rounded-lg p-5 shadow">
+            <h2 class="h6 font-weight-bold text-center mb-4">Current Step</h2>
+            <div class="progress mx-auto" data-value='66.7'>
+              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+              <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+              <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                <div class="h2 font-weight-bold">66.7<sup class="small">%</sup></div>
+              </div>
+            </div>
+            <div class="row text-center mt-4">
+              <div class="col-6 border-right">
+                <div class="h4 font-weight-bold mb-0">5 km/hr</div>
+                <span class="small text-gray">Last Session</span>
+              </div>
+              <div class="col-6">
+                <div class="h4 font-weight-bold mb-0">7.5 km/hr</div>
+                <span class="small text-gray">Step</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Viewing -->
+        <div class="mb-4">
+          <div class="bg-white rounded-lg p-5 shadow">
+          <h2 class="h6 font-weight-bold text-center mb-4">Viewing Step N</h2>
+            <div class="progress mx-auto" data-value='62.5'>
+              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+              <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+              <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                <div class="h2 font-weight-bold">62.5<sup class="small">%</sup></div>
+              </div>
+            </div>
+            <div class="row text-center mt-4">
+              <div class="col-6 border-right">
+                <div class="h4 font-weight-bold mb-0">5 km/hr</div>
+                <span class="small text-gray">Last Session</span>
+              </div>
+              <div class="col-6">
+                <div class="h4 font-weight-bold mb-0">8 km/hr</div>
+                <span class="small text-gray">This Step</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="row">
+        <!-- Goal -->
+        <div class="row">
+          <div class="mb-4">
+            <div class="bg-white rounded-lg p-5 shadow">
+              <h2 class="h6 font-weight-bold text-center mb-4">Goal</h2>
+              <div class="progress mx-auto" data-value='50'>
+                <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                  <div class="h2 font-weight-bold">50<sup class="small">%</sup></div>
+                </div>
+              </div>
+              <div class="row text-center mt-4">
+                <div class="col-6 border-right">
+                  <div class="h4 font-weight-bold mb-0">5 km/hr</div>
+                  <span class="small text-gray">Last Session</span>
+                </div>
+                <div class="col-6">
+                  <div class="h4 font-weight-bold mb-0">10 km/hr</div>
+                  <span class="small text-gray">Goal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
