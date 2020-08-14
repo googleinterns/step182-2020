@@ -25,9 +25,8 @@ import static org.hamcrest.Matchers.*;
 public class SchedulerTest { 
   long duration = 30;
   Scheduler scheduler= new Scheduler(duration);
- 
-  
-  public static long getMillisecondsBetween(EventDateTime a, EventDateTime b){
+
+    public static long getMillisecondsBetween(EventDateTime a, EventDateTime b){
     return b.getDateTime().getValue() - a.getDateTime().getValue();
   }
 
@@ -47,12 +46,9 @@ public class SchedulerTest {
     events.add(b);
     events.add(e);
     
-    EventDateTime minSpan = new EventDateTime();
-    minSpan.setDateTime(new DateTime("2020-08-10T10:00:00-04:00"));
- 
-    EventDateTime maxSpan = new EventDateTime();
-    maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
- 
+    DateTime minSpan = new DateTime("2020-08-10T10:00:00-04:00");
+    DateTime maxSpan = new DateTime("2020-08-11T00:00:00-04:00");
+
     Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     
     //Tests that exercise starts at the end of the last event.
@@ -62,10 +58,12 @@ public class SchedulerTest {
     assertEquals(this.getMillisecondsBetween(exerciseTime.getStart(),exerciseTime.getEnd()), duration * Time.minutesToMilliseconds);
     
     // Tests that exercise is not after and maxSpan.
-    assertThat(this.getMillisecondsBetween(exerciseTime.getEnd(),maxSpan), greaterThan(0L));
+    assertTrue(exerciseTime.getEnd().getDateTime().getValue() < maxSpan.getValue());
+
     
     // Tests that exercise is not before and minSpan.
-    assertThat(this.getMillisecondsBetween(minSpan, exerciseTime.getStart()), greaterThan(0L));
+    assertTrue(exerciseTime.getStart().getDateTime().getValue() > minSpan.getValue());
+
   }
  
 //   Tests a scenario where there is space for an exercise between two events. 
@@ -85,11 +83,8 @@ public class SchedulerTest {
     events.add(a);
     events.add(v);
     
-    EventDateTime minSpan = new EventDateTime();
-    minSpan.setDateTime(new DateTime("2020-08-10T10:00:00-04:00"));
- 
-    EventDateTime maxSpan = new EventDateTime();
-    maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
+    DateTime minSpan = new DateTime("2020-08-10T10:00:00-04:00");
+    DateTime maxSpan = new DateTime("2020-08-11T00:00:00-04:00");
  
     Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     
@@ -99,11 +94,13 @@ public class SchedulerTest {
     //Tests that exercise ends 30 minutes after it starts. 
     assertTrue(exerciseTime.getEnd().getDateTime().getValue() == exerciseTime.getStart().getDateTime().getValue()+ (duration * 60000));
  
+    
     // Tests that exercise is not after and maxSpan.
-    assertTrue(exerciseTime.getEnd().getDateTime().getValue() < maxSpan.getDateTime().getValue());
+    assertTrue(exerciseTime.getEnd().getDateTime().getValue() < maxSpan.getValue());
+
     
     // Tests that exercise is not before and minSpan.
-    assertTrue(exerciseTime.getStart().getDateTime().getValue() > minSpan.getDateTime().getValue());
+    assertTrue(exerciseTime.getStart().getDateTime().getValue() > minSpan.getValue());
  
   }
  
@@ -112,15 +109,12 @@ public class SchedulerTest {
   public void noEvents() {
     Collection<Event> events = new ArrayList<Event>();
     
-    EventDateTime minSpan = new EventDateTime();
-    minSpan.setDateTime(new DateTime("2020-08-10T10:00:00-04:00"));
- 
-    EventDateTime maxSpan = new EventDateTime();
-    maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
+    DateTime minSpan = new DateTime("2020-08-10T10:00:00-04:00");
+    DateTime maxSpan = new DateTime("2020-08-11T00:00:00-04:00");
  
     Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     // Tests that the exercise begins at minSpan since the user has no events.
-    assertTrue(exerciseTime.getStart().getDateTime().getValue() == minSpan.getDateTime().getValue());
+    assertTrue(exerciseTime.getStart().getDateTime().getValue() == minSpan.getValue());
   }
  
   // Tests scenario where there's no space for events.  
@@ -128,11 +122,8 @@ public class SchedulerTest {
   public void noSpace() {
     Collection<Event> events = new ArrayList<Event>();
     
-    EventDateTime minSpan = new EventDateTime();
-    minSpan.setDateTime(new DateTime("2020-08-10T10:00:00-04:00"));
- 
-    EventDateTime maxSpan = new EventDateTime();
-    maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
+    DateTime minSpan = new DateTime("2020-08-10T10:00:00-04:00");
+    DateTime maxSpan = new DateTime("2020-08-11T00:00:00-04:00");
     
  
     Event h = new Event();

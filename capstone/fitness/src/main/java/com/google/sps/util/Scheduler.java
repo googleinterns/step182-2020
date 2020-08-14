@@ -28,7 +28,7 @@ public class Scheduler {
  
   // Here, minSpan and maxSpan are the boundaries for when a workout could be scheduled on a particular day e.g 7:00 AM to 9:00 PM events is the user's free/busy information.
   // TODO (@piercedw) : change minSpan and maxSpan inputs to Java.util.DateTime objects, and construct EventDateTime objects inside method. This will help decouple fromn the actual Calendar objects. 
-  public Event getFreeTime( EventDateTime minSpan, EventDateTime maxSpan, Collection<Event> currentlyScheduledEvents) {
+  public Event getFreeTime(DateTime minSpan, DateTime maxSpan, Collection<Event> currentlyScheduledEvents) {
     
     // Initial capacity of eventsQueue is 1 larger than the size of events so that it can handle the case where there are no events. 
     PriorityQueue<Event> eventQueue = new PriorityQueue<Event>((currentlyScheduledEvents.size() +1), new EventComparator());
@@ -36,8 +36,11 @@ public class Scheduler {
       eventQueue.add(evt);
     }
     
-    EventDateTime now = minSpan;
-    EventDateTime end = maxSpan;
+    // Instantiate EventDateTime objects from the DateTime objects given as parameters. 
+    EventDateTime now = new EventDateTime();
+    now.setDateTime(minSpan);
+    EventDateTime end = new EventDateTime();
+    end.setDateTime(maxSpan);
  
  
     long exerciseMilliseconds = this.exerciseDuration * Time.minutesToMilliseconds;
