@@ -24,19 +24,20 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.gson.Gson;
 import com.google.api.services.calendar.model.CalendarListEntry;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;   
 
 // AbstractAuthServlet initializes the OAuth process. 
 @WebServlet("/abstract")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
   String APPLICATION_NAME = "Marathon App";
-
   Calendar calendar;
   Scheduler scheduler;
-
-  long exerciseDuration = 30;
-  
+  long exerciseDuration = 30;  
   Gson gson = new Gson();
+  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
+  LocalDateTime now = LocalDateTime.now();  
 
   
   @Override
@@ -61,10 +62,8 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           result.add(entry.getId());
         }}
 
-    String id = gson.toJson(result.get(0));
-    String jsonID = gson.toJson(id);
-
-    response.getWriter().println(jsonID);    
+    String jsonId = gson.toJson(result.get(0));
+    response.getWriter().println((jsonId));    
  
     scheduler = new Scheduler(exerciseDuration);
     
@@ -104,7 +103,6 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     }
     
-    response.sendRedirect("/calendar.html");
   }
  
   @Override

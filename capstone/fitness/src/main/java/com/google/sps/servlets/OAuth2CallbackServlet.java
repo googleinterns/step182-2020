@@ -30,7 +30,6 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
       HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
       throws ServletException, IOException {
     resp.getWriter().print( nickname + " has not given access to their calendar. Why not? :(");
-    resp.getWriter().print( nickname + " has not given access to their calendar.");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");
   }

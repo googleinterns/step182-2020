@@ -25,16 +25,22 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import java.util.Date;
 
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;    
+
+
 // servlet that sends the date to calendar.html. 
 @WebServlet("/calendar-events")
 public class CalendarEventsServlet extends HttpServlet {
   Gson gson = new Gson();
-  Date date = new Date();
-  DateTime dateTimeFormat = new DateTime(date);
+  
+  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
+  LocalDateTime now = LocalDateTime.now();  
+
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
     response.setContentType("text/html;");
-    String jsonDate = gson.toJson(date.getMonth() + "/" + date.getDay() + "/" + (date.getYear()+1900));
-    response.getWriter().println(jsonDate);
+    response.getWriter().println(gson.toJson(dtf.format(now)));
+
   }
 }
