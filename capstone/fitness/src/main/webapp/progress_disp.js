@@ -1,4 +1,4 @@
-const infoMsg = "rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>";
+const infoMsg = "rada---------------------------------------------------------------------------------------------------------------------------------------------------<br>rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>";
 
 $(function() {
 

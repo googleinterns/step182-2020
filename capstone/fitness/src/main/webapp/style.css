@@ -8,6 +8,14 @@
   margin-top: 20px;
 }
 
+body {
+  background: #878787;
+}
+
+.text-gray {
+  color: #aaa;
+}
+
 /*
   Styling for 'finish session' UI
 */
@@ -17,51 +25,47 @@
 }
 
 #input-time {
-  display: inline-flex;
   align-items: center;
+  display: inline-flex;
 }
 
 .separator {
   margin: 0 10px;
 }
 
+/*
+  Progress Styling
+*/
+
 .goal-desc {
-  border-left: 4px solid black;
+  border-left: 2px solid black;
   height: 50%;
 }
 
-/*
-*
-* ==========================================
-* CUSTOM UTIL CLASSES
-* ==========================================
-*
-*/
-
 .progress {
-  width: 150px;
-  height: 150px;
   background: none;
+  height: 150px;
   position: relative;
+  width: 150px;
 }
 
 .progress::after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
   border: 6px solid #eee;
+  border-radius: 50%;
+  content: "";
+  height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
+  width: 100%;
 }
 
 .progress>span {
-  width: 50%;
   height: 100%;
   overflow: hidden;
   position: absolute;
   top: 0;
+  width: 50%;
   z-index: 1;
 }
 
@@ -70,22 +74,22 @@
 }
 
 .progress .progress-bar {
-  width: 100%;
-  height: 100%;
   background: none;
-  border-width: 6px;
   border-style: solid;
+  border-width: 6px;
+  height: 100%;
   position: absolute;
   top: 0;
+  width: 100%;
 }
 
 .progress .progress-left .progress-bar {
-  left: 100%;
-  border-top-right-radius: 80px;
   border-bottom-right-radius: 80px;
   border-left: 0;
-  -webkit-transform-origin: center left;
+  border-top-right-radius: 80px;
+  left: 100%;
   transform-origin: center left;
+  -webkit-transform-origin: center left;
 }
 
 .progress .progress-right {
@@ -93,43 +97,16 @@
 }
 
 .progress .progress-right .progress-bar {
-  left: -100%;
-  border-top-left-radius: 80px;
   border-bottom-left-radius: 80px;
   border-right: 0;
-  -webkit-transform-origin: center right;
+  border-top-left-radius: 80px;
+  left: -100%;
   transform-origin: center right;
+  -webkit-transform-origin: center right;
 }
 
 .progress .progress-value {
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
-}
-
-/*
-*
-* ==========================================
-* FOR DEMO PURPOSE
-* ==========================================
-*
-*/
-
-body {
-  background: #ff7e5f;
-  background: -webkit-linear-gradient(to right, #ff7e5f, #feb47b);
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  min-height: 100vh;
-}
-
-.rounded-lg {
-  border-radius: 1rem;
-}
-
-.text-gray {
-  color: #aaa;
-}
-
-div.h4 {
-  line-height: 1rem;
 }
