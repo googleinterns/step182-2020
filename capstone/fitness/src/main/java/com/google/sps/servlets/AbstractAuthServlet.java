@@ -70,7 +70,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     //TODO (@piercedw) : Get from datastore using getData().
     int daysAvailable = 14;
 
-    // TODO (@piercedw) : Get from datastore using getData(). 
+    // TODO (@piercedw) : Get collection of exercises strings from datastore using getData(). 
     List<String> exercises = new ArrayList<String>();
     exercises.add("Scheduled Exercise 1");
     exercises.add("Scheduled Exercise 2");
@@ -82,14 +82,18 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     
     int timesPerWeek = daysAvailable/ exercises.size(); 
 
-    // Hardcoded as 8:00 AM today. 
-    // TODO (@piercedw) : Make this just the start of the next day. 
-    DateTime minSpan = new DateTime("2020-08-14T12:00:00+00:00");
+    // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
+    LocalDateTime now = LocalDateTime.now();  
+    DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
+    String nextDayOfMonth = myDtf.format(now.plusDays(1));
+    String nextDayStartTime = "T11:00:00+00:00";
+    String nextDayEndTime = "T23:00:00+00:00";
+    String minRCF3339 = nextDayOfMonth + nextDayStartTime;
+    String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
+    DateTime minSpan = new DateTime(minRCF3339);
+    DateTime maxSpan = new DateTime(maxRCF3399);
 
-    // Hardcoded as 8:00 PM today. 
-    //TODO (@piercedw) : Same as above.
-    DateTime maxSpan = new DateTime("2020-08-15T00:00:00+00:00");
-    
+    // Use the scheduler to schedule one exercise per day. 
     int y = 0;
     for (int x = 0; x<daysAvailable; x+=timesPerWeek){
         List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
