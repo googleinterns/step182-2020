@@ -1,3 +1,5 @@
+const infoMsg = "rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>";
+
 $(function() {
 
   $(".progress").each(function() {
@@ -22,3 +24,15 @@ $(function() {
   }
 
 });
+
+function displayGoalStep() {
+  const info = document.getElementById("button0");
+  if(info.innerHTML === infoMsg) {
+    info.innerHTML = ""; 
+    info.style.height = "50%";
+  }
+  else {
+    info.innerHTML = infoMsg; 
+    info.style.height = "";
+  }
+}

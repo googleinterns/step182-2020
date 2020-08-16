@@ -21,14 +21,14 @@
   <a href="/view-data.html">Data</a>
 </div>
 
-<body id="container">
+<body id="content">
   <div class="row">
     <div class="col-sm">
       <div class="row">
         <!-- Pagination -->
         <div class="col-sm">
           <!-- Sorting -->  
-          <input type="radio" id="uncomplete" name="sorting" value="uncomplete">
+          <input type="radio" id="uncomplete" name="sorting" value="uncomplete" checked>
           <label for="uncomplete">Show Uncomplete</label><br>
           <input type="radio" id="all" name="sorting" value="all">
           <label for="all">Show All</label><br>
@@ -48,24 +48,29 @@
           <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
             <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item"><a class="page-link" href="#">Next</a></li>
           </ul>
         </div>
-      </div>
+      </div><br>
       <div class="row">
         <!-- Goal Steps -->
         <div id="model">
+          <button type="button" class="btn btn-light" onclick="displayGoalStep()" value="0">Start</button><br>
+          <div id="button0" class="goal-desc"></div>
+          <button type="button" class="btn btn-light">Step 1</button><br>
+          <div class="goal-desc"></div>
+          <button type="button" class="btn btn-light">Step 2</button><br>
+          <div class="goal-desc"></div>
+          <button type="button" class="btn btn-light">Goal</button>
         </div>
       </div>
     </div>
-    <div class="col-sm">
+    <div class="col-sm-8">
       <div class="row">
         <!-- Current -->
-        <div class="mb-4">
+        <div class="mb-4 col-sm-6">
           <div class="bg-white rounded-lg p-5 shadow">
-            <h2 class="h6 font-weight-bold text-center mb-4">Current Step</h2>
+            <h2 class="h6 font-weight-bold text-center mb-4">Distance From The Next Step</h2>
             <div class="progress mx-auto" data-value='66.7'>
               <span class="progress-left"><span class="progress-bar border-primary"></span></span>
               <span class="progress-right"><span class="progress-bar border-primary"></span></span>
@@ -85,12 +90,35 @@
             </div>
           </div>
         </div>
+        <!-- Goal -->
+        <div class="mb-4 col-sm-6">
+          <div class="bg-white rounded-lg p-5 shadow">
+            <h2 class="h6 font-weight-bold text-center mb-4">Distance From Your Goal</h2>
+            <div class="progress mx-auto" data-value='50'>
+              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                  <div class="h2 font-weight-bold">50<sup class="small">%</sup></div>
+                </div>
+            </div>
+            <div class="row text-center mt-4">
+              <div class="col-6 border-right">
+                <div class="h4 font-weight-bold mb-0">5 km/hr</div>
+                <span class="small text-gray">Last Session</span>
+              </div>
+              <div class="col-6">
+                <div class="h4 font-weight-bold mb-0">10 km/hr</div>
+                <span class="small text-gray">Goal</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
         <!-- Viewing -->
-        <div class="mb-4">
+        <div class="mb-4 col-sm-6">
           <div class="bg-white rounded-lg p-5 shadow">
-          <h2 class="h6 font-weight-bold text-center mb-4">Viewing Step N</h2>
+          <h2 class="h6 font-weight-bold text-center mb-4">Viewing Distance From Step N</h2>
             <div class="progress mx-auto" data-value='62.5'>
               <span class="progress-left"><span class="progress-bar border-primary"></span></span>
               <span class="progress-right"><span class="progress-bar border-primary"></span></span>
@@ -105,36 +133,7 @@
               </div>
               <div class="col-6">
                 <div class="h4 font-weight-bold mb-0">8 km/hr</div>
-                <span class="small text-gray">This Step</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm">
-      <div class="row">
-        <!-- Goal -->
-        <div class="row">
-          <div class="mb-4">
-            <div class="bg-white rounded-lg p-5 shadow">
-              <h2 class="h6 font-weight-bold text-center mb-4">Goal</h2>
-              <div class="progress mx-auto" data-value='50'>
-                <span class="progress-left"><span class="progress-bar border-primary"></span></span>
-                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
-                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                  <div class="h2 font-weight-bold">50<sup class="small">%</sup></div>
-                </div>
-              </div>
-              <div class="row text-center mt-4">
-                <div class="col-6 border-right">
-                  <div class="h4 font-weight-bold mb-0">5 km/hr</div>
-                  <span class="small text-gray">Last Session</span>
-                </div>
-                <div class="col-6">
-                  <div class="h4 font-weight-bold mb-0">10 km/hr</div>
-                  <span class="small text-gray">Goal</span>
-                </div>
+                <span class="small text-gray">Step</span>
               </div>
             </div>
           </div>
