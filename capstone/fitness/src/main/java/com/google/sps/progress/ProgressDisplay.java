@@ -14,8 +14,6 @@
 
 package com.google.sps.progress;
 
-import com.google.sps.progress.*;
-
 public class ProgressDisplay {
 
   private final boolean complete;

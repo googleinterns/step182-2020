@@ -17,9 +17,11 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
+import com.google.sps.util.Metadata.Sort;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +45,7 @@ public class ProgressModelServlet extends HttpServlet {
         DataHandler.setGoalSteps(model.toJson());
       }
     }
-    List<ProgressDisplay> display = getProgressDisplays(model.toArray());
+    List<ProgressDisplay> display = getProgressDisplays(paginate(model.toArray(), request.getSession()));
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));
   }
@@ -60,5 +62,51 @@ public class ProgressModelServlet extends HttpServlet {
     Gson gson = new Gson();
     String json = gson.toJson(display);
     return json;
+  }
+
+  private GoalStep[] paginate(GoalStep[] goalSteps, HttpSession session) {
+    Metadata metadata = (Metadata) session.getAttribute("metadata");
+    if(metadata == null) {
+      metadata = new Metadata();
+    }
+    int startingIndex = metadata.getPage() * metadata.getCount();
+    if(startingIndex >= goalSteps.length) {
+      metadata.setPage(metadata.getPage() - 1);
+      startingIndex -= metadata.getCount();
+    }
+    metadata.setMaxPages(getMaxPages(metadata.getCount(), goalSteps.length));
+    metadata.setGoalSteps(goalSteps.length);
+    List<GoalStep> trueGoalSteps = new ArrayList<>();
+    boolean setStartIndex = false;
+    for(int i = startingIndex; i < startingIndex + metadata.getCount() && i < goalSteps.length; i++) {
+      boolean skip = false;
+      switch(metadata.getSort()) {
+        case UNCOMPLETE:
+          skip = goalSteps[i].isComplete();
+          break;
+        case COMPLETE:
+          skip = !goalSteps[i].isComplete();
+          break;
+        default:
+          break;
+      }
+      if(!skip) {
+        trueGoalSteps.add(goalSteps[i]);
+        if(!setStartIndex) {
+          metadata.setStartIndex(i);
+          setStartIndex = true;
+        }
+      }
+    }
+    session.setAttribute("metadata", metadata);
+    return trueGoalSteps.toArray(new GoalStep[trueGoalSteps.size()]);
+  }
+
+  private int getMaxPages(int batchSize, int size) {
+    int remainder = size % batchSize != 0 ? 1 : 0;
+    int pageCount = (int)Math.floor((float)size/batchSize);
+    int maxPages = pageCount + remainder;
+    maxPages = maxPages == 0 ? 1 : maxPages;
+    return maxPages;
   }
 }

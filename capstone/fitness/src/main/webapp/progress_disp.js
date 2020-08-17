@@ -48,13 +48,18 @@ async function loadProgressModel() {
 }
 
 async function formatModel(insertionIndex) {
-  const response = await fetch("/pro");
-  const progressList = await response.json();
+  // Order matters
+  const progressResponse = await fetch("/pro");
+  const progressList = await progressResponse.json();
+  const metadataResponse = await fetch("/pagin");
+  const metadata = await metadataResponse.json();
+
   const model = document.getElementById("model");
   model.innerHTML = "";
+  const startIndex = metadata.startIndex;
 
   for(let i = 0; i < progressList.length; i++) {
-    let formattedStr = getFormattedStr(i, progressList[i], progressList.length, insertionIndex);
+    let formattedStr = getFormattedStr(startIndex + i, progressList[i], metadata.goalSteps, insertionIndex);
     model.innerHTML += formattedStr;
     if(i != progressList.length - 1) {
       model.innerHTML += rightArrow;
@@ -87,7 +92,6 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
 }
 
 $(document).on("click", "button[name='" + viewStep + "']", async function(){
-    console.log("hello");
     $('[role="tooltip"]').remove();
     await formatModel(parseInt($(this).val()));
     $('[data-toggle="popover"]').popover();
