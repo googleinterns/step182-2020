@@ -125,14 +125,15 @@ public class Exercise implements Serializable {
    * @return whether this Exercise's average values are better than the given one's.
    */
   public boolean betterThan(Exercise exercise) {
-    boolean betterThanOverall = true;
     boolean betterThanAtLeastOnce = false;
     for(SetType type : setValues.keySet()) {
       boolean betterThan = betterThan(exercise, type).orElse(false);
       betterThanAtLeastOnce |= betterThan;
-      betterThanOverall &= betterThan || equalTo(exercise, type).orElse(false);
+      if(!betterThan && !equalTo(exercise, type).orElse(false)) {
+        return false;
+      }
     }
-    return betterThanAtLeastOnce && betterThanOverall;
+    return betterThanAtLeastOnce;
   }
 
   /**
