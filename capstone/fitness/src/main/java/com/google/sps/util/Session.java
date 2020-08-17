@@ -15,17 +15,27 @@
 package com.google.sps.util;
 
 import com.google.sps.fit.*;
+import com.google.sps.fit.Exercise.SetType;
+import java.io.Serializable;
 
 /*
  * Mock Session object. 
  * Meant to hold workout done by the user during a scheduled event.
  */
-public class Session {
+public class Session implements Serializable {
+  private static final long serialVersionUID = 208302144072029362L;     
 
   private Exercise[] workout;
 
   public Session(Exercise[] workout) {
     this.workout = workout;
+  }
+
+  public Session(MarathonSession ms) {
+    Exercise exercise = new Exercise.Builder("Running")
+                            .addSetTypeWithValues(SetType.DURATION_INC, new float[] {ms.getSpeed()})
+                            .build();
+    this.workout = new Exercise[] {exercise};
   }
 
   public Exercise[] getWorkout() {

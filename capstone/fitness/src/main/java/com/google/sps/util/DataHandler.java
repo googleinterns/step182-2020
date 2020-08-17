@@ -1,21 +1,11 @@
 package com.google.sps.util;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.progress.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import com.google.appengine.api.datastore.FetchOptions;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 
 public class DataHandler {
 
@@ -33,6 +23,7 @@ public class DataHandler {
   public final static String GOAL_TIME_PROPERTY = "goalTime";
   public final static String PROGRESS_PROPERTY = "progress";
   public final static String MILE_TIME_PROPERTY = "mileTime";
+  public final static String GOAL_STEPS_PROPERTY = "goalSteps";
   static {
     PROPERTIES.add(NAME_PROPERTY);
     PROPERTIES.add(AGE_PROPERTY);
@@ -42,6 +33,7 @@ public class DataHandler {
     PROPERTIES.add(GOAL_TIME_PROPERTY);
     PROPERTIES.add(PROGRESS_PROPERTY);
     PROPERTIES.add(MILE_TIME_PROPERTY);
+    PROPERTIES.add(GOAL_STEPS_PROPERTY);
   }
  
 
@@ -123,6 +115,23 @@ public class DataHandler {
     return data; 
   }
 
+  public static String getGoalSteps() {
+    Entity user = getUser();
+    if(user == null) {
+      return null;
+    }
+
+    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
+    return goalSteps; 
+  }
+
+  public static void setGoalSteps(String goalStepsJson) {
+    Entity user = getUser();
+    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(user);
+  }
+
   /**
   * isNumber returns wheter or not a property is a number of not
   *
@@ -130,7 +139,7 @@ public class DataHandler {
   * @return             Wether or not it should be a number or string. 
   */
   public static boolean isNumber(String property) {
-      if(property.equals(NAME_PROPERTY) || property.equals(PROGRESS_PROPERTY)) {
+      if(property.equals(NAME_PROPERTY) || property.equals(PROGRESS_PROPERTY) || property.equals(GOAL_STEPS_PROPERTY)) {
         return false;
       } 
       return true;

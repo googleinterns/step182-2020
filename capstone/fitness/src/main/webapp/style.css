@@ -8,6 +8,14 @@
   margin-top: 20px;
 }
 
+.step {
+  transition: transform .2s;
+}
+
+.step:hover {
+  transform: scale(1.05);
+}
+
 /*
   Styling for 'finish session' UI
 */
@@ -24,4 +32,3 @@
 .separator {
   margin: 0 10px;
 }
-
