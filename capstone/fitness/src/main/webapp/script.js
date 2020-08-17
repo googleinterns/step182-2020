@@ -13,7 +13,9 @@ function initViewData() {
   displayLogIn();
 }
 
-//TODO (@piercedw) : 
+/** 
+ Function that fetches the user's calendar ID and puts it into the calendar display link. 
+*/ 
 async function getCalendarInfo(){
   console.log("fetching username");
   const idResponse = await fetch('/abstract');
