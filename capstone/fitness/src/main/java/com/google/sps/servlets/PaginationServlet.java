@@ -78,12 +78,12 @@ public class PaginationServlet extends HttpServlet {
 
     String movePage = request.getParameter("move-page");
     if(movePage != null) {
-      if(movePage.equals("left")) {
+      if(movePage.equals("previous")) {
         if(page != 0) {
           page--;
         }
       }
-      else if(movePage.equals("right")) {
+      else if(movePage.equals("next")) {
         page++;
       }
       else {

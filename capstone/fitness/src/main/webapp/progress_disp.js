@@ -42,6 +42,8 @@ const goalStep = "<div class=\"row step\"><button name=\"" + viewStep + "\" titl
 const completedButtonStyle = "btn-dark";
 const unCompletedButtonStyle = "btn-light";
 
+const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" class=\"page-link\" value=\"pageNum\">pageNum</button></li>"
+
 async function loadProgressModel() {
   await formatModel(0);
   $('[data-toggle="popover"]').popover();
@@ -53,6 +55,15 @@ async function formatModel(insertionIndex) {
   const progressList = await progressResponse.json();
   const metadataResponse = await fetch("/pagin");
   const metadata = await metadataResponse.json();
+
+  const pageMove = document.getElementById("start-page-bar");
+
+  let paginationButtons = paginationButton.replace("pageNum", "previous").replace("pageNum", "Previous");
+  for(let i = 0; i < metadata.maxPages; i++) {
+    paginationButtons += paginationButton.replace("pageNum", i).replace("pageNum", (i + 1));
+  }
+  paginationButtons += paginationButton.replace("pageNum", "next").replace("pageNum", "Next");
+  pageMove.innerHTML = paginationButtons;
 
   const model = document.getElementById("model");
   model.innerHTML = "";
