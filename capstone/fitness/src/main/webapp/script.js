@@ -24,43 +24,43 @@ async function getCalendarInfo(){
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
  */
-// google.charts.load('current', {packages: ['corechart', 'line']});
-// async function loadDataChart() {
+google.charts.load('current', {packages: ['corechart', 'line']});
+async function loadDataChart() {
   
-//   // Set up chart for X/Y visualization.
-//   var data = new google.visualization.DataTable();
-//   data.addColumn('number', 'numberOfSessions');
-//   data.addColumn('number', 'speed');
+  // Set up chart for X/Y visualization.
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'numberOfSessions');
+  data.addColumn('number', 'speed');
 
-//   // Gets the JSON object that holds all the sesssions.
-//   const progressData = await fetch('/progress');
-//   const dataJson = await progressData.json();
-//   // Create matrix with sessions numbers and speeds.
-//   var dataRows = [];
-//   var i=0;
-//   while(dataJson[i]) {
-//     dataRows[i] = [i, dataJson[i].speed];
-//     i++;
-//   }
-//   // Adds the data points to the chart.
-//   data.addRows(dataRows);
+  // Gets the JSON object that holds all the sesssions.
+  const progressData = await fetch('/progress');
+  const dataJson = await progressData.json();
+  // Create matrix with sessions numbers and speeds.
+  var dataRows = [];
+  var i=0;
+  while(dataJson[i]) {
+    dataRows[i] = [i, dataJson[i].speed];
+    i++;
+  }
+  // Adds the data points to the chart.
+  data.addRows(dataRows);
 
-//   //TODO(gabrieldg)
-//   //  Get the initial and goal time to display as horizontal lines.
+  //TODO(gabrieldg)
+  //  Get the initial and goal time to display as horizontal lines.
 
-//   // Customizing the chart
-//   var options = {
-//     hAxis: {
-//       title: 'Session #'
-//     },
-//     vAxis: {
-//       title: 'Speed (Km/h)'
-//     }
-//   };
+  // Customizing the chart
+  var options = {
+    hAxis: {
+      title: 'Session #'
+    },
+    vAxis: {
+      title: 'Speed (Km/h)'
+    }
+  };
 
-//   var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
-//   chart.draw(data, options);
-// }
+  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
+  chart.draw(data, options);
+}
 
 /**
  Function that fills in the login div.
