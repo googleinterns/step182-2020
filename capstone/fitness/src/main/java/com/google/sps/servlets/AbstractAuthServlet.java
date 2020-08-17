@@ -27,6 +27,10 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;   
 import com.google.sps.util.*;
+import com.google.sps.progress.*;
+import com.google.gson.reflect.TypeToken;
+
+
 
 // AbstractAuthServlet initializes the OAuth process. 
 @WebServlet("/abstract")
@@ -68,22 +72,28 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
  
     scheduler = new Scheduler(exerciseDuration);
     
-    //TODO (@piercedw) : Get from datastore using getData().
-    int daysAvailable = 14;
+    // Get from datastore using getData(). Convert to # of days available. 
+    String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
+    int weeksToTrain = Integer.parseInt(wks);
+    System.out.println("WEEKS TO TRAIN: " + weeksToTrain);
+    
+    int daysAvailable = weeksToTrain * Time.weeksToDays;
+    System.out.println("DAYS AVAILABlE: " + daysAvailable);
 
-    // TODO (@piercedw) : Get collection of exercises strings from datastore using getData(). 
+    String goalSteps = DataHandler.getGoalSteps();
+    // System.out.println(goalSteps);
+    // ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps,JsonGoalStep.class);
+    ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
+    // System.out.println("GOALSTEPS ARRAY: " + goalStepsArray);
     List<String> exercises = new ArrayList<String>();
-    exercises.add("Scheduled Exercise 1");
-    exercises.add("Scheduled Exercise 2");
-    exercises.add("Scheduled Exercise 3");
-    exercises.add("Scheduled Exercise 4");
-    exercises.add("Scheduled Exercise 5");
-    exercises.add("Scheduled Exercise 6");
-    exercises.add("Scheduled Exercise 7");
+    for(JsonGoalStep goal: goalStepsArray){
+        exercises.add(goal.getName());
+    }
+
     
     int timesPerWeek = daysAvailable/ exercises.size(); 
 
-    // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
+    // // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
     LocalDateTime now = LocalDateTime.now();  
     DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
     String nextDayOfMonth = myDtf.format(now.plusDays(1));
@@ -97,15 +107,20 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // Use the scheduler to schedule one exercise per day. 
     int y = 0;
     for (int x = 0; x<daysAvailable; x+=timesPerWeek){
-        List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
-        Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-        exerciseEvent.setSummary(exercises.get(y));
-        exerciseEvent.setColorId("4");
-        this.insertEvent(exerciseEvent);
-    // Increment minSpan and maxSpan by one day. 
-        y++;
-        minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
-        maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+        if (y>=exercises.size()){
+          break;
+        }
+        else{
+          List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
+          Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
+          exerciseEvent.setSummary(exercises.get(y));
+          exerciseEvent.setColorId("4");
+          this.insertEvent(exerciseEvent);
+          // Increment minSpan and maxSpan by one day. 
+          minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+          maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+          y++;
+    }
     }
     
   }
