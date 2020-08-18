@@ -33,7 +33,9 @@ public class Scheduler {
     // Initial capacity of eventsQueue is 1 larger than the size of events so that it can handle the case where there are no events. 
     PriorityQueue<Event> eventQueue = new PriorityQueue<Event>((currentlyScheduledEvents.size() +1), new EventComparator());
     for (Event evt : currentlyScheduledEvents){
-      eventQueue.add(evt);
+        // Doesn't need to handle all day events. 
+        if (!this.isAllDay(evt)){
+        eventQueue.add(evt);}
     }
     
     // Instantiate EventDateTime objects from the DateTime objects given as parameters. 
@@ -65,5 +67,8 @@ public class Scheduler {
     event.setDescription("success"); 
     return event;  
  
+  }
+  public Boolean isAllDay(Event e){
+    return e.getStart().getDate()!=null;
   }
 }

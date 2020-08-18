@@ -67,6 +67,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           result.add(entry.getId());
         }}
 
+    String id = result.get(0);
     String jsonId = gson.toJson(result.get(0));
     response.getWriter().println((jsonId));    
  
@@ -75,10 +76,8 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // Get from datastore using getData(). Convert to # of days available. 
     String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
-    System.out.println("WEEKS TO TRAIN: " + weeksToTrain);
     
     int daysAvailable = weeksToTrain * Time.weeksToDays;
-    System.out.println("DAYS AVAILABlE: " + daysAvailable);
 
     String goalSteps = DataHandler.getGoalSteps();
     // System.out.println(goalSteps);
@@ -122,6 +121,8 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           y++;
     }
     }
+    System.out.println("from servlet: " + "/calendar.html?calendarId=" + id);
+    response.sendRedirect("/calendar.html?calendarId=" + id);
     
   }
  

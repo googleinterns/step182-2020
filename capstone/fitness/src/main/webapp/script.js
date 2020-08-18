@@ -17,10 +17,12 @@ function initViewData() {
  Function that fetches the user's calendar ID and puts it into the calendar display link. 
 */ 
 async function getCalendarInfo(){
-  console.log("fetching username");
-  const idResponse = await fetch('/abstract');
-  const jsonId = await idResponse.json();
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + jsonId + "&ctz=America%2FNew_York";
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log("WINDOW w/o .search: " + window.location);
+  console.log("WINDOW with .search: " + window.location.search);
+  const id = urlParams.get("calendarId");
+  console.log("id: " + id);
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
   }
 /**
  Function that fills in the charts div.

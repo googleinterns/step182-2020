@@ -23,6 +23,7 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
       throws ServletException, IOException {
     resp.sendRedirect("/abstract");
     resp.getWriter().print( nickname + " is logged in and has given access to their calendar.");
+
   } 
 
   // On failure (i.e user denies access) the callback servlet displays a simple error message."
