@@ -28,7 +28,6 @@
         <!-- Pagination -->
         <div class="col-sm">
           <!-- Sorting -->
-          <!--TODO(ijelue): Add Servlet for automatic sorting logic. -->  
           <input type="radio" id="uncomplete" name="sorting" value="uncomplete" checked>
           <label for="uncomplete">Show Uncomplete</label><br>
           <input type="radio" id="all" name="sorting" value="all">
@@ -37,15 +36,16 @@
           <label for="complete">Show Complete</label><br>
 
           <!-- Submit Session -->
-          <!--TODO(ijelue): Connect to existing submit session button on home page. -->
-          <button type="button" class="btn btn-primary btn-sm">Submit Session</button>  
+          <a class="btn btn-primary btn-sm" href="complete-session.html">Submit Session</a>  
         </div>
         <div class="col-sm">
           <!-- Goal Step Count Per Page -->
           <!--TODO(ijelue): Add Servlet for automatic number restriction logic. -->
-          <button class="btn btn-info btn-sm">Go!</button>
-          <input type="number" id="count" name="count" min="1" max="10">
-          <label for="count">Goal Steps Per Page</label><br>
+          <form action="/pagin" method="POST">
+            <button class="btn btn-info btn-sm">Go!</button>
+            <input type="number" id="count" name="count" min="1" max="10">
+            <label for="count">Goal Steps Per Page</label><br>
+          </form>
 
           <!-- Prev/Next Page Stuffs -->
           <!--TODO(ijelue): Add Servlet for goal step traversal. -->

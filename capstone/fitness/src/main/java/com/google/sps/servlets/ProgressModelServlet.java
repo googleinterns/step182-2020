@@ -69,37 +69,54 @@ public class ProgressModelServlet extends HttpServlet {
     if(metadata == null) {
       metadata = new Metadata();
     }
+    int[] pos = getPositions(goalSteps, metadata.getSort());
+    GoalStep[] splitGoalSteps = getSplitGoalSteps(goalSteps, pos); 
     int startingIndex = metadata.getPage() * metadata.getCount();
-    if(startingIndex >= goalSteps.length) {
+
+    while(startingIndex >= splitGoalSteps.length) {
       metadata.setPage(metadata.getPage() - 1);
       startingIndex -= metadata.getCount();
     }
-    metadata.setMaxPages(getMaxPages(metadata.getCount(), goalSteps.length));
+
+    metadata.setMaxPages(getMaxPages(metadata.getCount(), splitGoalSteps.length));
     metadata.setGoalSteps(goalSteps.length);
+    metadata.setStartIndex(pos[0] + startingIndex);
     List<GoalStep> trueGoalSteps = new ArrayList<>();
-    boolean setStartIndex = false;
-    for(int i = startingIndex; i < startingIndex + metadata.getCount() && i < goalSteps.length; i++) {
-      boolean skip = false;
-      switch(metadata.getSort()) {
-        case UNCOMPLETE:
-          skip = goalSteps[i].isComplete();
-          break;
-        case COMPLETE:
-          skip = !goalSteps[i].isComplete();
-          break;
-        default:
-          break;
-      }
-      if(!skip) {
-        trueGoalSteps.add(goalSteps[i]);
-        if(!setStartIndex) {
-          metadata.setStartIndex(i);
-          setStartIndex = true;
-        }
-      }
+    for(int i = startingIndex; i < startingIndex + metadata.getCount() && i < splitGoalSteps.length; i++) {
+      trueGoalSteps.add(splitGoalSteps[i]);
     }
     session.setAttribute("metadata", metadata);
     return trueGoalSteps.toArray(new GoalStep[trueGoalSteps.size()]);
+  }
+
+  private int[] getPositions(GoalStep[] goalSteps, Sort sortingStrategy) {
+    int start = 0;
+    int end = goalSteps.length - 1;
+    switch(sortingStrategy) {
+      case UNCOMPLETE:
+        start = end;
+        while(start > 0 && !goalSteps[start].isComplete()) {
+          start--;
+        }
+        start++;
+        break;
+      case COMPLETE:
+        end = start;
+        while(end < goalSteps.length - 1 && goalSteps[end].isComplete()) {
+          end++;
+        }
+        end--;
+        break;
+      default:
+        break;
+    }
+    return new int[] {start, end};
+  }
+
+  private GoalStep[] getSplitGoalSteps(GoalStep[] goalSteps, int[] pos) {
+    GoalStep[] subArr = new GoalStep[pos[1] - pos[0] + 1];
+    System.arraycopy(goalSteps, pos[0], subArr, 0, subArr.length);
+    return subArr;
   }
 
   private int getMaxPages(int batchSize, int size) {

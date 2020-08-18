@@ -77,7 +77,7 @@ public class PaginationServlet extends HttpServlet {
     }
 
     String movePage = request.getParameter("move-page");
-    if(movePage != null) {
+    if(movePage != null && !movePage.isEmpty()) {
       if(movePage.equals("previous")) {
         if(page != 0) {
           page--;
@@ -99,7 +99,6 @@ public class PaginationServlet extends HttpServlet {
         }
       }
     }
-
     return new Metadata(count, page, sortData);
   }
 }

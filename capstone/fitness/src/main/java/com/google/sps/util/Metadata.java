@@ -30,6 +30,7 @@ public class Metadata implements Serializable {
   private static final int START_INDEX = 0;
   private static final int MAX_PAGES = 1;
   private static final int GOAL_STEPS = 0;
+  
   public enum Sort {
     UNCOMPLETE, ALL, COMPLETE;
   }

@@ -45,7 +45,7 @@ const unCompletedButtonStyle = "btn-light";
 const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" class=\"page-link\" value=\"pageNum\">pageNum</button></li>"
 
 async function loadProgressModel() {
-  await formatModel(0);
+  await formatModel(-1);
   $('[data-toggle="popover"]').popover();
 }
 
@@ -102,8 +102,22 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
   return formattedStr;
 }
 
-$(document).on("click", "button[name='" + viewStep + "']", async function(){
+$(document).on("click", "button[name='" + viewStep + "']", async function() {
     $('[role="tooltip"]').remove();
     await formatModel(parseInt($(this).val()));
     $('[data-toggle="popover"]').popover();
+});
+
+$(document).on("click", "input[name='sorting']", async function() {
+    const params = new URLSearchParams();
+    params.append('sorting', $(this).val());
+    await fetch('/pagin', {method: 'POST', body: params});
+    await formatModel(-1);
+});
+
+$(document).on("click", "button[name='move-page']", async function() {
+    const params = new URLSearchParams();
+    params.append('move-page', $(this).val());
+    await fetch('/pagin', {method: 'POST', body: params});
+    await formatModel(-1);
 });
