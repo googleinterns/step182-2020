@@ -73,7 +73,6 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
  
     scheduler = new Scheduler(exerciseDuration);
     
-    // Get from datastore using getData(). Convert to # of days available. 
     String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
     
