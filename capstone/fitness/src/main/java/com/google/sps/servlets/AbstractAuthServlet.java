@@ -80,15 +80,12 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     int daysAvailable = weeksToTrain * Time.weeksToDays;
 
     String goalSteps = DataHandler.getGoalSteps();
-    // System.out.println(goalSteps);
-    // ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps,JsonGoalStep.class);
+
     ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
-    // System.out.println("GOALSTEPS ARRAY: " + goalStepsArray);
     List<String> exercises = new ArrayList<String>();
     for(JsonGoalStep goal: goalStepsArray){
         exercises.add(goal.getName());
     }
-
     
     int timesPerWeek = daysAvailable/ exercises.size(); 
 
@@ -121,8 +118,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           y++;
     }
     }
-    response.sendRedirect("/calendar.html?calendarId=" + id);
-    
+    response.sendRedirect("/calendar.html?calendarId=" + id); 
   }
  
   @Override
@@ -151,4 +147,3 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     Event myNewEvent = calendar.events().insert("primary", event).execute();
   }
 }
- 
