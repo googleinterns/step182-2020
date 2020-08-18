@@ -42,6 +42,12 @@ body {
   height: 25%;
 }
 
+.goal-desc-fill {
+  border-left: 2px solid black;
+  height: 100%;
+}
+
+
 .progress {
   background: none;
   height: 150px;

@@ -22,20 +22,8 @@ $(function() {
   }
 });
 
-/* Mock function for what happens when a step in progress model is clicked on progress page. */
-function displayGoalStep() {
-  const info = document.getElementById("button0");
-  if(info.innerHTML === infoMsg) {
-    info.innerHTML = ""; 
-    info.style.height = "25%";
-  }
-  else {
-    info.innerHTML = infoMsg; 
-    info.style.height = "";
-  }
-}
-
 const rightArrow = "<div class=\"goal-desc\"></div>";
+const rightArrowFill = "<div class=\"goal-desc-fill\"><p><i>infoMsg</i></p></div>";
 const stepMessage = "Step number";
 const viewStep = "view-step";
 const goalStep = "<div class=\"row step\"><button name=\"" + viewStep + "\" title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-content=\"progress\" data-html=\"true\" value=\"arrayNum\">stepMessage</button></div>";
@@ -46,7 +34,6 @@ const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" cla
 
 async function loadProgressModel() {
   await formatModel(-1);
-  $('[data-toggle="popover"]').popover();
 }
 
 async function formatModel(insertionIndex) {
@@ -72,9 +59,6 @@ async function formatModel(insertionIndex) {
   for(let i = 0; i < progressList.length; i++) {
     let formattedStr = getFormattedStr(startIndex + i, progressList[i], metadata.goalSteps, insertionIndex);
     model.innerHTML += formattedStr;
-    if(i != progressList.length - 1) {
-      model.innerHTML += rightArrow;
-    }
   }
 }
 
@@ -96,16 +80,19 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
   else {
     formattedStr = formattedStr.replace("buttonType", unCompletedButtonStyle);
   }
+
   if(index === insertionIndex) {
-    formattedStr = formattedStr.replace("progress", goalStepObj.exerciseString);
+    formattedStr += rightArrowFill.replace("infoMsg", goalStepObj.exerciseString);
   }
+  else {
+    formattedStr += rightArrow;
+  }
+
   return formattedStr;
 }
 
 $(document).on("click", "button[name='" + viewStep + "']", async function() {
-    $('[role="tooltip"]').remove();
     await formatModel(parseInt($(this).val()));
-    $('[data-toggle="popover"]').popover();
 });
 
 $(document).on("click", "input[name='sorting']", async function() {
