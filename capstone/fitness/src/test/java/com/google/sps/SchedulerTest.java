@@ -134,4 +134,27 @@ public class SchedulerTest {
     Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     assertNull(exerciseTime);
   }
+
+  // Test for an all day event.
+  @Test 
+  public void allDay(){
+    Collection<Event> events = new ArrayList<Event>();
+    
+    DateTime minSpan = new DateTime("2020-08-10T10:00:00-04:00");
+    DateTime maxSpan = new DateTime("2020-08-11T00:00:00-04:00");
+    
+    
+    Event k = new Event();
+    k.setStart(new EventDateTime().setDate(new DateTime("2020-08-10")));
+    events.add(k);
+
+    Event t = new Event();
+    t.setStart(new EventDateTime().setDateTime(new DateTime("2020-08-10T10:10:00-04:00"))); 
+    t.setEnd(new EventDateTime().setDateTime(new DateTime("2020-08-10T10:45:30-04:00")));
+    events.add(t);
+
+    Event exerciseTime = this.scheduler.getFreeTime(minSpan, maxSpan, events);
+
+    assertTrue(exerciseTime.getStart().getDateTime().getValue()==t.getEnd().getDateTime().getValue());
+     }
 }

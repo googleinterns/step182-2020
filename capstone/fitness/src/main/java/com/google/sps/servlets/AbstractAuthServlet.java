@@ -121,7 +121,6 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           y++;
     }
     }
-    System.out.println("from servlet: " + "/calendar.html?calendarId=" + id);
     response.sendRedirect("/calendar.html?calendarId=" + id);
     
   }
