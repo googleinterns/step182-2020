@@ -35,6 +35,10 @@ public class MarathonSession {
     this.date = date;
   }
 
+  public float getSpeed() {
+    return speed;
+  }
+
   public String toString() {
     return timestamp + " " + speed + " " + date;
   }

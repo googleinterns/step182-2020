@@ -93,7 +93,7 @@ function createLoginTemplate(name, url, type) {
   var template = 
   `
   <p>Welcome, ${name}. 
-    <a href='https://8080-ce19f3ee-62b8-4778-b1d0-8b6beb1e067f.us-east1.cloudshell.dev/${url}'>Log${type} here</a>
+    <a href='${url}'>Log${type} here</a>
   </p>
   `;
   return template;
