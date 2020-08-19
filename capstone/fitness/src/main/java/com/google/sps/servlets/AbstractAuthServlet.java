@@ -67,7 +67,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         for (CalendarListEntry entry : feed.getItems()) {
           result.add(entry.getId());
         }}
-
+    // TODO (@piercedw) : Store this result in datastore.
     String id = result.get(0);
     String jsonId = gson.toJson(result.get(0));
     response.getWriter().println((jsonId));    
@@ -109,8 +109,9 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         else{
           List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
           Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-          exerciseEvent.setSummary(exercises.get(y));
+          exerciseEvent.setSummary("Marathon App: " + exercises.get(y));
           exerciseEvent.setColorId("4");
+          // TODO (@piercedw) : Store each event's eventID in datastore for display later.
           this.insertEvent(exerciseEvent);
           // Increment minSpan and maxSpan by one day. 
           minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
