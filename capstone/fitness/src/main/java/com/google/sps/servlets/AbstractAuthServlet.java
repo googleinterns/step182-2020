@@ -57,6 +57,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     new JacksonFactory(),
     credential).setApplicationName(APPLICATION_NAME).build();
 
+    // Might be an extra step. 
     com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
     listRequest.setFields("items(id)").setMaxResults(1);
     CalendarList feed = listRequest.execute();
