@@ -192,6 +192,16 @@ public class Exercise implements Serializable {
     return srcSum == 0 ? Optional.empty() : opt;
   }
 
+  public float[] getSummations() {
+    float[] summations = new float[setValues.size()];
+    int i = 0;
+    for(SetType type : setValues.keySet()) {
+      summations[i] = sum(getSetValues(type));
+      i++;
+    }
+    return summations;
+  }
+
   private float avg(float[] src) {
     return sum(src)/src.length;
   }

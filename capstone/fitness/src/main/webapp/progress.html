@@ -66,23 +66,8 @@
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
             <h2 class="font-weight-bold text-center mb-4">Distance From The Next Step</h2>
-            <div class="progress mx-auto" data-value='66.7'>
-              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
-              <span class="progress-right"><span class="progress-bar border-primary"></span></span>
-              <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                <div class="h2 font-weight-bold">66.7<sup class="small">%</sup></div>
-              </div>
-            </div>
-            <div class="row text-center mt-4">
-              <div class="col-6 border-right">
-                <div class="font-weight-bold mb-0">5 km/hr</div>
-                <span class="small text-gray">Last Session</span>
-              </div>
-              <div class="col-6">
-                <div class="font-weight-bold mb-0">7.5 km/hr</div>
-                <span class="small text-gray">Step</span>
-              </div>
-            </div>
+            <div id="next-bar"></div>
+            <div id="next-sets"></div>
           </div>
         </div>
         <!-- Goal -->
@@ -90,49 +75,19 @@
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
             <h2 class="font-weight-bold text-center mb-4">Distance From Your Goal</h2>
-            <div class="progress mx-auto" data-value='50'>
-              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
-                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
-                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                  <div class="h2 font-weight-bold">50<sup class="small">%</sup></div>
-                </div>
-            </div>
-            <div class="row text-center mt-4">
-              <div class="col-6 border-right">
-                <div class="font-weight-bold mb-0">5 km/hr</div>
-                <span class="small text-gray">Last Session</span>
-              </div>
-              <div class="col-6">
-                <div class="font-weight-bold mb-0">10 km/hr</div>
-                <span class="small text-gray">Goal</span>
-              </div>
-            </div>
+            <div id="goal-bar"></div>
+            <div id="goal-sets"></div>
           </div>
         </div>
       </div>
-      <div class="row">
+      <div id="view-panel" class="row">
         <!-- Viewing -->
         <!--TODO(ijelue): Add Servlet and javascript to get percentages and versus values (when hovering or pressing goal step button, this container shows up). -->
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
           <h2 class="font-weight-bold text-center mb-4">Distance From Step N</h2>
-            <div class="progress mx-auto" data-value='62.5'>
-              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
-              <span class="progress-right"><span class="progress-bar border-primary"></span></span>
-              <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                <div class="h2 font-weight-bold">62.5<sup class="small">%</sup></div>
-              </div>
-            </div>
-            <div class="row text-center mt-4">
-              <div class="col-6 border-right">
-                <div class="font-weight-bold mb-0">5 km/hr</div>
-                <span class="small text-gray">Last Session</span>
-              </div>
-              <div class="col-6">
-                <div class="font-weight-bold mb-0">8 km/hr</div>
-                <span class="small text-gray">Step</span>
-              </div>
-            </div>
+            <div id="viewing-bar"></div>
+            <div id="viewing-sets"></div>
           </div>
         </div>
       </div>

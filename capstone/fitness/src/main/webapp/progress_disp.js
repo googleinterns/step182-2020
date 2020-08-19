@@ -1,6 +1,57 @@
-const infoMsg = "rada---------------------------------------------------------------------------------------------------------------------------------------------------<br>rada<br>rada<br>rada<br>rada<br>rada<br>rada<br>";
+const rightArrow = "<div class=\"goal-desc\"></div>";
+const rightArrowFill = "<div class=\"goal-desc-fill\"><p><i>infoMsg</i></p></div>";
+const stepMessage = "Step number";
+const viewStep = "view-step";
+const goalStep = "<div class=\"row step\"><button name=\"" + viewStep + "\" title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-content=\"progress\" data-html=\"true\" value=\"arrayNum\">stepMessage</button></div>";
+const completedButtonStyle = "btn-dark";
+const unCompletedButtonStyle = "btn-light";
 
-$(function() {
+const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" class=\"page-link\" value=\"pageNum\">pageNum</button></li>"
+
+const nextKeyword = "Next";
+const goalKeyword = "Goal";
+const viewKeyword = "Viewing";
+
+const progressCircle = `<div class="progress mx-auto" data-value='percentage'>
+              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                  <div class="h2 font-weight-bold">percentage<sup class="small">%</sup></div>
+                </div>
+            </div>`;
+
+const progressSets = `<div class="row text-center mt-4">
+              <div class="col-6 border-right">
+                <div class="font-weight-bold mb-0">sets</div>
+                <span class="small text-gray">Last Session</span>
+              </div>
+              <div class="col-6">
+                <div class="font-weight-bold mb-0">sets</div>
+                <span class="small text-gray">keyword</span>
+              </div>
+            </div>
+
+`;
+
+async function loadProgressModel() {
+  await formatModel(-1);
+  await loadPercentages();
+}
+
+async function loadPercentages() {
+  const statsResponse = await fetch("/stats");
+  const statsList = await statsResponse.json();
+  const next = getStat(nextKeyword, statsList);
+  const goal = getStat(goalKeyword, statsList);
+  const viewing = getStat(viewKeyword, statsList);
+  clearPanels();
+  enableViewing(viewing);
+  for(let i = 0; i < statsList.length; i++) {
+    if(statsList[i].tag === "Session" && statsList[i].name === goal.name) {
+      addPercentages(statsList[i], next, goal, viewing);
+    }
+  }
+
   $(".progress").each(function() {
     // Takes each progress panel and writes two half circles to it that make up the circular progress bar.
     var value = $(this).attr('data-value');
@@ -15,25 +66,68 @@ $(function() {
         left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)');
       }
     }
-  })
+  });
+}
 
-  function percentageToDegrees(percentage) {
-    return percentage / 100 * 360;
+function getStat(keyword, list) {
+  for(let i = 0; i < list.length; i++) {
+    if(list[i].tag.includes(keyword)) {
+      return list[i];
+    }
   }
-});
+  return null;
+}
 
-const rightArrow = "<div class=\"goal-desc\"></div>";
-const rightArrowFill = "<div class=\"goal-desc-fill\"><p><i>infoMsg</i></p></div>";
-const stepMessage = "Step number";
-const viewStep = "view-step";
-const goalStep = "<div class=\"row step\"><button name=\"" + viewStep + "\" title=\"stepMessage\" type=\"button\" class=\"btn buttonType btn-sm\" data-container=\"body\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"right\" data-content=\"progress\" data-html=\"true\" value=\"arrayNum\">stepMessage</button></div>";
-const completedButtonStyle = "btn-dark";
-const unCompletedButtonStyle = "btn-light";
+function clearPanels() {
+  const panels = [getBarAndSet(nextKeyword), getBarAndSet(goalKeyword), getBarAndSet(viewKeyword)];
+  panels.map(keywordTuple => {
+   keywordTuple["bar"].html("");
+   keywordTuple["sets"].html("");
+  });
+}
 
-const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" class=\"page-link\" value=\"pageNum\">pageNum</button></li>"
+function enableViewing(viewing) {
+  let panel = $("#view-panel");
+  if(viewing) {
+    panel.show();
+  }
+  else {
+    panel.hide();
+  }
+}
 
-async function loadProgressModel() {
-  await formatModel(-1);
+function percentageToDegrees(percentage) {
+  return percentage / 100 * 360;
+}
+
+function addPercentages(sessionExercise, next, goal, viewing) {
+  for (let type in sessionExercise.setValues) {
+    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type]);
+    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type]);
+    if(viewing != null) {
+      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type]);
+    }
+  }
+}
+
+function addToPanel(keyword, sessionValues, comparisonValues) {
+  let percentage = (sum(sessionValues)/sum(comparisonValues) * 100).toPrecision(2);
+  console.log(percentage);
+  var keywordTuple = getBarAndSet(keyword);
+  keywordTuple["bar"].html(keywordTuple["bar"].html() + progressCircle.replace("percentage", "" + percentage).replace("percentage", "" + percentage));
+  keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", "" + sessionValues).replace("sets", "" + comparisonValues).replace("keyword", keyword));
+}
+
+function sum(values) {
+  let summation = values.reduce((a, b) => a + b, 0);
+  return summation;
+}
+
+function getBarAndSet(keyword) {
+  let keywordTuple = new Map();
+  keywordTuple["bar"] = $("#" + keyword.toLowerCase() + "-bar");
+  keywordTuple["sets"] = $("#" + keyword.toLowerCase() + "-sets");
+  return keywordTuple;
 }
 
 async function formatModel(insertionIndex) {
@@ -93,6 +187,10 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
 
 $(document).on("click", "button[name='" + viewStep + "']", async function() {
     await formatModel(parseInt($(this).val()));
+    const params = new URLSearchParams();
+    params.append('insertion', $(this).val());
+    await fetch('/stats', {method: 'POST', body: params});
+    await loadPercentages();
 });
 
 $(document).on("click", "input[name='sorting']", async function() {
