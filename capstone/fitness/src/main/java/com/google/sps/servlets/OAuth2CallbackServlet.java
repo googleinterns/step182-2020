@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
 import com.google.sps.util.*;
 
-
 // Callback servlet handles callbacks for OAuth. 
 @WebServlet("/oauth2callback")
 public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCallbackServlet {
@@ -24,6 +23,7 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
       throws ServletException, IOException {
     resp.sendRedirect("/auth-servlet");
     resp.getWriter().print( nickname + " is logged in and has given access to their calendar.");
+
   } 
 
   // On failure (i.e user denies access) the callback servlet displays a simple error message.

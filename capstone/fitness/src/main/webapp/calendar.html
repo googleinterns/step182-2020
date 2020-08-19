@@ -18,16 +18,7 @@
     <div id="content">
     <br><br>
     <h1 style="background-color:Tomato;">Your Calendar</h1>
-    <!-- user-message loads in user's nickname and a short message in Java -->
-    <!-- TODO: use JS to fetch user nickname from datastore.  -->
-    <p id = "user-message">Hi [User]!...</p>
-    <!-- week-container loads in the current week from server using Java date function. -->
-    <div id = "week-container">Planned events for the week of XX/XX/XXXX:</div>
-    <!-- events-container loads in the workouts from API in JS. -->
-    <!-- loads in workouts for the current day and the next four days -->
-    <div id = "events-container"> Workouts here. </div>
-    <!-- comp-workout link redirects to the data page, where the user can input their complete workout -->
-    <a id = "comp-workout"  href = "/">Complete a Workout!</button>
-    <!-- TODO (@piercedw): Embed user calendar.  -->    
+    <!-- Embed user calendar.  -->    
+    <iframe id = "calendar-container" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
   </body>
 </html>

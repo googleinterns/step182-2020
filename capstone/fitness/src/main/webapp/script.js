@@ -13,14 +13,15 @@ function initViewData() {
   displayLogIn();
 }
 
-//TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
-// get current date.
+/** 
+ Function that fetches the user's calendar ID and puts it into the calendar display link. 
+*/ 
 async function getCalendarInfo(){
-  console.log("fetching date");
-  const response = await fetch('/calendar-events');
-  const jsonDate = await response.json();
-  console.log("date is " + jsonDate);
-  document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;}
+  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
+  const urlParams = new URLSearchParams(window.location.search);;
+  const id = urlParams.get("calendarId");
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+  }
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
@@ -93,7 +94,7 @@ function createLoginTemplate(name, url, type) {
   var template = 
   `
   <p>Welcome, ${name}. 
-    <a href='https://8080-ce19f3ee-62b8-4778-b1d0-8b6beb1e067f.us-east1.cloudshell.dev/${url}'>Log${type} here</a>
+    <a href='${url}'>Log${type} here</a>
   </p>
   `;
   return template;

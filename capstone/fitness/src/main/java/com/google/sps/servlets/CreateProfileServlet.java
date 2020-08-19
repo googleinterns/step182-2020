@@ -8,8 +8,10 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Text;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.progress.*;
 import com.google.sps.util.DataHandler;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -19,10 +21,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.gson.Gson;
+import java.util.*;
 
 @WebServlet("/create-profile")
 public class CreateProfileServlet extends HttpServlet {
   
+  private static final String EXERCISE_NAME = "Running";
+  private static final int DAYS_PER_WEEK = 3;
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -71,6 +78,12 @@ public class CreateProfileServlet extends HttpServlet {
     newUser.setProperty(DataHandler.MILE_TIME_PROPERTY, mileTime);
     newUser.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
     newUser.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
+    newUser.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
+                                                            .setDaysAvailable(weeksTotrain, DAYS_PER_WEEK)
+                                                            .setDurationIncrementStart(EXERCISE_NAME, lengthOfMarathon/initialTime)
+                                                            .setDurationIncrementGoal(EXERCISE_NAME, lengthOfMarathon/goalTime)
+                                                            .build()
+                                                            .toJson()));
 
     // Put user in datastore.
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
