@@ -31,9 +31,9 @@ public class SchedulerTest {
     return b.getDateTime().getValue() - a.getDateTime().getValue();
   }
 
-  // tests a scenario where there is space after all of the events and before maxSpan. 
+  // Tests a scenario where there is space after all of the events and before maxSpan. 
   @Test
-  public void SpaceAfterEventsInWindow() {
+  public void spaceAfterEventsInWindow() {
     Collection<Event> events = new ArrayList<Event>();
  
     Event b = new Event();
@@ -53,25 +53,24 @@ public class SchedulerTest {
     EventDateTime maxSpan = new EventDateTime();
     maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
  
-    Event exerciseTime = this.scheduler.GetFreeTime(minSpan,maxSpan,events);
+    Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     
-    //tests that exercise starts at the end of the last event.
+    //Tests that exercise starts at the end of the last event.
     assertEquals(exerciseTime.getStart() ,e.getEnd());
     
-    //tests that exercise ends 30 minutes after it starts. 
+    //Tests that exercise ends 30 minutes after it starts. 
     assertEquals(this.getMillisecondsBetween(exerciseTime.getStart(),exerciseTime.getEnd()), duration * Time.minutesToMilliseconds);
     
-    // tests that exercise is not after and maxSpan.
+    // Tests that exercise is not after and maxSpan.
     assertThat(this.getMillisecondsBetween(exerciseTime.getEnd(),maxSpan), greaterThan(0L));
     
-    // tests that exercise is not before and minSpan.
-    // assertGreaterThan(Time.eventDateTimeToMilliseconds(exerciseTime.getStart()), Time.eventDateTimeToMilliseconds(minSpan));
+    // Tests that exercise is not before and minSpan.
     assertThat(this.getMillisecondsBetween(minSpan, exerciseTime.getStart()), greaterThan(0L));
   }
  
-//   tests a scenario where there is space for an exercise between two events. 
+//   Tests a scenario where there is space for an exercise between two events. 
   @Test
-  public void SpaceBetweenTwoEvents() {
+  public void spaceBetweenTwoEvents() {
     Collection<Event> events = new ArrayList<Event>();
  
  
@@ -92,25 +91,25 @@ public class SchedulerTest {
     EventDateTime maxSpan = new EventDateTime();
     maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
  
-    Event exerciseTime = this.scheduler.GetFreeTime(minSpan,maxSpan,events);
+    Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     
-    //tests that exercise starts at the end of the first event.
+    //Tests that exercise starts at the end of the first event.
     assertTrue(exerciseTime.getStart().getDateTime().getValue() == a.getEnd().getDateTime().getValue());
     
-    //tests that exercise ends 30 minutes after it starts. 
+    //Tests that exercise ends 30 minutes after it starts. 
     assertTrue(exerciseTime.getEnd().getDateTime().getValue() == exerciseTime.getStart().getDateTime().getValue()+ (duration * 60000));
  
-    // tests that exercise is not after and maxSpan.
+    // Tests that exercise is not after and maxSpan.
     assertTrue(exerciseTime.getEnd().getDateTime().getValue() < maxSpan.getDateTime().getValue());
     
-    // tests that exercise is not before and minSpan.
+    // Tests that exercise is not before and minSpan.
     assertTrue(exerciseTime.getStart().getDateTime().getValue() > minSpan.getDateTime().getValue());
  
   }
  
-  // tests a scenario where the user has no events whatsoever.
+  // Tests a scenario where the user has no events whatsoever.
   @Test
-  public void NoEvents() {
+  public void noEvents() {
     Collection<Event> events = new ArrayList<Event>();
     
     EventDateTime minSpan = new EventDateTime();
@@ -119,14 +118,14 @@ public class SchedulerTest {
     EventDateTime maxSpan = new EventDateTime();
     maxSpan.setDateTime(new DateTime("2020-08-11T00:00:00-04:00"));
  
-    Event exerciseTime = this.scheduler.GetFreeTime(minSpan,maxSpan,events);
-    // tests that the exercise begins at minSpan since the user has no events.
+    Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
+    // Tests that the exercise begins at minSpan since the user has no events.
     assertTrue(exerciseTime.getStart().getDateTime().getValue() == minSpan.getDateTime().getValue());
   }
  
-  // tests scenario where there's no space for events.  
+  // Tests scenario where there's no space for events.  
   @Test
-  public void NoSpace() {
+  public void noSpace() {
     Collection<Event> events = new ArrayList<Event>();
     
     EventDateTime minSpan = new EventDateTime();
@@ -141,7 +140,7 @@ public class SchedulerTest {
     h.setEnd(new EventDateTime().setDateTime(new DateTime("2020-08-10T23:55:00-04:00")));
     events.add(h);
  
-    Event exerciseTime = this.scheduler.GetFreeTime(minSpan,maxSpan,events);
+    Event exerciseTime = this.scheduler.getFreeTime(minSpan,maxSpan,events);
     assertNull(exerciseTime);
   }
 }

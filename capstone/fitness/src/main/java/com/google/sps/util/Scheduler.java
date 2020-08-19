@@ -18,8 +18,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Event;
 import java.util.*;
  
-// class scheduler uses the user's free/busy information and the duration of an exercise to find a time in a user's day when
-// the user could do an exercise
+// Class scheduler uses the user's free/busy information and the duration of an exercise to find a time in a user's day when the user could do an exercise.
 public class Scheduler {
   private final long exerciseDuration;
 
@@ -27,16 +26,14 @@ public class Scheduler {
     this.exerciseDuration =exerciseDuration;
   }
  
-  // minSpan and maxSpan are the boundaries for when a workout could be scheduled on a particular day e.g 7:00 AM to 9:00 PM
-  // events is the user's free/busy information.
-  // TODO (@piercedw) : change minSpan and maxSpan inputs to Java.util.DateTime objects, and construct EventDateTime objects inside method. 
-  public Event GetFreeTime( EventDateTime minSpan, EventDateTime maxSpan, Collection<Event> currentlyScheduledEvents) {
+  // Here, minSpan and maxSpan are the boundaries for when a workout could be scheduled on a particular day e.g 7:00 AM to 9:00 PM events is the user's free/busy information.
+  // TODO (@piercedw) : change minSpan and maxSpan inputs to Java.util.DateTime objects, and construct EventDateTime objects inside method. This will help decouple fromn the actual Calendar objects. 
+  public Event getFreeTime( EventDateTime minSpan, EventDateTime maxSpan, Collection<Event> currentlyScheduledEvents) {
     
-    // initial capacity of eventsQueue is 1 larger than the size of events so that it can handle the case
-    // where there are no events. 
+    // Initial capacity of eventsQueue is 1 larger than the size of events so that it can handle the case where there are no events. 
     PriorityQueue<Event> eventQueue = new PriorityQueue<Event>((currentlyScheduledEvents.size() +1), new EventComparator());
     for (Event evt : currentlyScheduledEvents){
-        eventQueue.add(evt);
+      eventQueue.add(evt);
     }
     
     EventDateTime now = minSpan;
@@ -45,12 +42,11 @@ public class Scheduler {
  
     long exerciseMilliseconds = this.exerciseDuration * Time.minutesToMilliseconds;
     
-    // if there is no space for an exercise between 'now' and the next event, then dequeue the first event.
+    // If there is no space for an exercise between 'now' and the next event, then dequeue the first event.
     while (eventQueue.size() > 0 && Time.eventDateTimeToMilliseconds(eventQueue.peek().getStart()) - Time.eventDateTimeToMilliseconds(now) < (exerciseMilliseconds)) {
       now = eventQueue.poll().getEnd();
       }
-    // once broken out of the loop (i.e the user has no more events),
-    // check that there is enough time, and schedule at now. 
+    // Once broken out of the loop (i.e the user has no more events), check that there is enough time, and schedule at now. 
     if (Time.eventDateTimeToMilliseconds(now) > Time.eventDateTimeToMilliseconds(end) - (exerciseMilliseconds)) {
       return null;
      }  

@@ -5,9 +5,9 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Event;
 import java.util.*;
  
-// time class contains methods that help with handling time in other Calender-related classes.
+// Time class contains methods that help with handling time in other Calender-related classes.
 public class Time{
-  // using a private constructor since no instance of this object should be made.
+  // Using a private constructor since no instance of this object should be made.
   private Time(){}
   public static final int minutesToMilliseconds = 60000;
  
