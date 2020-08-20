@@ -65,7 +65,6 @@ public class ProgressModelServlet extends HttpServlet {
   }
 
   private GoalStep[] paginate(GoalStep[] goalSteps, HttpSession session) {
-    session.setAttribute("metadata", null);
     Metadata metadata = (Metadata) session.getAttribute("metadata");
     if(metadata == null) {
       metadata = new Metadata();

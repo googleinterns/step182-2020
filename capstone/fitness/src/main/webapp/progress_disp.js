@@ -12,6 +12,8 @@ const nextKeyword = "Next";
 const goalKeyword = "Goal";
 const viewKeyword = "Viewing";
 
+const viewingHeaderStr = "Distance From Step #";
+
 const progressCircle = `<div class="progress mx-auto" data-value='percentage'>
               <span class="progress-left"><span class="progress-bar border-primary"></span></span>
                 <span class="progress-right"><span class="progress-bar border-primary"></span></span>
@@ -33,12 +35,25 @@ const progressSets = `<div class="row text-center mt-4">
 
 `;
 
+const goalStepCountLabel = "Goal Steps Per Page: -";
+const pageLabel = "Page - of -";
+
 async function loadProgressModel() {
-  await formatModel(-1);
-  await loadPercentages();
+  await updateModelAndStats(-1);
 }
 
-async function loadPercentages() {
+async function loadPercentages(insertionIndex, goalIndex) {
+  const viewHeader = document.getElementById("view-panel-header");
+  if(insertionIndex === 0) {
+    viewHeader.innerText = viewingHeaderStr.replace("#","Start");  
+  }
+  else if(insertionIndex === goalIndex) {
+    viewHeader.innerText = viewingHeaderStr.replace("#","Goal");
+  }
+  else {
+    viewHeader.innerText = viewingHeaderStr.replace("#","" + insertionIndex);  
+  }
+  
   const statsResponse = await fetch("/stats");
   const statsList = await statsResponse.json();
   const next = getStat(nextKeyword, statsList);
@@ -112,7 +127,9 @@ function addPercentages(sessionExercise, next, goal, viewing) {
 
 function addToPanel(keyword, sessionValues, comparisonValues) {
   let percentage = (sum(sessionValues)/sum(comparisonValues) * 100).toPrecision(2);
-  console.log(percentage);
+  if(percentage > 100) {
+    percentage = 100;
+  }
   var keywordTuple = getBarAndSet(keyword);
   keywordTuple["bar"].html(keywordTuple["bar"].html() + progressCircle.replace("percentage", "" + percentage).replace("percentage", "" + percentage));
   keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", "" + sessionValues).replace("sets", "" + comparisonValues).replace("keyword", keyword));
@@ -151,12 +168,36 @@ async function formatModel(insertionIndex) {
   const startIndex = metadata.startIndex;
 
   for(let i = 0; i < progressList.length; i++) {
-    let formattedStr = getFormattedStr(startIndex + i, progressList[i], metadata.goalSteps, insertionIndex);
+    let formattedStr = getFormattedStr(startIndex + i, progressList[i], metadata.goalSteps, insertionIndex, i == progressList.length - 1);
     model.innerHTML += formattedStr;
   }
+
+  document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", metadata.count)
+  document.getElementById("page-label").innerText = pageLabel.replace("-", metadata.page + 1).replace("-", metadata.maxPages);
+
+  switch(metadata.sortLabel){
+    case "UNCOMPLETE":
+      document.getElementById("uncomplete").checked = true;
+      document.getElementById("all").checked = false;
+      document.getElementById("complete").checked = false;
+      break;
+    case "COMPLETE":
+      document.getElementById("uncomplete").checked = false;
+      document.getElementById("all").checked = false;
+      document.getElementById("complete").checked = true;
+      break;
+    case "ALL":
+      document.getElementById("uncomplete").checked = false;
+      document.getElementById("all").checked = true;
+      document.getElementById("complete").checked = false;
+      break;
+    default:
+      break;
+  }
+  return metadata.goalSteps;
 }
 
-function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
+function getFormattedStr(index, goalStepObj, listSize, insertionIndex, isLast) {
   let formattedStr = goalStep.replace("stepMessage", stepMessage).replace("stepMessage", stepMessage).replace("arrayNum", "" + index);
   if(index == 0) {
     formattedStr = formattedStr.replace(stepMessage, "Start").replace(stepMessage, "Start"); 
@@ -182,27 +223,35 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex) {
     formattedStr += rightArrow;
   }
 
+  if(isLast) {
+    formattedStr = formattedStr.replace("goal-desc", "goal-desc-no-border");
+  }
+
   return formattedStr;
 }
 
 $(document).on("click", "button[name='" + viewStep + "']", async function() {
-    await formatModel(parseInt($(this).val()));
-    const params = new URLSearchParams();
-    params.append('insertion', $(this).val());
-    await fetch('/stats', {method: 'POST', body: params});
-    await loadPercentages();
+    await updateModelAndStats(parseInt($(this).val()));
 });
 
 $(document).on("click", "input[name='sorting']", async function() {
     const params = new URLSearchParams();
     params.append('sorting', $(this).val());
     await fetch('/pagin', {method: 'POST', body: params});
-    await formatModel(-1);
+    await updateModelAndStats(-1);
 });
 
 $(document).on("click", "button[name='move-page']", async function() {
     const params = new URLSearchParams();
     params.append('move-page', $(this).val());
     await fetch('/pagin', {method: 'POST', body: params});
-    await formatModel(-1);
+    await updateModelAndStats(-1);
 });
+
+async function updateModelAndStats(insertionIndex) {
+  const goalStepCount = await formatModel(insertionIndex);
+  const params = new URLSearchParams();
+  params.append('insertion', insertionIndex);
+  await fetch('/stats', {method: 'POST', body: params});
+  await loadPercentages(insertionIndex, goalStepCount - 1);
+}

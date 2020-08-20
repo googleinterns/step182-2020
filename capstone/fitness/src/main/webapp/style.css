@@ -47,6 +47,13 @@ body {
   height: 100%;
 }
 
+.goal-desc-no-border {
+  height: 25%;
+}
+
+.goal-desc-no-border-fill {
+  height: 100%;
+}
 
 .progress {
   background: none;

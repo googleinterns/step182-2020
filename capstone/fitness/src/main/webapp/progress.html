@@ -28,7 +28,7 @@
         <!-- Pagination -->
         <div class="col-sm">
           <!-- Sorting -->
-          <input type="radio" id="uncomplete" name="sorting" value="uncomplete" checked>
+          <input type="radio" id="uncomplete" name="sorting" value="uncomplete">
           <label for="uncomplete">Show Uncomplete</label><br>
           <input type="radio" id="all" name="sorting" value="all">
           <label for="all">Show All</label><br>
@@ -44,11 +44,12 @@
           <form action="/pagin" method="POST">
             <button class="btn btn-info btn-sm">Go!</button>
             <input type="number" id="count" name="count" min="1" max="10">
-            <label for="count">Goal Steps Per Page</label><br>
+            <label id="count-label" for="count"></label><br><br>
           </form>
 
           <!-- Prev/Next Page Stuffs -->
           <!--TODO(ijelue): Add Servlet for goal step traversal. -->
+          <label id="page-label"></label><br>
           <ul id="start-page-bar" class="pagination">
           </ul>
         </div>
@@ -85,7 +86,7 @@
         <!--TODO(ijelue): Add Servlet and javascript to get percentages and versus values (when hovering or pressing goal step button, this container shows up). -->
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
-          <h2 class="font-weight-bold text-center mb-4">Distance From Step N</h2>
+          <h2 id="view-panel-header" class="font-weight-bold text-center mb-4"></h2>
             <div id="viewing-bar"></div>
             <div id="viewing-sets"></div>
           </div>
