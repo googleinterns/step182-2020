@@ -2,41 +2,41 @@ package com.google.sps.servlets;
  
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
+import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.sps.util.*;
+import com.google.sps.progress.*;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
-import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeServlet;
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.sps.util.*;
-import com.google.api.services.calendar.Calendar;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
-import java.util.*;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.services.calendar.model.CalendarList;
-import com.google.gson.Gson;
-import com.google.api.services.calendar.model.CalendarListEntry;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;   
-import com.google.sps.util.*;
-import com.google.sps.progress.*;
-import com.google.gson.reflect.TypeToken;
+import java.util.*;
 
 
 
-// AbstractAuthServlet initializes the OAuth process. 
+// AbstractAuthServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/auth-servlet")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
   String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
   String APPLICATION_NAME = "Marathon App";
+  String colorId = "4";
   Calendar calendar;
   Scheduler scheduler;
   long exerciseDuration = 30;  
@@ -52,10 +52,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
-    calendar = new Calendar.Builder(
-    new UrlFetchTransport(),
-    new JacksonFactory(),
-    credential).setApplicationName(APPLICATION_NAME).build();
+    calendar = new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
 
     // Might be an extra step. 
     com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
@@ -63,10 +60,11 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     CalendarList feed = listRequest.execute();
    
     ArrayList<String> result = new ArrayList<String>();
-      if (feed.getItems() != null) {
-        for (CalendarListEntry entry : feed.getItems()) {
-          result.add(entry.getId());
-        }}
+    if (feed.getItems() != null) {
+      for (CalendarListEntry entry : feed.getItems()) {
+        result.add(entry.getId());}
+        }
+        
     // TODO (@piercedw) : Store this result in datastore.
     String id = result.get(0);
     String jsonId = gson.toJson(result.get(0));
@@ -109,8 +107,8 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
         else{
           List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
           Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-          exerciseEvent.setSummary("Marathon App: " + exercises.get(y));
-          exerciseEvent.setColorId("4");
+          exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
+          exerciseEvent.setColorId(colorId);
           // TODO (@piercedw) : Store each event's eventID in datastore for display later.
           this.insertEvent(exerciseEvent);
           // Increment minSpan and maxSpan by one day. 

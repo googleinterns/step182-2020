@@ -83,7 +83,7 @@ public class Scheduler {
     return event;  
  
   }
-  public Boolean isAllDay(Event e){
+  private Boolean isAllDay(Event e){
     return e.getStart().getDate()!=null;
   }
 }
