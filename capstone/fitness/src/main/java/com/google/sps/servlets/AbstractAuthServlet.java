@@ -34,7 +34,7 @@ import java.util.*;
 // AbstractAuthServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/auth-servlet")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
-  String nickname = UserServiceFactory.getUserService().getCurrentUser().getNickname();
+
   String APPLICATION_NAME = "Marathon App";
   String colorId = "4";
   Calendar calendar;
@@ -54,37 +54,14 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     Credential credential = Utils.newFlow().loadCredential(userId);
     calendar = new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
 
-    // Might be an extra step. 
-    com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
-    listRequest.setFields("items(id)").setMaxResults(1);
-    CalendarList feed = listRequest.execute();
-   
-    ArrayList<String> result = new ArrayList<String>();
-    if (feed.getItems() != null) {
-      for (CalendarListEntry entry : feed.getItems()) {
-        result.add(entry.getId());}
-        }
-        
-    // TODO (@piercedw) : Store this result in datastore.
-    String id = result.get(0);
-    String jsonId = gson.toJson(result.get(0));
-    response.getWriter().println((jsonId));    
- 
     scheduler = new Scheduler(exerciseDuration);
     
     String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
     
     int daysAvailable = weeksToTrain * Time.weeksToDays;
-
-    String goalSteps = DataHandler.getGoalSteps();
-
-    ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
-    List<String> exercises = new ArrayList<String>();
-    for(JsonGoalStep goal: goalStepsArray){
-        exercises.add(goal.getName());
-    }
     
+    List<String> exercises = this.getExercises();
     int timesPerWeek = daysAvailable/ exercises.size(); 
 
     // // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
@@ -117,6 +94,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
           y++;
     }
     }
+    String id = this.getCalendarId();
     response.sendRedirect("/calendar.html?calendarId=" + id); 
   }
  
@@ -144,5 +122,32 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
   // Method for putting an event on the user's calendar. 
   public void insertEvent(Event event) throws IOException{
     Event myNewEvent = calendar.events().insert("primary", event).execute();
+  }
+
+  public String getCalendarId() throws IOException{
+    // Might be an extra step. 
+    com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
+    listRequest.setFields("items(id)").setMaxResults(1);
+    CalendarList feed = listRequest.execute();
+   
+    ArrayList<String> result = new ArrayList<String>();
+    if (feed.getItems() != null) {
+      for (CalendarListEntry entry : feed.getItems()) {
+        result.add(entry.getId());}
+        }
+        
+    // TODO (@piercedw) : Store this result in datastore.
+    return result.get(0); 
+  }
+  List <String> getExercises(){
+    String goalSteps = DataHandler.getGoalSteps();
+    ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
+    List<String> exercises = new ArrayList<String>();
+    for(JsonGoalStep goal: goalStepsArray){
+        exercises.add(goal.getName());
+    }
+
+    return exercises; 
+    
   }
 }
