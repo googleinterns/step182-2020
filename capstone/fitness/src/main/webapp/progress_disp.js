@@ -13,6 +13,7 @@ const goalKeyword = "Goal";
 const viewKeyword = "Viewing";
 
 const viewingHeaderStr = "Distance From Step #";
+let viewingIndex = -1;
 
 const progressCircle = `<div class="progress mx-auto" data-value='percentage'>
               <span class="progress-left"><span class="progress-bar border-primary"></span></span>
@@ -62,7 +63,7 @@ async function loadPercentages(insertionIndex, goalIndex) {
   clearPanels();
   enableViewing(viewing);
   for(let i = 0; i < statsList.length; i++) {
-    if(statsList[i].tag === "Session" && statsList[i].name === goal.name) {
+    if(statsList[i].tag.includes("Session") && statsList[i].name === goal.name) {
       addPercentages(statsList[i], next, goal, viewing);
     }
   }
@@ -209,7 +210,7 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex, isLast) {
     formattedStr = formattedStr.replace("number", index).replace("number", index);
   }
 
-  if(goalStepObj.complete) {
+  if(isComplete(goalStepObj)) {
     formattedStr = formattedStr.replace("buttonType", completedButtonStyle);
   }
   else {
@@ -230,8 +231,16 @@ function getFormattedStr(index, goalStepObj, listSize, insertionIndex, isLast) {
   return formattedStr;
 }
 
-$(document).on("click", "button[name='" + viewStep + "']", async function() {
-    await updateModelAndStats(parseInt($(this).val()));
+function isComplete(goalStepObj) {
+  return goalStepObj.tag.includes("Complete");
+}
+
+$(document).on("mouseover", "button[name='" + viewStep + "']", async function() {
+    const value = parseInt($(this).val());
+    if(viewingIndex != value) {
+      viewingIndex = value;
+      await updateModelAndStats(value);
+    }
 });
 
 $(document).on("click", "input[name='sorting']", async function() {

@@ -31,26 +31,26 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/stats")
 public class StatsServlet extends HttpServlet {
 
-  private static String SESSION = "Session";
+  private static String SESSION = "Last Session";
   private static String NEXT_STEP = "Next Step";
   private static String GOAL = "Goal";
-  private static String VIEWING_STEP = "Viewing";
+  private static String VIEWING_STEP = "Viewing Step";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String goalStepsJson = DataHandler.getGoalSteps();
-    ProgressModel model = null;
+    List<JsonExercise> panelDisplay = null; 
     if(goalStepsJson != null) {
-      model = new ProgressModel.Builder()
-                  .setJsonGoalSteps(goalStepsJson)
-                  .build();
+      ProgressModel model = new ProgressModel.Builder()
+                            .setJsonGoalSteps(goalStepsJson)
+                            .build();
+      HttpSession session = request.getSession();
+      Integer insertion = (Integer) session.getAttribute("insertion");
+      GoalStep viewing = insertion == null ? null : model.toArray()[insertion];
+      panelDisplay = getStatItems(DataHandler.getLastSession(), model.getCurrentMainGoalStep(), model.getLast(), viewing);
     }
-    HttpSession session = request.getSession();
-    Integer insertion = (Integer) session.getAttribute("insertion");
-    GoalStep viewing = insertion == null ? null : model.toArray()[insertion];
-    List<JsonExercise> display = getStatItems(getLastSession(), model.getCurrentMainGoalStep(), model.getLast(), viewing);
     response.setContentType("application/json");
-    response.getWriter().println(getJson(display));
+    response.getWriter().println(getJson(panelDisplay));
   }
 
   @Override
@@ -60,29 +60,19 @@ public class StatsServlet extends HttpServlet {
     response.sendRedirect("/progress.html");
   }
 
-  private Integer updateInsertion(HttpServletRequest request) {
-    String insertionString = request.getParameter("insertion");
-    if(insertionString != null  && !insertionString.isEmpty()) {
-      int parsedInsertion = Integer.parseInt(insertionString);
-      return parsedInsertion < 0 ? null : parsedInsertion;
-    }
-    return null;
-  }
-
-  private String getJson(List<JsonExercise> display) {
-    Gson gson = new Gson();
-    String json = gson.toJson(display);
-    return json;
-  }
-
   private List<JsonExercise> getStatItems(Session session, GoalStep next, GoalStep goal, GoalStep viewing) {
     List<JsonExercise> exercises = new ArrayList<>();
-    if(session != null) {
-      for(Exercise e : session.getWorkout()) {
-        exercises.add(new JsonExercise(SESSION, e));
-      }
+    // Do not get extra info if there's no session.
+    if(session == null) {
+      return exercises;
     }
 
+    // Add last session exercises.
+    for(Exercise e : session.getWorkout()) {
+      exercises.add(new JsonExercise(SESSION, e));
+    }
+
+    // Add panel comparison exercises.
     exercises.add(new JsonExercise(NEXT_STEP, next));
     exercises.add(new JsonExercise(GOAL, goal));
     if(viewing != null) {
@@ -90,16 +80,20 @@ public class StatsServlet extends HttpServlet {
     }
     
     return exercises;
-  } 
+  }
 
-  private Session getLastSession() {
-    String sessionsJson = DataHandler.getData(DataHandler.PROGRESS_PROPERTY, DataHandler.getUser());
-    if(sessionsJson != null) {
-      ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
-      if(sessions.isEmpty()) {
-        return null;
-      }
-      return new Session(sessions.get(sessions.size() - 1));
+  private String getJson(List<JsonExercise> panelDisplay) {
+    Gson gson = new Gson();
+    String json = panelDisplay != null ? gson.toJson(panelDisplay) : gson.toJson(new ArrayList<>());
+    return json;
+  }
+
+  private Integer updateInsertion(HttpServletRequest request) {
+    // Insertion index refers to actual index of step being viewed in viewing panel.
+    String insertionString = request.getParameter("insertion");
+    if(insertionString != null  && !insertionString.isEmpty()) {
+      int parsedInsertion = Integer.parseInt(insertionString);
+      return parsedInsertion < 0 ? null : parsedInsertion;
     }
     return null;
   }

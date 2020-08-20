@@ -40,7 +40,6 @@
         </div>
         <div class="col-sm">
           <!-- Goal Step Count Per Page -->
-          <!--TODO(ijelue): Add Servlet for automatic number restriction logic. -->
           <form action="/pagin" method="POST">
             <button class="btn btn-info btn-sm">Go!</button>
             <input type="number" id="count" name="count" min="1" max="10">
@@ -56,14 +55,12 @@
       </div><br>
       <div class="row">
         <!-- Goal Steps -->
-        <!--TODO(ijelue): Add Servlet and javascript for automatic generation of goal step buttons. -->
         <div id="model"></div>
       </div>
     </div>
     <div class="col-sm-8">
       <div class="row">
         <!-- Current -->
-        <!--TODO(ijelue): Add Servlet and javascript to get percentages and versus values. -->
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
             <h2 class="font-weight-bold text-center mb-4">Distance From The Next Step</h2>
@@ -72,7 +69,6 @@
           </div>
         </div>
         <!-- Goal -->
-        <!--TODO(ijelue): Add Servlet and javascript to get percentages and versus values. -->
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
             <h2 class="font-weight-bold text-center mb-4">Distance From Your Goal</h2>
@@ -83,7 +79,6 @@
       </div>
       <div id="view-panel" class="row">
         <!-- Viewing -->
-        <!--TODO(ijelue): Add Servlet and javascript to get percentages and versus values (when hovering or pressing goal step button, this container shows up). -->
         <div class="mb-4 col-sm-6">
           <div class="bg-white rounded p-5 shadow">
           <h2 id="view-panel-header" class="font-weight-bold text-center mb-4"></h2>

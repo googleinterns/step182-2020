@@ -57,7 +57,7 @@ public class PaginationServlet extends HttpServlet {
   }
   
   /**
-  * Creates an updated instance of the comments container metadata given the request parameters
+  * Creates an updated instance of the goal steps display metadata given the request parameters
   * @param metadata metadata to update
   * @param request holds request parameters for specific http request
   */

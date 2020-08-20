@@ -21,18 +21,24 @@ import java.util.*;
 /* Json version of exercise. */
 public class JsonExercise {
 
-  private final String tag;
   private final String name;
+  private final String tag;
   private final HashMap<SetType, float[]> setValues;
+  private final String exerciseString;
 
   public JsonExercise(String tag, GoalStep gs) {
-    this(tag, gs.getMarker());
+    this(tag + String.format(" %s", (gs.isComplete() ? "Complete" : "")), gs.getMarker());
   }
 
   public JsonExercise(String tag, Exercise e) {
+    this(e.getName(), tag, e.getSetValues(), e.toString().replaceAll("\n", "<br>"));
+  }
+  
+  public JsonExercise(String name, String tag, HashMap<SetType, float[]> setValues, String exerciseString) {
+    this.name = name;
     this.tag = tag;
-    name = e.getName();
-    setValues = e.getSetValues();
+    this.setValues = setValues;
+    this.exerciseString = exerciseString;
   }
 
   public String getTag() {
@@ -45,5 +51,9 @@ public class JsonExercise {
 
   public HashMap<SetType, float[]> getSetValues() {
     return setValues;
+  }
+
+  public String toString() {
+    return String.format("%s\nTag: %s\n%s", name, tag, setValues);
   }
 }
