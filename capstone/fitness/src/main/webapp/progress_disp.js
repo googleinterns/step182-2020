@@ -15,25 +15,26 @@ const viewKeyword = "Viewing";
 const viewingHeaderStr = "Distance From Step #";
 let viewingIndex = -1;
 
-const progressCircle = `<div class="progress mx-auto" data-value='percentage'>
-              <span class="progress-left"><span class="progress-bar border-primary"></span></span>
-                <span class="progress-right"><span class="progress-bar border-primary"></span></span>
-                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-                  <div class="h2 font-weight-bold">percentage<sup class="small">%</sup></div>
-                </div>
-            </div>`;
+const progressCircle = `
+  <div class="progress mx-auto" data-value='percentage'>
+    <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+    <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+    <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+      <div class="h2 font-weight-bold">percentage<sup class="small">%</sup></div>
+    </div>
+  </div>`;
 
-const progressSets = `<div class="row text-center mt-4">
-              <div class="col-6 border-right">
-                <div class="font-weight-bold mb-0">sets</div>
-                <span class="small text-gray">Last Session</span>
-              </div>
-              <div class="col-6">
-                <div class="font-weight-bold mb-0">sets</div>
-                <span class="small text-gray">keyword</span>
-              </div>
-            </div>
-
+const progressSets = `
+  <div class="row text-center mt-4">
+    <div class="col-6 border-right">
+      <div class="font-weight-bold mb-0">sets</div>
+      <span class="small text-gray">Last Session</span>
+    </div>
+    <div class="col-6">
+      <div class="font-weight-bold mb-0">sets</div>
+      <span class="small text-gray">keyword</span>
+    </div>
+  </div>
 `;
 
 const goalStepCountLabel = "Goal Steps Per Page: -";
