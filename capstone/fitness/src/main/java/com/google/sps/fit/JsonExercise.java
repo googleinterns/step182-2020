@@ -12,39 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.progress;
+package com.google.sps.fit;
 
-import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
-import com.google.sps.util.*;
+import com.google.sps.progress.*;
 import java.util.*;
 
-/* Json version of progress marker. */
-public class JsonGoalStep {
+/* Json version of exercise. */
+public class JsonExercise {
 
   private final String name;
-  private final boolean complete;
+  private final String tag;
   private final HashMap<SetType, float[]> setValues;
+  private final String exerciseString;
 
-  public JsonGoalStep(GoalStep gs) {
-    this(gs.getName(), gs.isComplete(), gs.getMarker().getSetValues());
+  public JsonExercise(String tag, GoalStep gs) {
+    this(tag + String.format(" %s", (gs.isComplete() ? "Complete" : "")), gs.getMarker());
   }
 
-  public JsonGoalStep(String name, boolean complete, HashMap<SetType, float[]> setValues) {
+  public JsonExercise(String tag, Exercise e) {
+    this(e.getName(), tag, e.getSetValues(), e.toString().replaceAll("\n", "<br>"));
+  }
+  
+  public JsonExercise(String name, String tag, HashMap<SetType, float[]> setValues, String exerciseString) {
     this.name = name;
-    this.complete = complete;
+    this.tag = tag;
     this.setValues = setValues;
+    this.exerciseString = exerciseString;
+  }
+
+  public String getTag() {
+    return tag;
   }
 
   public String getName() {
     return name;
   }
 
-  public boolean isComplete() {
-    return complete;
-  }
-
   public HashMap<SetType, float[]> getSetValues() {
     return setValues;
+  }
+
+  public String toString() {
+    return String.format("%s\nTag: %s\n%s", name, tag, setValues);
   }
 }

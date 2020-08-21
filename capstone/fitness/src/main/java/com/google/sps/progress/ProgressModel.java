@@ -78,7 +78,7 @@ public class ProgressModel {
     }
 
     public Builder setJsonGoalSteps(String json) {
-      List<JsonGoalStep> jsonGoalSteps = new Gson().fromJson(json, new TypeToken<List<JsonGoalStep>>(){}.getType());
+      List<JsonExercise> jsonGoalSteps = new Gson().fromJson(json, new TypeToken<List<JsonExercise>>(){}.getType());
       GoalStep[] goalSteps = new GoalStep[jsonGoalSteps.size()];
       for(int i = 0; i < goalSteps.length; i++) {
         goalSteps[i] = new GoalStep(jsonGoalSteps.get(i));
@@ -149,7 +149,7 @@ public class ProgressModel {
   }
 
   public boolean updateModel() {
-    return updateModel(getLastSession());
+    return updateModel(DataHandler.getLastSession());
   }
 
   /**
@@ -220,9 +220,9 @@ public class ProgressModel {
   
   public String toJson() {
     GoalStep[] goalSteps = toArray();
-    List<JsonGoalStep> jsonGoalSteps = new ArrayList<>();
+    List<JsonExercise> jsonGoalSteps = new ArrayList<>();
     for(GoalStep goalStep : goalSteps) {
-      jsonGoalSteps.add(new JsonGoalStep(goalStep));
+      jsonGoalSteps.add(new JsonExercise("GoalStep", goalStep));
     }
     String json = new Gson().toJson(jsonGoalSteps);
     return json;
@@ -435,18 +435,6 @@ public class ProgressModel {
     }
 
     return (GoalStep) goalStep;
-  }
-
-  private Session getLastSession() {
-    String sessionsJson = DataHandler.getData(DataHandler.PROGRESS_PROPERTY, DataHandler.getUser());
-    if(sessionsJson != null) {
-      ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
-      if(sessions.isEmpty()) {
-        return null;
-      }
-      return new Session(sessions.get(sessions.size() - 1));
-    }
-    return null;
   }
 
   private boolean progressMain() {

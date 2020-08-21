@@ -29,12 +29,12 @@ public class GoalStep extends BananaNode {
     this.marker = marker;
   }
 
-  public GoalStep(JsonGoalStep jgs) {
+  public GoalStep(JsonExercise je) {
     super();
-    this.marker = new Exercise.Builder(jgs.getName())
-                      .addSetValues(jgs.getSetValues())
+    this.marker = new Exercise.Builder(je.getName())
+                      .addSetValues(je.getSetValues())
                       .build();
-    setComplete(jgs.isComplete());
+    setComplete(je.getTag().contains("Complete"));
   }
 
   public Exercise getMarker() {
