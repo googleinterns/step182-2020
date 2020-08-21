@@ -106,18 +106,18 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     return Utils.newFlow();
   }
   
-  public List<Event> getEventsInTimespan(DateTime minSpan, DateTime maxSpan) throws IOException{
+  private List<Event> getEventsInTimespan(DateTime minSpan, DateTime maxSpan) throws IOException{
     Events events = calendar.events().list("primary").setTimeMin(minSpan).setTimeMax(maxSpan).setOrderBy("startTime").setSingleEvents(true).execute();
     List<Event> items = events.getItems();
     return items;
   }
 
   // Method for putting an event on the user's calendar. 
-  public void insertEvent(Event event) throws IOException{
+  private void insertEvent(Event event) throws IOException{
     Event myNewEvent = calendar.events().insert("primary", event).execute();
   }
 
-  public String getCalendarId() throws IOException{
+  private String getCalendarId() throws IOException{
     // Might be an extra step. 
     com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
     listRequest.setFields("items(id)").setMaxResults(1);
@@ -132,7 +132,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // TODO (@piercedw) : Store this result in datastore.
     return result.get(0); 
   }
-  List <String> getExercises(){
+ private List <String> getExercises(){
     String goalSteps = DataHandler.getGoalSteps();
     ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
     List<String> exercises = new ArrayList<String>();
