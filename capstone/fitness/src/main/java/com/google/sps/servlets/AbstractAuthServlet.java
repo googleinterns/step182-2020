@@ -109,12 +109,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
   }
   
   public List<Event> getEventsInTimespan(DateTime minSpan, DateTime maxSpan) throws IOException{
-    Events events = calendar.events().list("primary")
-                .setTimeMin(minSpan)
-                .setTimeMax(maxSpan)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
+    Events events = calendar.events().list("primary").setTimeMin(minSpan).setTimeMax(maxSpan).setOrderBy("startTime").setSingleEvents(true).execute();
     List<Event> items = events.getItems();
     return items;
   }

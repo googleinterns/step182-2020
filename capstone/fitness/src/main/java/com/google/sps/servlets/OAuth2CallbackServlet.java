@@ -5,12 +5,12 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.util.*;
 import java.io.IOException;
-import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.annotation.WebServlet;
-import com.google.sps.util.*;
+import javax.servlet.ServletException;
 
 // Callback servlet handles callbacks for OAuth. 
 @WebServlet("/oauth2callback")

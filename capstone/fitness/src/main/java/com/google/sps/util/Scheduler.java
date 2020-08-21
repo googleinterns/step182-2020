@@ -14,8 +14,8 @@
 package com.google.sps.util;
  
 import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import java.util.*;
  
 // Class scheduler uses the user's free/busy information and the duration of an exercise to find a time in a user's day when the user could do an exercise.

@@ -1,11 +1,12 @@
 package com.google.sps.util;
 
-import java.util.*;
-import java.lang.*; 
-import java.io.*; 
-
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import java.io.*; 
+import java.lang.*; 
+import java.util.*;
+
+
 
 
 // Comparator for Event class. Orders Event instances by milliseconds.
