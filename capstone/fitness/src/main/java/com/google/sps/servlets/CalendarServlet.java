@@ -31,17 +31,14 @@ import java.util.*;
 
 
 
-// AbstractAuthServlet initializes the OAuth process and does calendar functions. 
-@WebServlet("/auth-servlet")
-public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
-  String APPLICATION_NAME = "Marathon App";
-  String colorId = "4";
-  Calendar calendar;
-  Scheduler scheduler;
-  long exerciseDuration = 30;  
+// CalendarServlet initializes the OAuth process and does calendar functions. 
+@WebServlet("/calendar-servlet")
+public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
+  private static String APPLICATION_NAME = "Marathon App";
+  private static String colorId = "4";
+  private static long exerciseDuration = 30;  
+  private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   Gson gson = new Gson();
-  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
-  LocalDateTime now = LocalDateTime.now();  
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -50,9 +47,9 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
-    calendar = new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
+      Calendar calendar= new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
 
-    scheduler = new Scheduler(exerciseDuration);
+    Scheduler scheduler = new Scheduler(exerciseDuration);
     
     String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
