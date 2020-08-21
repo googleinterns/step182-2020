@@ -39,7 +39,16 @@ body {
 
 .goal-desc-insertion {
   border-left: 2px solid black;
-  height: 50%;
+  height: 25%;
+}
+
+.goal-desc-insertion-with-text {
+  font-style: italic;
+  height: 100%;
+}
+
+.goal-desc-insertion-empty {
+  height: 25%;
 }
 
 .progress {
