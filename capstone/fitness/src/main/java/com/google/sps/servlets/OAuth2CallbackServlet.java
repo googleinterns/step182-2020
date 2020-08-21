@@ -29,8 +29,8 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
   // On failure (i.e user denies access) the callback servlet displays a simple error message.
   @Override
   protected void onError(
-      HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
-      throws ServletException, IOException {
+    HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
+    throws ServletException, IOException {
     resp.getWriter().print( nickname + " has not given access to their calendar.");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");

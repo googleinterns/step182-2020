@@ -13,14 +13,16 @@
 // limitations under the License.
  
 package com.google.sps;
-import com.google.sps.util.*;
-import java.util.*;
-import org.junit.*;
-import static org.junit.Assert.*;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.sps.util.*;
+import java.util.*;
 import static org.hamcrest.Matchers.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+
+
  
 public class SchedulerTest { 
   long duration = 30;
