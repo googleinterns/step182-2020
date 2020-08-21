@@ -31,14 +31,9 @@ public class UserDataServlet extends HttpServlet {
 
     JSONObject json = new JSONObject();
 
-    for(String property : DataHandler.PROPERTIES)
+    for(String property : DataHandler.USER_PROPERTIES)
     {
-      if(DataHandler.isNumber(property)) {
-        json.put(property, Float.parseFloat(DataHandler.getData(property, user)));
-      }
-      else {
-        json.put(property, DataHandler.getData(property, user));
-      }
+      json.put(property, DataHandler.getUserData(property, user));
     }
     response.setContentType("application/json");
     response.getWriter().println(json.toString());

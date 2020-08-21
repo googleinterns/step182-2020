@@ -6,52 +6,79 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.progress.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class DataHandler {
 
   // Constants used for datastore.
-  // TODO(@gabrieldg) 
-  //  - make private and change to getters and setters.
-  //  - Figure out why the identifiers do not work.
-  public static Set<String> PROPERTIES  = new HashSet<>();
   public final static String USER_ENTITY = "user";
+  public static Set<String> USER_PROPERTIES  = new HashSet<>();
   public final static String NAME_PROPERTY = "name";
   public final static String AGE_PROPERTY = "age";
+  public final static String WORKOUT_LIST_PROPERTY = "workoutList";
+  public final static String CALENDAR_ID_PROPERTY = "calendarId";
+  public final static String EVENT_IDS_PROPERTY = "EventIds";
+
+  public final static String WORKOUT_ENTITY = "workout";
+  public static Set<String> WORKOUT_PROPERTIES = new HashSet<>();
+  public final static String WORKOUT_NAME_PROPERTY = "workoutName";
+  public final static String TYPE_PROPERTY = "workoutType";
   public final static String WEEKS_TO_TRAIN_PROPERTY = "weeksToTrain";
+  public final static String GOAL_STEPS_PROPERTY = "goalSteps";
+  public final static String PROGRESS_PROPERTY = "progress";
+
+  public static Set<String> MARATHON_PROPERTIES = new HashSet<>();
   public final static String MARATHON_LENGTH_PROPERTY = "marathonLength";
   public final static String INITIAL_TIME_PROPERTY = "initialTime";
   public final static String GOAL_TIME_PROPERTY = "goalTime";
-  public final static String PROGRESS_PROPERTY = "progress";
   public final static String MILE_TIME_PROPERTY = "mileTime";
-  public final static String GOAL_STEPS_PROPERTY = "goalSteps";
+  
+  
+  public static Set<String> LIFTING_PROPERTIES = new HashSet<>();
+  public final static String INITIAL_WEIGHT_PROPERTY = "initialWeight";
+  public final static String INITIAL_REPS_PROPERTY = "initialReps";
+  public final static String GOAL_WEIGHT_PROPERTY = "goalWeight";
+  public final static String GOAL_REPS_PROPERTY = "goalReps";
+
   static {
-    PROPERTIES.add(NAME_PROPERTY);
-    PROPERTIES.add(AGE_PROPERTY);
-    PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
-    PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
-    PROPERTIES.add(INITIAL_TIME_PROPERTY);
-    PROPERTIES.add(GOAL_TIME_PROPERTY);
-    PROPERTIES.add(PROGRESS_PROPERTY);
-    PROPERTIES.add(MILE_TIME_PROPERTY);
-    PROPERTIES.add(GOAL_STEPS_PROPERTY);
+    USER_PROPERTIES.add(NAME_PROPERTY);
+    USER_PROPERTIES.add(AGE_PROPERTY);
+    USER_PROPERTIES.add(CALENDAR_ID_PROPERTY);
+    USER_PROPERTIES.add(EVENT_IDS_PROPERTY);
+
+    WORKOUT_PROPERTIES.add(TYPE_PROPERTY);
+    WORKOUT_PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
+    WORKOUT_PROPERTIES.add(WORKOUT_NAME_PROPERTY);
+    WORKOUT_PROPERTIES.add(GOAL_STEPS_PROPERTY);
+
+    MARATHON_PROPERTIES.add(MARATHON_LENGTH_PROPERTY);
+    MARATHON_PROPERTIES.add(INITIAL_TIME_PROPERTY);
+    MARATHON_PROPERTIES.add(GOAL_TIME_PROPERTY);
+    MARATHON_PROPERTIES.add(MILE_TIME_PROPERTY);
+
+    LIFTING_PROPERTIES.add(INITIAL_WEIGHT_PROPERTY);
+    LIFTING_PROPERTIES.add(INITIAL_REPS_PROPERTY);
+    LIFTING_PROPERTIES.add(GOAL_WEIGHT_PROPERTY);
+    LIFTING_PROPERTIES.add(GOAL_REPS_PROPERTY);
   }
  
 
   static DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  static Gson gson = new Gson();
 
   /**
   * equalKeys checks if an email matches the key of a entity.
-  * Entity keys are in the format user("key"), so using the 
-  * substring gets rid of the 'user("' and '")' at both ends.
-  * The complexity of this is O(1).
+  * keys are in the format "'type(key)'" so removing the last
+  * 2 characters and checking the ending will check if that is
+  * the correct jey
   *
-  * @param   email   The email of the current user.
+  * @param   id      The ID of the entity we are dealing with.
   * @param   key     The key in the above mentioned format.
-  * @return          If the email matches the key.
+  * @return          If the id matches the key.
   */
-  public static boolean equalKeys(String  email, String key) {
-    return key.substring(6, key.length()-2).equals(email);
+  public static boolean equalKeys(String  id, String key) {
+    return key.substring(0,key.length()-2).endsWith(id);
   }
 
 
@@ -99,13 +126,33 @@ public class DataHandler {
   }
 
   /**
+  * getWorkout - returns a workout entity given a name(id)
+  *
+  * @param name the name of the activity
+  * @return     the workout entity
+  */
+  public static Entity getWorkout(String name) {
+    // Find user in datastore.
+    Query query = new Query(WORKOUT_ENTITY);
+    PreparedQuery results = datastore.prepare(query);
+    
+    for(Entity e : results.asIterable()) {
+        String key = e.getKey().toString();
+        if(!(key == null) && equalKeys(name, key)) {
+          return e;
+        }
+    }
+    return null;
+  }
+
+  /**
   * GetData returns a datapoint from datastore for a user.
   *
   * @param  property    The property that we want to get.
   * @param  user        The User entity we are dealing with.
   * @return             The value of the data as a String
   */
-  public static String getData(String property, Entity user) {
+  public static String getUserData(String property, Entity user) {
     //Entity user = getUser();
     // Check if user is signed in
     if(user == null) {
@@ -116,33 +163,69 @@ public class DataHandler {
     return data; 
   }
 
-  public static String getGoalSteps() {
-    Entity user = getUser();
-    if(user == null) {
+  /**
+  * GetData returns a datapoint from datastore for a user.
+  *
+  * @param  property    The property that we want to get.
+  * @param  workout     The User entity we are dealing with.
+  * @return             The value of the data as a String
+  */
+  public static String getWorkoutData(String property, Entity workout) {
+    //Entity user = getUser();
+    // Check if user is signed in
+    if(workout == null) {
       return null;
     }
 
-    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
+    String data = (workout.getProperty(property)).toString();
+    return data; 
+  }
+  /**
+  *getGoalSteps returns the JSON string of the goalsteps of the workout
+
+  * @param workout  the workout we want the info from
+  * @return         the goalsteps string
+  */
+  public static String getGoalSteps(Entity workout) {
+    String goalSteps = ((Text) workout.getProperty(GOAL_STEPS_PROPERTY)).getValue();
     return goalSteps; 
   }
 
-  public static void setGoalSteps(String goalStepsJson) {
-    Entity user = getUser();
-    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
+
+  /**
+  * setGoalSteps updates the JSON string of the goalsteps of the workout
+  *
+  * @param goalStepsJson    new new goalStep string
+  * @param workout          the workout we want to update
+  * @return                 none
+  */
+  public static void setGoalSteps(String goalStepsJson, Entity workout) {
+    workout.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
+    datastore.put(workout);
   }
 
   /**
-  * isNumber returns wheter or not a property is a number of not
-  *
-  * @param  property    The property we are dealing with
-  * @return             Wether or not it should be a number or string. 
+  * setCalendarID sets the ID for authentication of the calendar
+
+  * @param user the user's whose calendar ID we want to update
+  * @param id   the new Calendar ID
+  * @return     none
   */
-  public static boolean isNumber(String property) {
-      if(property.equals(NAME_PROPERTY) || property.equals(PROGRESS_PROPERTY)) {
-        return false;
-      } 
-      return true;
+  public static void setCalendarID(Entity user, String id) {
+      user.setProperty(CALENDAR_ID_PROPERTY, id);
+      datastore.put(user);
   }
-}
+
+  /**
+  * addEventID - adds an eventId to the list of eventIDS
+  *
+  * @param user the user
+  * @param id   the ID we are going to add
+  * @return     null
+  */
+  public static void addEventID(Entity user, String id) {
+      ArrayList<String> EventIds = gson.fromJson(getUserData(user, EVENT_IDS_PROPERTY), new TypeToken<List<String>>(){}.getType());
+      EventIds.add(id);
+      user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
+      datastore.put(workout);
+  }

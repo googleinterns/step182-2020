@@ -115,7 +115,7 @@ public class ProgressTest {
                             .setStart(start)
                             .setGoal(goal)
                             .build();
-    
+
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
     assertTrue(model.getLast().getMarker().equalTo(goal));
@@ -141,7 +141,7 @@ public class ProgressTest {
                             .setStart(start)
                             .setGoal(goal)
                             .build();
-    
+
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
     assertTrue(model.getLast().getMarker().equalTo(goal));
@@ -167,7 +167,7 @@ public class ProgressTest {
                             .setStart(start)
                             .setGoal(goal)
                             .build();
-    
+
     // Test validity of dynamic model.
     assertTrue(model.getCurrentMainGoalStep().getMarker().equalTo(start));
     assertTrue(model.getLast().getMarker().equalTo(goal));
@@ -175,7 +175,7 @@ public class ProgressTest {
   }
 
   @Test
-  public void testUpdateGoalStepWithPrevious() {
+  public void testUpdateModelWithPrevious() {
     // Defines a start and goal with multiple set and set type changes.
     Exercise start = new Exercise.Builder(name)
         .addSetTypeWithValues(SetType.DISTANCE, new float[] {2})

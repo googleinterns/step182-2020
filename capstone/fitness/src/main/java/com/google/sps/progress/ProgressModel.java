@@ -101,7 +101,6 @@ public class ProgressModel {
         if(goal == null) {
           throw new NullPointerException("Cannot build model because the goal is null.");
         }
-
         model.buildMainGoalSteps(daysAvailable, start, goal);
       }
       else {
@@ -466,7 +465,6 @@ public class ProgressModel {
     if(head == null) {
       return 0;
     }
-
     // "head" counts as part of the size.
     int size = 1;
     BananaNode current = head;

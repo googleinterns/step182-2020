@@ -27,9 +27,6 @@ import java.util.*;
 @WebServlet("/create-profile")
 public class CreateProfileServlet extends HttpServlet {
   
-  private static final String EXERCISE_NAME = "Running";
-  private static final int DAYS_PER_WEEK = 3;
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -61,30 +58,16 @@ public class CreateProfileServlet extends HttpServlet {
     // Get the parameters from the request.
     String name = request.getParameter(DataHandler.NAME_PROPERTY);
     Integer age = Integer.parseInt(request.getParameter(DataHandler.AGE_PROPERTY));
-    Integer weeksTotrain = Integer.parseInt(request.getParameter(DataHandler.WEEKS_TO_TRAIN_PROPERTY));
-    Float lengthOfMarathon = Float.parseFloat(request.getParameter(DataHandler.MARATHON_LENGTH_PROPERTY));
-    // Divide by 60 to convert to hours.
-    Float mileTime = Float.parseFloat(request.getParameter(DataHandler.MILE_TIME_PROPERTY))/60;
-    Float initialTime = Float.parseFloat(request.getParameter(DataHandler.INITIAL_TIME_PROPERTY));
-    Float goalTime = Float.parseFloat(request.getParameter(DataHandler.GOAL_TIME_PROPERTY));
-
+   
     // Create a user entity that uses the email as the key.
     Entity newUser = new Entity(DataHandler.USER_ENTITY, userEmail);
     newUser.setProperty(DataHandler.NAME_PROPERTY, name);
     newUser.setProperty(DataHandler.AGE_PROPERTY, age);
-    newUser.setProperty(DataHandler.MARATHON_LENGTH_PROPERTY, lengthOfMarathon);
-    newUser.setProperty(DataHandler.WEEKS_TO_TRAIN_PROPERTY, weeksTotrain);
-    newUser.setProperty(DataHandler.PROGRESS_PROPERTY, "[]");
-    newUser.setProperty(DataHandler.MILE_TIME_PROPERTY, mileTime);
-    newUser.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
-    newUser.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
-    newUser.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
-                                                            .setDaysAvailable(weeksTotrain, DAYS_PER_WEEK)
-                                                            .setDurationIncrementStart(EXERCISE_NAME, lengthOfMarathon/initialTime)
-                                                            .setDurationIncrementGoal(EXERCISE_NAME, lengthOfMarathon/goalTime)
-                                                            .build()
-                                                            .toJson()));
+    newUser.setProperty(DataHandler.WORKOUT_LIST_PROPERTY, "[]");
+    newUser.setProperty(DataHandler.CALENDAR_ID_PROPERTY, "");
+    newUser.setProperty(DataHandler.EVENT_IDS_PROPERTY, "[]");
 
+    
     // Put user in datastore.
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(newUser);
