@@ -37,7 +37,7 @@ body {
   Progress Styling. Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
 */
 
-.goal-desc {
+.goal-desc-insertion {
   border-left: 2px solid black;
   height: 50%;
 }
