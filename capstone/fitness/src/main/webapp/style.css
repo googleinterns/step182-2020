@@ -45,6 +45,7 @@ body {
 
 .goal-desc-fill {
   border-left: 2px solid black;
+  font-style: italic;
   height: 100%;
 }
 
@@ -53,6 +54,7 @@ body {
 }
 
 .goal-desc-no-border-fill {
+  font-style: italic;
   height: 100%;
 }
 
