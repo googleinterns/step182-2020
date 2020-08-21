@@ -6,9 +6,6 @@ import java.io.*;
 import java.lang.*; 
 import java.util.*;
 
-
-
-
 // Comparator for Event class. Orders Event instances by milliseconds.
 class EventComparator implements Comparator<Event> 
 { 

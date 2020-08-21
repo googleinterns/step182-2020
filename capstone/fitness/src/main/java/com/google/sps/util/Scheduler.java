@@ -34,8 +34,8 @@ public class Scheduler {
     PriorityQueue<Event> eventQueue = new PriorityQueue<Event>((currentlyScheduledEvents.size() +1), new EventComparator());
 
     for (Event evt : currentlyScheduledEvents){
-        if (!this.isAllDay(evt)){
-        eventQueue.add(evt);}
+      if (!this.isAllDay(evt)){
+      eventQueue.add(evt);}
     }
     
     // Instantiate EventDateTime objects from the DateTime objects given as parameters. 
@@ -55,14 +55,14 @@ public class Scheduler {
     while (eventQueue.size() > 0 && 
     Time.eventDateTimeToMilliseconds(eventQueue.peek().getStart()) - Time.eventDateTimeToMilliseconds(now) < (exerciseMilliseconds)) {
       if (Time.eventDateTimeToMilliseconds(eventQueue.peek().getEnd()) > latestEnd){ 
-          // Now only needs to get reset if the end time of the current event is later than the latest end time we've found so far. 
-          latestEnd = Time.eventDateTimeToMilliseconds(eventQueue.peek().getEnd());
-          now = eventQueue.poll().getEnd();
+        // Now only needs to get reset if the end time of the current event is later than the latest end time we've found so far. 
+        latestEnd = Time.eventDateTimeToMilliseconds(eventQueue.peek().getEnd());
+        now = eventQueue.poll().getEnd();
           }
       else{
-          // Otherwise, now stays the same and we just remove that top event, 
-          // but we don't care about it's end time because we know there's something later that's likely overlapping.
-          eventQueue.poll();
+        // Otherwise, now stays the same and we just remove that top event, 
+        // but we don't care about it's end time because we know there's something later that's likely overlapping.
+        eventQueue.poll();
       }
       
       }

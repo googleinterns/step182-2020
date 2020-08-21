@@ -34,7 +34,6 @@ import java.util.*;
 // AbstractAuthServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/auth-servlet")
 public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServlet {
-
   String APPLICATION_NAME = "Marathon App";
   String colorId = "4";
   Calendar calendar;
@@ -44,7 +43,6 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   LocalDateTime now = LocalDateTime.now();  
 
-  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     response.setContentType("application/json;");
@@ -78,20 +76,20 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     // Use the scheduler to schedule one exercise per day. 
     int y = 0;
     for (int x = 0; x<daysAvailable; x+=timesPerWeek){
-        if (y>=exercises.size()){
-          break;
+      if (y>=exercises.size()){
+        break;
         }
-        else{
-          List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
-          Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-          exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
-          exerciseEvent.setColorId(colorId);
-          // TODO (@piercedw) : Store each event's eventID in datastore for display later.
-          this.insertEvent(exerciseEvent);
-          // Increment minSpan and maxSpan by one day. 
-          minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
-          maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
-          y++;
+      else{
+        List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
+        Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
+        exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
+        exerciseEvent.setColorId(colorId);
+        // TODO (@piercedw) : Store each event's eventID in datastore for display later.
+        this.insertEvent(exerciseEvent);
+        // Increment minSpan and maxSpan by one day. 
+        minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+        maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+        y++;
     }
     }
     String id = this.getCalendarId();
@@ -139,7 +137,7 @@ public class AbstractAuthServlet extends AbstractAppEngineAuthorizationCodeServl
     ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
     List<String> exercises = new ArrayList<String>();
     for(JsonGoalStep goal: goalStepsArray){
-        exercises.add(goal.getName());
+      exercises.add(goal.getName());
     }
 
     return exercises; 
