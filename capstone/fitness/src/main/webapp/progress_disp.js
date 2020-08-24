@@ -13,7 +13,7 @@ const uncompletedGoalStepStyle = "btn-light";
 const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" class=\"page-link\" value=\"pageNum\">pageNum</button></li>"
 const goalStepCountLabel = "Goal Steps Per Page: -";
 const pageLabel = "Page - of -";
-const sortingStrategies = ["uncomplete", "all", "complete"];
+const filters = ["uncomplete", "all", "complete"];
 let viewingIndex = -1;
 
 async function loadPage() {
@@ -33,8 +33,8 @@ async function updateModel(insertionIndex) {
   // Add goal step count to pagination label.
   document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", metadata.count)
 
-  // Set up sorting strategy display.
-  setSortingDisplay(metadata.sortLabel);
+  // Set up filtered display.
+  setFilteredDisplay(metadata.filterLabel);
 
   // Build pagination bar.
   const pageMove = document.getElementById("start-page-bar");
@@ -57,9 +57,9 @@ async function updateModel(insertionIndex) {
   }
 }
 
-function setSortingDisplay(sortLabel) {
-  for (sortingStrategy of sortingStrategies) {
-    document.getElementById(sortingStrategy).checked = sortLabel.toLowerCase() === sortingStrategy;
+function setFilteredDisplay(filterLabel) {
+  for (filter of filters) {
+    document.getElementById(filter).checked = filterLabel.toLowerCase() === filter;
   }
 }
 
@@ -117,11 +117,11 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
 });
 
 /**
- * Changes the sorting style and progress page's goal steps if a radio button is selected. 
+ * Changes the filter and progress page's goal steps if a radio button is selected. 
  */
-$(document).on("click", "input[name='sorting']", async function() {
+$(document).on("click", "input[name='filter']", async function() {
     const params = new URLSearchParams();
-    params.append('sorting', $(this).val());
+    params.append('filter', $(this).val());
     await fetch('/pagin', {method: 'POST', body: params});
     await updateModel(-1);
 });

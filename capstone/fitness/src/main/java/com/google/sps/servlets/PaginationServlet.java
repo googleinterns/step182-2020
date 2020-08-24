@@ -16,7 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import com.google.sps.util.Metadata;
-import com.google.sps.util.Metadata.Sort;
+import com.google.sps.util.Metadata.Filter;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -68,7 +68,7 @@ public class PaginationServlet extends HttpServlet {
     
     int count = metadata.getCount();
     int page = metadata.getPage();
-    Sort sortData = metadata.getSort();
+    Filter filterData = metadata.getFilter();
 
     String countString = request.getParameter("count");
     if(countString != null && !countString.isEmpty()) {
@@ -91,14 +91,14 @@ public class PaginationServlet extends HttpServlet {
       }
     }
     
-    String sorting = request.getParameter("sorting");
-    if(sorting != null) {
-      for(Sort s : Sort.values()) {
-        if(s.name().equalsIgnoreCase(sorting)) {
-          sortData = s;
+    String filter = request.getParameter("filter");
+    if(filter != null) {
+      for(Filter f : Filter.values()) {
+        if(f.name().equalsIgnoreCase(filter)) {
+          filterData = f;
         }
       }
     }
-    return new Metadata(count, page, sortData);
+    return new Metadata(count, page, filterData);
   }
 }

@@ -26,18 +26,18 @@ public class Metadata implements Serializable {
   /* Default Values */
   private static final int COUNT = 10;
   private static final int PAGE = 0;
-  private static final Sort SORT = Sort.UNCOMPLETE;
+  private static final Filter FILTER = Filter.UNCOMPLETE;
   private static final int START_INDEX = 0;
   private static final int MAX_PAGES = 1;
   private static final int GOAL_STEPS = 0;
   
-  public enum Sort {
+  public enum Filter {
     UNCOMPLETE, ALL, COMPLETE;
   }
 
   private final int count;
-  private final Sort sort;
-  private final String sortLabel;
+  private final Filter filter;
+  private final String filterLabel;
 
   private int page;
   private int startIndex;
@@ -45,14 +45,14 @@ public class Metadata implements Serializable {
   private int goalSteps;
 
   public Metadata() {
-    this(COUNT, PAGE, SORT);
+    this(COUNT, PAGE, FILTER);
   }
 
-  public Metadata(int count, int page, Sort sort) {
+  public Metadata(int count, int page, Filter filter) {
     this.count = count;
     this.page = page;
-    this.sort = sort;
-    this.sortLabel = sort.name();
+    this.filter = filter;
+    this.filterLabel = filter.name();
     this.startIndex = START_INDEX;
     this.maxPages = MAX_PAGES;
     this.goalSteps = GOAL_STEPS;
@@ -70,8 +70,8 @@ public class Metadata implements Serializable {
     this.page = page;
   }
 
-  public Sort getSort() {
-    return sort;
+  public Filter getFilter() {
+    return filter;
   }
 
   public void setMaxPages(int maxPages) {

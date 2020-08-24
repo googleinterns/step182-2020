@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
-import com.google.sps.util.Metadata.Sort;
+import com.google.sps.util.Metadata.Filter;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -55,8 +55,8 @@ public class ProgressModelServlet extends HttpServlet {
       metadata = new Metadata();
     }
 
-    // Get split array based on sorting strategy.
-    int[] pos = getPositions(goalSteps, metadata.getSort());
+    // Get split array based on filter.
+    int[] pos = getPositions(goalSteps, metadata.getFilter());
     GoalStep[] splitGoalSteps = getSplitGoalSteps(goalSteps, pos); 
     
     // Modify where the split array starts based on page number and goal step count per page.
@@ -80,11 +80,11 @@ public class ProgressModelServlet extends HttpServlet {
     return trueGoalSteps.toArray(new GoalStep[trueGoalSteps.size()]);
   }
 
-  private int[] getPositions(GoalStep[] goalSteps, Sort sortingStrategy) {
-    // Returns array of the start and end of goal step array based on the sorting strategy. 
+  private int[] getPositions(GoalStep[] goalSteps, Filter filter) {
+    // Returns array of the start and end of goal step array based on the filter. 
     int start = 0;
     int end = goalSteps.length - 1;
-    switch(sortingStrategy) {
+    switch(filter) {
       case UNCOMPLETE:
         start = end;
         while(start > 0 && !goalSteps[start].isComplete()) {
