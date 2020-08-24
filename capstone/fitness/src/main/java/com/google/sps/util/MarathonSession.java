@@ -20,7 +20,6 @@ public class MarathonSession {
   private long timestamp;
   private float speed;
   private String date;
-  
   /**
   * Constructor for Marathon Session.
   *
