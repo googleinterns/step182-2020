@@ -3,7 +3,10 @@ package com.google.sps.util;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.sps.progress.*;
+import com.google.sps.util.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import com.google.gson.Gson;
@@ -179,15 +182,33 @@ public class DataHandler {
     String data = (workout.getProperty(property)).toString();
     return data; 
   }
+
+  public static void setGoalSteps(String goalStepsJson) {
+    Entity user = getUser();
+    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(user);
+  } 
+
+  public static Session getLastSession() {
+    String sessionsJson = getData(PROGRESS_PROPERTY, getUser());
+    if(sessionsJson != null) {
+      ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
+      if(sessions.isEmpty()) {
+        return null;
+      }
+      return new Session(sessions.get(sessions.size() - 1));
+    }
+    return null;
+    
   /**
   *getGoalSteps returns the JSON string of the goalsteps of the workout
-
   * @param workout  the workout we want the info from
   * @return         the goalsteps string
   */
   public static String getGoalSteps(Entity workout) {
     String goalSteps = ((Text) workout.getProperty(GOAL_STEPS_PROPERTY)).getValue();
-    return goalSteps; 
+    return goalSteps;
   }
 
 
