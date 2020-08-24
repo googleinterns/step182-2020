@@ -33,7 +33,7 @@ public class ProgressModelServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String goalStepsJson = DataHandler.getGoalSteps();
-    List<JsonExercise> display = null;
+    List<JsonExercise> display = Collections.emptyList();
     if(goalStepsJson != null) {
       // Replicate existing model and stored version based on session in DataHandler.
       ProgressModel model = new ProgressModel.Builder()
@@ -132,7 +132,7 @@ public class ProgressModelServlet extends HttpServlet {
 
   private String getJson(List<JsonExercise> display) {
     Gson gson = new Gson();
-    String json = display != null ? gson.toJson(display) : gson.toJson(new ArrayList<>());
+    String json = gson.toJson(display);
     return json;
   }
 }
