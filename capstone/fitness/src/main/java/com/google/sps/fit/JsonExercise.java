@@ -27,18 +27,26 @@ public class JsonExercise {
   private final String exerciseString;
 
   public JsonExercise(String tag, GoalStep gs) {
-    this(tag + String.format(" %s", (gs.isComplete() ? "Complete" : "")), gs.getMarker());
+    this(modifyTagWithGoalStep(tag, gs), gs.getMarker());
   }
 
   public JsonExercise(String tag, Exercise e) {
-    this(e.getName(), tag, e.getSetValues(), e.toString().replaceAll("\n", "<br>"));
+    this(e.getName(), tag, e.getSetValues(), modifyStringForHTML(e.toString()));
   }
-  
+
   public JsonExercise(String name, String tag, HashMap<SetType, float[]> setValues, String exerciseString) {
     this.name = name;
     this.tag = tag;
     this.setValues = setValues;
     this.exerciseString = exerciseString;
+  }
+
+  private static String modifyStringForHTML(String str) {
+    return str.replaceAll("\n", "<br>");
+  }
+
+  private static String modifyTagWithGoalStep(String tag, GoalStep gs) {
+    return tag + String.format(" %s", (gs.isComplete() ? "Complete" : ""));
   }
 
   public String getTag() {
