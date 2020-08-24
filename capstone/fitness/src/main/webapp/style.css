@@ -16,6 +16,14 @@ body {
   color: #aaa;
 }
 
+.step {
+  transition: transform .2s;
+}
+
+.step:hover {
+  transform: scale(1.05);
+}
+
 /*
   Styling for 'finish session' UI
 */
