@@ -67,28 +67,11 @@ public class PaginationServlet extends HttpServlet {
     }
     
     int count = metadata.getCount();
-    int page = metadata.getPage();
     Filter filterData = metadata.getFilter();
 
     String countString = request.getParameter("count");
     if(countString != null && !countString.isEmpty()) {
       count = Integer.parseInt(countString);
-      page = 0;
-    }
-
-    String movePage = request.getParameter("move-page");
-    if(movePage != null && !movePage.isEmpty()) {
-      if(movePage.equals("previous")) {
-        if(page != 0) {
-          page--;
-        }
-      }
-      else if(movePage.equals("next")) {
-        page++;
-      }
-      else {
-        page = Integer.parseInt(movePage);
-      }
     }
     
     String filter = request.getParameter("filter");
@@ -99,6 +82,6 @@ public class PaginationServlet extends HttpServlet {
         }
       }
     }
-    return new Metadata(count, page, filterData);
+    return new Metadata(count, filterData);
   }
 }

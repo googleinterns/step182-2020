@@ -191,7 +191,7 @@ public class DataHandler {
   } 
 
   public static Session getLastSession() {
-    String sessionsJson = getData(PROGRESS_PROPERTY, getUser());
+    String sessionsJson = getUserData(PROGRESS_PROPERTY, getUser());
     if(sessionsJson != null) {
       ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
       if(sessions.isEmpty()) {
@@ -200,7 +200,7 @@ public class DataHandler {
       return new Session(sessions.get(sessions.size() - 1));
     }
     return null;
-    
+  }
   /**
   *getGoalSteps returns the JSON string of the goalsteps of the workout
   * @param workout  the workout we want the info from
@@ -211,6 +211,20 @@ public class DataHandler {
     return goalSteps;
   }
 
+
+  /**
+  *getGoalSteps returns the JSON string of the goalsteps of the workout
+  * @param workout  the workout we want the info from
+  * @return         the goalsteps string
+  */
+  public static String getGoalSteps() {
+    Entity user = getUser();
+    if(user == null) {
+      return null;
+    }
+    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
+    return goalSteps;
+  }
 
   /**
   * setGoalSteps updates the JSON string of the goalsteps of the workout
@@ -244,8 +258,9 @@ public class DataHandler {
   * @return     null
   */
   public static void addEventID(Entity user, String id) {
-      ArrayList<String> EventIds = gson.fromJson(getUserData(user, EVENT_IDS_PROPERTY), new TypeToken<List<String>>(){}.getType());
+      ArrayList<String> EventIds = gson.fromJson(getUserData(EVENT_IDS_PROPERTY, user), new TypeToken<List<String>>(){}.getType());
       EventIds.add(id);
       user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
-      datastore.put(workout);
+      datastore.put(user);
   }
+}
