@@ -42,13 +42,13 @@ public class ProgressModelServlet extends HttpServlet {
       if(model.updateModel()) {
         DataHandler.setGoalSteps(model.toJson());
       }
-      display = getProgressDisplays(paginate(model.toArray(), request.getSession()));
+      display = getProgressDisplays(model.toArray());
     }
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));
   }
 
-  private GoalStep[] paginate(GoalStep[] goalSteps, HttpSession session) {
+  private GoalStep[] filterAndPaginate(GoalStep[] goalSteps, HttpSession session) {
     // Fetch metadata in session or use default if not found.
     Metadata metadata = (Metadata) session.getAttribute("metadata");
     if(metadata == null) {

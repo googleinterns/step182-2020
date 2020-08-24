@@ -17,8 +17,78 @@ const filters = ["uncomplete", "all", "complete"];
 let viewingIndex = -1;
 
 async function loadPage() {
-  await updateModel(-1);
-  loadPercentages();
+  await test();
+  //await updateModel(-1);
+  //loadPercentages();
+}
+
+async function test() {
+  const progressResponse = await fetch("/pro");
+  const progressList = await progressResponse.json();
+
+  const metadataResponse = await fetch("/pagin");
+  const metadata = await metadataResponse.json();
+
+  const goalStepsFiltered = filterGoalSteps(metadata.filter, progressList);
+  console.log(metadata.filter);
+  console.log(goalStepsFiltered);
+
+
+  const paginationBar = $('#pagination-bar');
+  const model = $('#model');
+  paginationBar.pagination({
+    dataSource: goalStepsFiltered["goalSteps"],
+    pageSize: metadata.count,
+    callback: function(data, pagination) {
+      let dataHTML = "";
+      for(let i = 0; i < data.length; i++) {
+        const trueIndex = i + goalStepsFiltered["shiftedStart"];
+        let formattedStr = goalStepWidget.replace("arrayNum", trueIndex);
+        if(trueIndex == 0) {
+          formattedStr = formattedStr.replace(stepMessage, "Start").replace(stepMessage, "Start"); 
+        }
+        else if(trueIndex == progressList.length - 1) {
+          formattedStr = formattedStr.replace(stepMessage, "Goal").replace(stepMessage, "Goal");
+        }
+        else {
+          formattedStr = formattedStr.replace("number", trueIndex).replace("number", trueIndex);
+        }
+        
+        if(isComplete(data[i])) {
+          formattedStr = formattedStr.replace("buttonType", completedGoalStepStyle);
+        }
+        else {
+          formattedStr = formattedStr.replace("buttonType", uncompletedGoalStepStyle);
+        }
+        dataHTML += formattedStr;
+      }
+      model.html(dataHTML);
+    }
+  });
+}
+
+function filterGoalSteps(filter, goalSteps) {
+  let start = 0;
+  let end = goalSteps.length - 1;
+  switch(filter) {
+    case "UNCOMPLETE":
+      start = end;
+      while(start > 0 && !isComplete(goalSteps[start])) {
+        start--;
+      }
+      start++;
+      break;
+    case "COMPLETE":
+      end = start;
+      while(end < goalSteps.length && isComplete(goalSteps[end])) {
+        end++;
+      }
+      end--;
+      break;
+    default:
+      break;
+  }
+  return {"goalSteps" : goalSteps.slice(start, end + 1), "shiftedStart" : start};
 }
 
 async function updateModel(insertionIndex) {
@@ -108,6 +178,7 @@ function isComplete(goalStepObj) {
 /** 
  * Updates progress page's viewing panel if the user hovers over a goal step.
  */
+/*
 $(document).on("mouseover", "button[name='" + viewStep + "']", async function() {
     const value = parseInt($(this).val());
     if(viewingIndex != value) {
@@ -115,6 +186,7 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
       await updateModel(value);
     }
 });
+*/
 
 /**
  * Changes the filter and progress page's goal steps if a radio button is selected. 
@@ -123,7 +195,7 @@ $(document).on("click", "input[name='filter']", async function() {
     const params = new URLSearchParams();
     params.append('filter', $(this).val());
     await fetch('/pagin', {method: 'POST', body: params});
-    await updateModel(-1);
+    await test();
 });
 
 /**
@@ -133,7 +205,7 @@ $(document).on("click", "button[name='move-page']", async function() {
     const params = new URLSearchParams();
     params.append('move-page', $(this).val());
     await fetch('/pagin', {method: 'POST', body: params});
-    await updateModel(-1);
+    await test(-1);
 });
 
 function loadPercentages() {

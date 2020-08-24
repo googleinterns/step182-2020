@@ -26,7 +26,7 @@ public class Metadata implements Serializable {
   /* Default Values */
   private static final int COUNT = 10;
   private static final int PAGE = 0;
-  private static final Filter FILTER = Filter.UNCOMPLETE;
+  private static final Filter FILTER = Filter.ALL;
   private static final int START_INDEX = 0;
   private static final int MAX_PAGES = 1;
   private static final int GOAL_STEPS = 0;
