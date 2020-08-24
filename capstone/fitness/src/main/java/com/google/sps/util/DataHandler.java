@@ -34,7 +34,6 @@ public class DataHandler {
   public final static String GOAL_TIME_PROPERTY = "goalTime";
   public final static String MILE_TIME_PROPERTY = "mileTime";
   
-  
   public static Set<String> LIFTING_PROPERTIES = new HashSet<>();
   public final static String INITIAL_WEIGHT_PROPERTY = "initialWeight";
   public final static String INITIAL_REPS_PROPERTY = "initialReps";
