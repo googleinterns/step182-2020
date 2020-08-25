@@ -54,7 +54,6 @@ async function updateModel(insertionIndex) {
       }
       model.html(dataHTML);
       document.getElementById("page-label").innerText = pageLabel.replace("-",  pagination.pageNumber).replace("-", Math.ceil(pagination.totalNumber/ pagination.pageSize));
-      console.log(paginationBar);
     }
   });
 }
