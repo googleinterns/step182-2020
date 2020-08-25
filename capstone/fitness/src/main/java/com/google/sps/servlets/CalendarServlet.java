@@ -73,8 +73,9 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     // Use the scheduler to schedule one exercise per day. 
     int y = 0;
-    for (int x = 0; x<daysAvailable; x+=timesPerWeek){
-      if (y>=exercises.size()){
+    
+    for (int x = 0; x < daysAvailable; x += timesPerWeek){
+      if (y >= exercises.size()){
         break;
         }
       else{
@@ -122,6 +123,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     CalendarList feed = listRequest.execute();
    
     ArrayList<String> result = new ArrayList<String>();
+
     if (feed.getItems() != null) {
       for (CalendarListEntry entry : feed.getItems()) {
         result.add(entry.getId());}
