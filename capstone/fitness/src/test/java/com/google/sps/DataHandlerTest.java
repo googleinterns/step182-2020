@@ -57,14 +57,14 @@ public class DataHandlerTest {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(e);
 
-    assertTrue(dh.getData(dh.NAME_PROPERTY, e).equals("John"));
-    assertTrue(dh.getData(dh.AGE_PROPERTY, e).equals("18"));
-    assertTrue(dh.getData(dh.WEEKS_TO_TRAIN_PROPERTY, e).equals("5"));
-    assertTrue(dh.getData(dh.MARATHON_LENGTH_PROPERTY, e).equals("5.0"));
-    assertTrue(dh.getData(dh.INITIAL_TIME_PROPERTY, e).equals("2.0"));
-    assertTrue(dh.getData(dh.GOAL_TIME_PROPERTY, e).equals("1.0"));
-    assertTrue(dh.getData(dh.PROGRESS_PROPERTY, e).equals("[]"));
-    assertTrue(dh.getData(dh.MILE_TIME_PROPERTY, e).equals("0.2"));
+    assertTrue(dh.getUserData(dh.NAME_PROPERTY, e).equals("John"));
+    assertTrue(dh.getUserData(dh.AGE_PROPERTY, e).equals("18"));
+    assertTrue(dh.getUserData(dh.WEEKS_TO_TRAIN_PROPERTY, e).equals("5"));
+    assertTrue(dh.getUserData(dh.MARATHON_LENGTH_PROPERTY, e).equals("5.0"));
+    assertTrue(dh.getUserData(dh.INITIAL_TIME_PROPERTY, e).equals("2.0"));
+    assertTrue(dh.getUserData(dh.GOAL_TIME_PROPERTY, e).equals("1.0"));
+    assertTrue(dh.getUserData(dh.PROGRESS_PROPERTY, e).equals("[]"));
+    assertTrue(dh.getUserData(dh.MILE_TIME_PROPERTY, e).equals("0.2"));
 
     datastore.delete(e.getKey());
   }

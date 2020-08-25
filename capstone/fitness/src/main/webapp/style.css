@@ -10,18 +10,11 @@
 
 body {
   background: #878787;
+  color: white;
 }
 
 .text-gray {
   color: #aaa;
-}
-
-.step {
-  transition: transform .2s;
-}
-
-.step:hover {
-  transform: scale(1.05);
 }
 
 /*
@@ -42,7 +35,8 @@ body {
 }
 
 /*
-  Progress Styling. Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
+  Progress Styling. 
+  Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
 */
 
 .goal-desc-insertion {
