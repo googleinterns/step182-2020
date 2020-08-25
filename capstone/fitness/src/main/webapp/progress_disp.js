@@ -14,13 +14,37 @@ const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" cla
 const goalStepCountLabel = "Goal Steps Per Page: -";
 const pageLabel = "Page - of -";
 const filters = ["uncomplete", "all", "complete"];
-let viewingIndex = -1;
 
 let pageNum = 1;
 
+// Keywords for panels.
+const nextKeyword = "Next";
+const goalKeyword = "Goal";
+const sessionKeyword = "Session";
+const viewKeyword = "Viewing";
+
+// Viewing panel helpers.
+const viewingHeaderStr = "Distance From Step #";
+let viewingIndex = -1;
+
+
+const progressSets = `
+  <div class="row text-center mt-4">
+    <div class="col-6 border-right">
+      <div class="font-weight-bold mb-0">sets</div>
+      <span class="small text-gray">Last Session</span>
+    </div>
+    <div class="col-6">
+      <div class="font-weight-bold mb-0">sets</div>
+      <span class="small text-gray">keyword</span>
+    </div>
+  </div>
+`;
+
+const progressBarDiv = `<div class="progress" id="keywordId-index"></div>`;
+
 async function loadPage() {
   await updateDisplay(-1);
-  loadPercentages();
 }
 
 async function updateDisplay(insertionIndex) {
@@ -36,6 +60,8 @@ async function updateDisplay(insertionIndex) {
   setFilteredDisplay(displayParam.filter);
 
   setupPaginationBarAndModel(insertionIndex, displayParam.filter, progressList, displayParam.count);
+
+  updatePanels(insertionIndex, progressList.length - 1);
 }
 
 function setupPaginationBarAndModel(insertionIndex, filter, progressList, count) {
@@ -154,27 +180,126 @@ $(document).on("click", "input[name='filter']", async function() {
     await updateDisplay(-1);
 });
 
-function loadPercentages() {
-  $(function() {
-    $(".progress").each(function() {
-      // Takes each progress panel and writes two half circles to it that make up the circular progress bar.
-      var value = $(this).attr('data-value');
-      var left = $(this).find('.progress-left .progress-bar');
-      var right = $(this).find('.progress-right .progress-bar');
-    
-      if (value > 0) {
-        if (value <= 50) {
-          right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)');
-        } 
-        else {
-          right.css('transform', 'rotate(180deg)');
-          left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)');
-        }
-      }
-    })
+async function updatePanels(insertionIndex, goalIndex) {
+  // Get stats for the panels of the page.
+  const params = new URLSearchParams();
+  params.append('insertion', insertionIndex);
+  await fetch('/stats', {method: 'POST', body: params});
+
+  clearPanels();
+  
+  const panelsResponse = await fetch("/panels");
+  const panelsList = await panelsResponse.json();
+  const next = getPanelComparator(nextKeyword, panelsList);
+  const goal = getPanelComparator(goalKeyword, panelsList);
+  const viewing = getPanelComparator(viewKeyword, panelsList);
+  
+  enableViewing(viewing, insertionIndex, goalIndex);
+
+  // Add percentage comparisons between session exercises and panel headers (next goal step, goal, and viewing step).
+  for(let i = 0; i < panelsList.length; i++) {
+    if(panelsList[i].tag.includes(sessionKeyword) && panelsList[i].name === goal.name) {
+      addPercentages(panelsList[i], next, goal, viewing, i);
+    }
+  }
+}
+
+function clearPanels() {
+  const panels = [getBarAndSets(nextKeyword), getBarAndSets(goalKeyword), getBarAndSets(viewKeyword)];
+  panels.map(keywordTuple => {
+   keywordTuple["bar"].html("");
+   keywordTuple["sets"].html("");
   });
 }
 
-function percentageToDegrees(percentage) {
-  return percentage / 100 * 360;
+function getBarAndSets(keyword) {
+  let keywordTuple = new Map();
+  keywordTuple["bar"] = $("#" + keyword.toLowerCase() + "-bar");
+  keywordTuple["sets"] = $("#" + keyword.toLowerCase() + "-sets");
+  return keywordTuple;
+}
+
+function getPanelComparator(keyword, list) {
+  for(let i = 0; i < list.length; i++) {
+    if(list[i].tag.includes(keyword)) {
+      return list[i];
+    }
+  }
+  return null;
+}
+
+function enableViewing(viewing, insertionIndex, goalIndex) {
+  // Enable viewing panel if a viewing goal step exists.
+  let panel = $("#view-panel");
+  if(viewing) {
+    panel.show();
+    const viewHeader = document.getElementById("view-panel-header");
+    if(insertionIndex === 0) {
+      viewHeader.innerText = viewingHeaderStr.replace("#","Start");  
+    }
+    else if(insertionIndex === goalIndex) {
+      viewHeader.innerText = viewingHeaderStr.replace("#","Goal");
+    }
+    else {
+      viewHeader.innerText = viewingHeaderStr.replace("#", insertionIndex);  
+    }
+  }
+  else {
+    panel.hide();
+  }
+}
+
+function addPercentages(sessionExercise, next, goal, viewing, index) {
+  for (let type in sessionExercise.setValues) {
+    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type], index);
+    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type], index);
+    if(viewing != null) {
+      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type], index);
+    }
+  }
+}
+
+function addToPanel(keyword, sessionValues, comparisonValues, index) {
+  let fraction = (sum(sessionValues)/sum(comparisonValues)).toPrecision(2);
+  if(fraction > 1) {
+    fraction = 1;
+  }
+  // Set the progress bar and sets for the panel of the corresponding keyword.
+  var keywordTuple = getBarAndSets(keyword);
+  const id = keywordTuple["bar"].attr('id');
+  keywordTuple["bar"].html(keywordTuple["bar"].html() +  progressBarDiv.replace("index", index).replace("keywordId", id));
+  loadCircleProgressBars(id, fraction, index);
+  keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", "" + sessionValues).replace("sets", "" + comparisonValues).replace("keyword", keyword));
+}
+
+function sum(values) {
+  let summation = values.reduce((a, b) => a + b, 0);
+  return summation;
+}
+
+function loadCircleProgressBars(id, fraction, index) {
+  var circle = new ProgressBar.Circle(`#${id}-${index}`, {
+    color: '#aaa',
+    duration: 1500,
+    easing: 'bounce',
+    strokeWidth: 4,
+    trailWidth: 1,
+    text: {
+      autoStyleContainer: false
+    },
+    from: { color: '#aaa', width: 1 },
+    to: { color: '#333', width: 4 },
+    step: function(state, circle) {
+      circle.path.setAttribute('stroke', state.color);
+      circle.path.setAttribute('stroke-width', state.width);
+
+      var value = Math.round(circle.value() * 100);
+      circle.setText(value + "%");
+    }
+  });
+  
+  circle.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+  circle.text.style.fontSize = '2rem';
+
+  circle.animate(fraction);
 }
