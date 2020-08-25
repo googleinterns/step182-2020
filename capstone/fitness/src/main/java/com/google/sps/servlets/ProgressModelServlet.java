@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
-import com.google.sps.util.Metadata.Filter;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
