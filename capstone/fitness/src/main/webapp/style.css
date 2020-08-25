@@ -8,6 +8,22 @@
   margin-top: 20px;
 }
 
+body {
+  background: #878787;
+}
+
+.text-gray {
+  color: #aaa;
+}
+
+.step {
+  transition: transform .2s;
+}
+
+.step:hover {
+  transform: scale(1.05);
+}
+
 /*
   Styling for 'finish session' UI
 */
@@ -17,11 +33,97 @@
 }
 
 #input-time {
-  display: inline-flex;
   align-items: center;
+  display: inline-flex;
 }
 
 .separator {
   margin: 0 10px;
 }
 
+/*
+  Progress Styling. Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
+*/
+
+.goal-desc-insertion {
+  border-left: 2px solid black;
+  height: 25%;
+}
+
+.goal-desc-insertion-with-text {
+  font-style: italic;
+  height: 100%;
+}
+
+.goal-desc-insertion-empty {
+  height: 25%;
+}
+
+.progress {
+  background: none;
+  height: 150px;
+  position: relative;
+  width: 150px;
+}
+
+.progress::after {
+  border: 6px solid #eee;
+  border-radius: 50%;
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress>span {
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 50%;
+  z-index: 1;
+}
+
+.progress .progress-left {
+  left: 0;
+}
+
+.progress .progress-bar {
+  background: none;
+  border-style: solid;
+  border-width: 6px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress .progress-left .progress-bar {
+  border-bottom-right-radius: 80px;
+  border-left: 0;
+  border-top-right-radius: 80px;
+  left: 100%;
+  transform-origin: center left;
+  -webkit-transform-origin: center left;
+}
+
+.progress .progress-right {
+  right: 0;
+}
+
+.progress .progress-right .progress-bar {
+  border-bottom-left-radius: 80px;
+  border-right: 0;
+  border-top-left-radius: 80px;
+  left: -100%;
+  transform-origin: center right;
+  -webkit-transform-origin: center right;
+}
+
+.progress .progress-value {
+  left: 0;
+  position: absolute;
+  top: 0;
+}

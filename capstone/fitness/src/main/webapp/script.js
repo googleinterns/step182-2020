@@ -93,7 +93,7 @@ function createLoginTemplate(name, url, type) {
   var template = 
   `
   <p>Welcome, ${name}. 
-    <a href='https://8080-ce19f3ee-62b8-4778-b1d0-8b6beb1e067f.us-east1.cloudshell.dev/${url}'>Log${type} here</a>
+    <a href='${url}'>Log${type} here</a>
   </p>
   `;
   return template;
@@ -108,4 +108,91 @@ async function getUser(){
   usernameContainer.innerHTML = "Hello " + userEmail + ".";
 }
 
+function fillWorkoutQuestions() {
+  workoutQuestions = document.getElementById("workout-information-container");
+  const type = document.getElementById("workout-type").value;
+  
+  if(type == "lifting") {
+    workoutQuestions.innerHTML = 
+      `
+        <form action="javascript:createWorkout();" method="POST">
+          <label for="workoutName">Enter a name for this workout</label>
+          <textarea name="workoutName"></textarea>
+          <br>
+          <label for="weekstoTrain">How many weeks do you have to train: </label>
+          <input type="number" name="weeksToTrain" min="5">
+          <br>
+          <label for="initialWeight">Enter your current max weight: </label>
+          <input type="number" name="initialWeight" min="0" step="0.01">
+          <br>
+          <label for="initialReps">Enter your current max reps: </label>
+          <input type="number" name="initialReps" min="0">
+          <br>
+          <label for="goalWeight">Enter your goal weight: </label>
+          <input type="number" name="goalWeight" min="0" step="0.01">
+          <br>
+          <label for="goalReps">Enter your goal reps: </label>
+          <input type="number" name="goalReps" min="0">
+          <br>
+          <input type="submit">
+        </form>
+      `;
+  }
+  else {
+    workoutQuestions.innerHTML =
+      `
+        <form action="javascript:createWorkout();" method="POST">
+          <label for="workoutName">Enter a name for this workout</label>
+          <textarea name="workoutName"></textarea>
+          <br>
+          <label for="weekstoTrain">How many weeks do you have to train: </label>
+          <input type="number" name="weeksToTrain" min="5">
+          <br>
+          <label for="marathonLength">How long is your marathon (in kilometers) </label>
+          <input type="number" name="marathonLength" min="5" step="0.01">
+          <br>
+          <label for="initialTime">Enter your current time in hours: </label>
+          <input type="number" name="initialTime" min="0" step="0.01">
+          <br>
+          <label for="goalTime">Enter your goal time in hours: </label>
+          <input type="number" name="goalTime" min="0" step="0.01">
+          <br>
+          <label for="mileTime">Enter your mile time in minutes: </label>
+          <input type="number" name="mileTime" min="0" step="0.01">
+          <br>
+          <input type="submit">
+        </form>
+      `;
+  }
+}
+
+async function createWorkout() {
+  const type = document.getElementById("workout-type").value;
+  var workoutInfoJson = {};
+  workoutInfoJson.workoutName = document.getElementsByName("workoutName")[0].value;
+  workoutInfoJson.workoutType = document.getElementsByName("workoutType")[0].value;
+  workoutInfoJson.weeksToTrain = document.getElementsByName("weeksToTrain")[0].value;
+  if(type == "lifting") {
+    workoutInfoJson.initialWeight = document.getElementsByName("initialWeight")[0].value;
+    workoutInfoJson.initialReps = document.getElementsByName("initialReps")[0].value;
+    workoutInfoJson.goalWeight = document.getElementsByName("goalWeight")[0].value;
+    workoutInfoJson.goalReps = document.getElementsByName("goalReps")[0].value;
+  } 
+  else {
+    workoutInfoJson.marathonLength = document.getElementsByName("marathonLength")[0].value;
+    workoutInfoJson.initialTime = document.getElementsByName("initialTime")[0].value;
+    workoutInfoJson.goalTime = document.getElementsByName("goalTime")[0].value;
+    workoutInfoJson.mileTime = document.getElementsByName("mileTime")[0].value;
+  }
+
+  const infoString = JSON.stringify(workoutInfoJson);
+  console.log(infoString);
+  const request = await fetch('/create-workout', {
+                                                    method: "POST",
+                                                    body: infoString
+  });
+
+  document.getElementById("workout-information-container").innerHTML = '';
+  
+}
 

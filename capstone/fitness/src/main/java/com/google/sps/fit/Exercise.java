@@ -27,6 +27,10 @@ public class Exercise implements Serializable {
     REPS,
     WEIGHT;
     
+    public boolean isDec() {
+      return this.name().contains("_DEC");
+    }
+
     /**
      * Certain measurements for exercises want to decrease in number whereas others don't. This addresses that by
      * returning a "better than" comparison for two numbers depending on if more of the stat is better.
@@ -36,7 +40,7 @@ public class Exercise implements Serializable {
      * @return if the starting float is better than its comparison.
      */
     public boolean betterThan(float src, float comp) {
-      if(this.name().contains("_DEC")) {
+      if(isDec()) {
         return src < comp;
       }
       return src > comp;
@@ -113,56 +117,57 @@ public class Exercise implements Serializable {
   private Exercise(){}
 
   /**
-   * Returns true if average of Exercise values are better than the given Exercise's average 
-   * values in each type.
-   * Note: Uses average to ignore set count.
+   * Returns true if Exercise's values are better than or overall equal to the given Exercise's 
+   * values in each type. Uses average if values should decrement, uses summation if not. The equal
+   * to demonstrates that an exercise cannot become better in all ways.
    * 
    * @param exercise Exercise to compare to.
    * @return whether this Exercise's average values are better than the given one's.
    */
   public boolean betterThan(Exercise exercise) {
+    boolean betterThanAtLeastOnce = false;
     for(SetType type : setValues.keySet()) {
-      float srcAvg = avg(getSetValues(type));
-      float compAvg = avg(exercise.getSetValues(type));
-      if(!type.betterThan(srcAvg, compAvg)) {
+      boolean betterThan = betterThan(exercise, type).orElse(false);
+      betterThanAtLeastOnce |= betterThan;
+      if(!betterThan && !equalTo(exercise, type).orElse(false)) {
         return false;
       }
     }
-    return true;
+    return betterThanAtLeastOnce;
   }
 
   /**
    * Returns Optional object holding true if average of Exercise values are better than the given Exercise's average values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
    * @return whether this Exercise's average values are better than the given one's for the specific set type.
    */
   public Optional<Boolean> betterThan(Exercise exercise, SetType setType) {
-    float srcAvg = avg(getSetValues(setType));
-    float compAvg = avg(exercise.getSetValues(setType));
-    boolean comparison = setType.betterThan(srcAvg, compAvg);
+    float src = avg(getSetValues(setType));
+    float comp = avg(exercise.getSetValues(setType));
+    if(!setType.isDec()) {
+      src *= getSetValues(setType).length;
+      comp *= exercise.getSetValues(setType).length;
+    }
+    boolean comparison = setType.betterThan(src, comp);
     Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
-    return srcAvg == 0 ? Optional.empty() : opt;
+    return src == 0 ? Optional.empty() : opt;
   }
 
   /**
-   * Returns true if the average of Exercise values are equal to the given Exercise's average 
+   * Returns true if the summation of Exercise values are equal to the given Exercise's summation 
    * values in each type.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @return whether this Exercise's average values are equal to the given one's.
    */
   public boolean equalTo(Exercise exercise) {
     for(SetType type : setValues.keySet()) {
-      float srcAvg = avg(getSetValues(type));
-      float compAvg = avg(exercise.getSetValues(type));
-      if(srcAvg != compAvg) {
+      if(!equalTo(exercise, type).orElse(false)) {
         return false;
       }
     }
@@ -170,25 +175,28 @@ public class Exercise implements Serializable {
   }
 
   /**
-   * Returns Optional object holding true if average of Exercise values are equal to the given Exercise's average values for 
+   * Returns Optional object holding true if summation of Exercise values are equal to the given Exercise's summation values for 
    * the specific set type. An empty Optional object means the type wasn't in the set values hashmap or 0's were logged.
-   * Note: Uses average to ignore set count.
    * 
    * @param exercise Exercise to compare to.
    * @param setType SetType to compare to.
    * @return whether this Exercise's average values are equal to the given one's for the specific set type.
    */
   public Optional<Boolean> equalTo(Exercise exercise, SetType setType) {
-    float srcAvg = avg(getSetValues(setType));
-    float compAvg = avg(exercise.getSetValues(setType));
-    boolean comparison = srcAvg == compAvg;
+    float srcSum = sum(getSetValues(setType));
+    float compSum = sum(exercise.getSetValues(setType));
+    boolean comparison = srcSum == compSum;
     Optional<Boolean> opt = comparison ? opt = Optional.of(true) : Optional.of(false);
     
     //  If at least one is 0, then the type didn't exist or 0's were logged which is a user error.
-    return srcAvg == 0 ? Optional.empty() : opt;
+    return srcSum == 0 ? Optional.empty() : opt;
   }
 
   private float avg(float[] src) {
+    return sum(src)/src.length;
+  }
+
+  private float sum(float[] src) {
     if(src == null) {
       return 0;
     }
@@ -197,7 +205,7 @@ public class Exercise implements Serializable {
     for(int i = 0; i < src.length; i++) {
       sum += src[i];
     }
-    return sum/src.length;
+    return sum;
   }
 
   public int getSetCount() {
@@ -245,9 +253,11 @@ public class Exercise implements Serializable {
     formattedSetValues = formattedSetValues.substring(0, formattedSetValues.length() - 2);
     formattedSetValues += "]";
     float[][] pairedValues = getPairedValues();
+    int setCount = 1;
     for(float[] pair : pairedValues) {
-      formattedSetValues += "\n" + Arrays.toString(pair);
+      formattedSetValues += String.format("\n Set %d: %s", setCount, Arrays.toString(pair));
+      setCount++;
     }
-    return String.format("Name: %s\nSets: %d\n%s\n", name, setCount, formattedSetValues);
+    return String.format("Name: %s\n%s\n", name, formattedSetValues);
   }
 }

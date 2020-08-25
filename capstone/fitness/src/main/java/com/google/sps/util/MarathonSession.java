@@ -20,7 +20,6 @@ public class MarathonSession {
   private long timestamp;
   private float speed;
   private String date;
-  
   /**
   * Constructor for Marathon Session.
   *
@@ -33,6 +32,10 @@ public class MarathonSession {
     this.timestamp = timestamp;
     this.speed = speed;
     this.date = date;
+  }
+
+  public float getSpeed() {
+    return speed;
   }
 
   public String toString() {
