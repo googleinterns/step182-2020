@@ -17,9 +17,9 @@ package com.google.sps.util;
 import java.io.Serializable;
 
 /**
-* The Metadata class stores information that represents how the are arranged.
+* The DisplayParameters class stores information that represents how display is arranged.
 */
-public class Metadata implements Serializable { 
+public class DisplayParameters implements Serializable { 
 
   private static final long serialVersionUID = -1908559582650257447L;
 
@@ -34,11 +34,11 @@ public class Metadata implements Serializable {
   private final int count;
   private final Filter filter;
 
-  public Metadata() {
+  public DisplayParameters() {
     this(COUNT, FILTER);
   }
 
-  public Metadata(int count, Filter filter) {
+  public DisplayParameters(int count, Filter filter) {
     this.count = count;
     this.filter = filter;
   }

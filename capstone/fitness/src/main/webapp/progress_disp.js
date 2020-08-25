@@ -19,30 +19,33 @@ let viewingIndex = -1;
 let pageNum = 1;
 
 async function loadPage() {
-  await updateModel(-1);
+  await updateDisplay(-1);
   loadPercentages();
 }
 
-async function updateModel(insertionIndex) {
+async function updateDisplay(insertionIndex) {
   const progressResponse = await fetch("/pro");
   const progressList = await progressResponse.json();
 
-  const metadataResponse = await fetch("/pagin");
-  const metadata = await metadataResponse.json();
+  const displayResponse = await fetch("/display-param");
+  const displayParam = await displayResponse.json();
 
   // Add goal step count to pagination label.
-  document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", metadata.count)
+  document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", displayParam.count)
 
-  // Set up filtered display.
-  setFilteredDisplay(metadata.filter);
+  setFilteredDisplay(displayParam.filter);
 
-  const goalStepsFiltered = filterGoalSteps(metadata.filter, progressList);
+  setupPaginationBarAndModel(insertionIndex, displayParam.filter, progressList, displayParam.count);
+}
 
+function setupPaginationBarAndModel(insertionIndex, filter, progressList, count) {
+  const goalStepsFiltered = filterGoalSteps(filter, progressList);
   const paginationBar = $('#pagination-bar');
   const model = $('#model');
+
   paginationBar.pagination({
     dataSource: goalStepsFiltered["goalSteps"],
-    pageSize: metadata.count,
+    pageSize: count,
     pageNumber: pageNum,
     callback: function(data, pagination) {
       pageNum = pagination.pageNumber;
@@ -137,7 +140,7 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
     const value = parseInt($(this).val());
     if(viewingIndex != value) {
       viewingIndex = value;
-      await updateModel(value);
+      await updateDisplay(value);
     }
 });
 
@@ -147,8 +150,8 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
 $(document).on("click", "input[name='filter']", async function() {
     const params = new URLSearchParams();
     params.append('filter', $(this).val());
-    await fetch('/pagin', {method: 'POST', body: params});
-    await updateModel(-1);
+    await fetch('/display-param', {method: 'POST', body: params});
+    await updateDisplay(-1);
 });
 
 function loadPercentages() {
