@@ -14,7 +14,6 @@ const paginationButton = "<li class=\"page-item\"><button name=\"move-page\" cla
 const goalStepCountLabel = "Goal Steps Per Page: -";
 const pageLabel = "Page - of -";
 const filters = ["uncomplete", "all", "complete"];
-
 let pageNum = 1;
 
 // Keywords for panels.
@@ -27,7 +26,7 @@ const viewKeyword = "Viewing";
 const viewingHeaderStr = "Distance From Step #";
 let viewingIndex = -1;
 
-
+// Templates for panels.
 const progressSets = `
   <div class="row text-center mt-4">
     <div class="col-6 border-right">
@@ -40,8 +39,7 @@ const progressSets = `
     </div>
   </div>
 `;
-
-const progressBarDiv = `<div class="progress" id="keywordId-index"></div>`;
+const progressBarDiv = `<div class="row progress" id="keywordId-index"></div>`;
 
 async function loadPage() {
   await updateDisplay(-1);
@@ -56,12 +54,19 @@ async function updateDisplay(insertionIndex) {
 
   // Add goal step count to pagination label.
   document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", displayParam.count)
-
+  
+  // Sets the radio button filters with the correct one checked.
   setFilteredDisplay(displayParam.filter);
 
   setupPaginationBarAndModel(insertionIndex, displayParam.filter, progressList, displayParam.count);
 
   updatePanels(insertionIndex, progressList.length - 1);
+}
+
+function setFilteredDisplay(filterLabel) {
+  for (filter of filters) {
+    document.getElementById(filter).checked = filterLabel.toLowerCase() === filter;
+  }
 }
 
 function setupPaginationBarAndModel(insertionIndex, filter, progressList, count) {
@@ -111,12 +116,6 @@ function filterGoalSteps(filter, goalSteps) {
   return {"goalSteps" : goalSteps.slice(start, end + 1), "shiftedStart" : start};
 }
 
-function setFilteredDisplay(filterLabel) {
-  for (filter of filters) {
-    document.getElementById(filter).checked = filterLabel.toLowerCase() === filter;
-  }
-}
-
 function getFormattedStr(index, goalStepObj, listSize, insertionIndex, isLast) {
   // Default formatted string.
   let formattedStr = goalStepWidget.replace("arrayNum", "" + index);
@@ -159,27 +158,6 @@ function isComplete(goalStepObj) {
   return goalStepObj.tag.includes("Complete");
 }
 
-/** 
- * Updates progress page's viewing panel if the user hovers over a goal step.
- */
-$(document).on("mouseover", "button[name='" + viewStep + "']", async function() {
-    const value = parseInt($(this).val());
-    if(viewingIndex != value) {
-      viewingIndex = value;
-      await updateDisplay(value);
-    }
-});
-
-/**
- * Changes the filter and progress page's goal steps if a radio button is selected. 
- */
-$(document).on("click", "input[name='filter']", async function() {
-    const params = new URLSearchParams();
-    params.append('filter', $(this).val());
-    await fetch('/display-param', {method: 'POST', body: params});
-    await updateDisplay(-1);
-});
-
 async function updatePanels(insertionIndex, goalIndex) {
   // Get stats for the panels of the page.
   const params = new URLSearchParams();
@@ -194,7 +172,7 @@ async function updatePanels(insertionIndex, goalIndex) {
   const goal = getPanelComparator(goalKeyword, panelsList);
   const viewing = getPanelComparator(viewKeyword, panelsList);
   
-  enableViewing(viewing, insertionIndex, goalIndex);
+  enableViewingPanel(viewing, insertionIndex, goalIndex);
 
   // Add percentage comparisons between session exercises and panel headers (next goal step, goal, and viewing step).
   for(let i = 0; i < panelsList.length; i++) {
@@ -228,7 +206,7 @@ function getPanelComparator(keyword, list) {
   return null;
 }
 
-function enableViewing(viewing, insertionIndex, goalIndex) {
+function enableViewingPanel(viewing, insertionIndex, goalIndex) {
   // Enable viewing panel if a viewing goal step exists.
   let panel = $("#view-panel");
   if(viewing) {
@@ -253,7 +231,7 @@ function addPercentages(sessionExercise, next, goal, viewing, index) {
   for (let type in sessionExercise.setValues) {
     addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type], index);
     addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type], index);
-    if(viewing != null) {
+    if(viewing) {
       addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type], index);
     }
   }
@@ -269,7 +247,7 @@ function addToPanel(keyword, sessionValues, comparisonValues, index) {
   const id = keywordTuple["bar"].attr('id');
   keywordTuple["bar"].html(keywordTuple["bar"].html() +  progressBarDiv.replace("index", index).replace("keywordId", id));
   loadCircleProgressBars(id, fraction, index);
-  keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", "" + sessionValues).replace("sets", "" + comparisonValues).replace("keyword", keyword));
+  keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", sessionValues).replace("sets", comparisonValues).replace("keyword", keyword));
 }
 
 function sum(values) {
@@ -284,9 +262,6 @@ function loadCircleProgressBars(id, fraction, index) {
     easing: 'bounce',
     strokeWidth: 4,
     trailWidth: 1,
-    text: {
-      autoStyleContainer: false
-    },
     from: { color: '#aaa', width: 1 },
     to: { color: '#333', width: 4 },
     step: function(state, circle) {
@@ -298,8 +273,28 @@ function loadCircleProgressBars(id, fraction, index) {
     }
   });
   
-  circle.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
   circle.text.style.fontSize = '2rem';
 
   circle.animate(fraction);
 }
+
+/** 
+ * Updates progress page's viewing panel if the user hovers over a goal step.
+ */
+$(document).on("mouseover", "button[name='" + viewStep + "']", async function() {
+    const value = parseInt($(this).val());
+    if(viewingIndex != value) {
+      viewingIndex = value;
+      await updateDisplay(value);
+    }
+});
+
+/**
+ * Changes the filter and progress page's goal steps if a radio button is selected. 
+ */
+$(document).on("click", "input[name='filter']", async function() {
+    const params = new URLSearchParams();
+    params.append('filter', $(this).val());
+    await fetch('/display-param', {method: 'POST', body: params});
+    await updateDisplay(-1);
+});
