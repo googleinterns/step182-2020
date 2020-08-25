@@ -10,10 +10,11 @@ public class Time{
   // Using a private constructor since no instance of this object should be made.
   private Time(){}
   public static final int minutesToMilliseconds = 60000;
+  public static final int millisecondsPerDay = 86400000;
+  public static final int weeksToDays = 7;
  
   public static long eventDateTimeToMilliseconds(EventDateTime e){
     return e.getDateTime().getValue();
   }
  
 }
-
