@@ -73,7 +73,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     // Use the scheduler to schedule one exercise per day. 
     int y = 0;
-    
+
     for (int x = 0; x < daysAvailable; x += timesPerWeek){
       if (y >= exercises.size()){
         break;
@@ -134,9 +134,9 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   }
  private List <String> getExercises(){
     String goalSteps = DataHandler.getGoalSteps();
-    ArrayList<JsonGoalStep> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonGoalStep>>(){}.getType());
+    ArrayList<JsonExercise> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonExercise>>(){}.getType());
     List<String> exercises = new ArrayList<String>();
-    for(JsonGoalStep goal: goalStepsArray){
+    for(JsonExercise goal: goalStepsArray){
       exercises.add(goal.getName());
     }
 
