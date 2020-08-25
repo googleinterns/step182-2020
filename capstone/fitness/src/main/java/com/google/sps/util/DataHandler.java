@@ -244,8 +244,9 @@ public class DataHandler {
   * @return     null
   */
   public static void addEventID(Entity user, String id) {
-      ArrayList<String> EventIds = gson.fromJson(getUserData(user, EVENT_IDS_PROPERTY), new TypeToken<List<String>>(){}.getType());
+      ArrayList<String> EventIds = gson.fromJson(getUserData(EVENT_IDS_PROPERTY, user), new TypeToken<List<String>>(){}.getType());
       EventIds.add(id);
       user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
-      datastore.put(workout);
+      datastore.put(user);
   }
+}
