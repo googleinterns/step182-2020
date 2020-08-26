@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/panels")
-public class PanelServlet extends HttpServlet {
+public class ProgressPanelServlet extends HttpServlet {
 
   private static final String SESSION = "Last Session";
   private static final String NEXT_STEP = "Next Step";
