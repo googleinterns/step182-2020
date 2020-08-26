@@ -29,7 +29,7 @@ public class SchedulerTest {
   Scheduler scheduler= new Scheduler(duration);
 
     public static long getMillisecondsBetween(EventDateTime a, EventDateTime b){
-    return b.getDateTime().getValue() - a.getDateTime().getValue();
+      return b.getDateTime().getValue() - a.getDateTime().getValue();
   }
 
   // Tests a scenario where there is space after all of the events and before maxSpan. 
