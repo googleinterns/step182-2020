@@ -32,6 +32,7 @@ public class WorkoutDataServlet extends HttpServlet {
 
     JSONObject json = new JSONObject();
 
+    // Add the properties that all workouts share
     for(String property : DataHandler.WORKOUT_PROPERTIES) {
         if(DataHandler.isNumber(property)) {
             json.put(property, Float.parseFloat(DataHandler.getWorkoutData(property, workout)));
@@ -41,6 +42,7 @@ public class WorkoutDataServlet extends HttpServlet {
         }
     }
 
+    // Add the workout specific properties depending on wheter it is a marathon or lifting weights.
     if(DataHandler.getWorkoutData(DataHandler.TYPE_PROPERTY, workout).equals("lifting")) {
       
       for(String property : DataHandler.LIFTING_PROPERTIES) {
