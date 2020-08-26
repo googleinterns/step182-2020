@@ -48,7 +48,7 @@ public class CreateWorkoutServlet extends HttpServlet {
     // Set the properties that all workouts share
     newWorkout.setProperty(DataHandler.PROGRESS_PROPERTY, "[]");
     newWorkout.setProperty(DataHandler.GOAL_STEPS_PROPERTY, "[]");
-    newWorkout.setProperty(DataHandler.TYPE_PROPERTY, workoutName);
+    newWorkout.setProperty(DataHandler.TYPE_PROPERTY, workoutType);
     newWorkout.setProperty(DataHandler.WEEKS_TO_TRAIN_PROPERTY, weeksToTrain);
 
     // Assign the correct properties depending on the type
@@ -70,7 +70,7 @@ public class CreateWorkoutServlet extends HttpServlet {
       newWorkout.setProperty(DataHandler.GOAL_TIME_PROPERTY, 
                              Float.parseFloat((String) workoutJSON.get(DataHandler.GOAL_TIME_PROPERTY)));
       newWorkout.setProperty(DataHandler.MILE_TIME_PROPERTY, 
-                             Float.parseFloat((String) workoutJSON.get(DataHandler.MILE_TIME_PROPERTY)));
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.MILE_TIME_PROPERTY))/((float) 60.0));
     }
 
     // Put the new workout in datastore and update the user
