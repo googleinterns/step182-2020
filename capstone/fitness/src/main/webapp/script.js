@@ -14,16 +14,14 @@ function initViewData() {
   displayLogIn();
 }
 
-// Fills in data for embeded calendar. 
+/** 
+ Function that fetches the user's calendar ID and puts it into the calendar display link. 
+*/ 
 async function getCalendarInfo(){
-  const idResponse = await fetch('/calendar-servlet',{
-                                                    method: "GET",
-                                                    mode: 'no-cors'
- 
-  });
-  const idJson = await idResponse.json();
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + idJson + "&ctz=America%2FNew_York";
-
+  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
+  const urlParams = new URLSearchParams(window.location.search);;
+  const id = urlParams.get("calendarId");
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
   }
 
 
@@ -215,11 +213,11 @@ async function createWorkout() {
                                                     method: "POST",
                                                     body: infoString
   });
-  const calendar = await fetch('/calendar-servlet',{
-                                                    method: "POST",
-                                                    mode: 'no-cors'
+//   const calendar = await fetch('/calendar-servlet',{
+//                                                     method: "POST",
+//                                                     mode: 'no-cors'
 
-  });
+//   });
 
   /*
   TODO(@piercedw) 

@@ -46,6 +46,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     
+    if (DataHandler.getUserData(DataHandler.getUser(), "calendarId") )
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
@@ -98,15 +99,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     // Store calendar ID. 
     String id = this.getCalendarId();
     DataHandler.setCalendarID(DataHandler.getUser(), id);
-  }
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    // Send calendar id and events. 
-    response.setContentType("application/json;");
-    // Id is already in Json when called from Datahandler and doesn't need to be unJson'd until JS. 
-    String jsonId = DataHandler.getUserData("calendarId", DataHandler.getUser());
-    response.getWriter().println(jsonId);
-    // TODO (@piercedw) : Get eventIDs from Datahandler, loop through and send the event name and time for each one. 
+    response.sendRedirect("/calendar.html?calendarId=" + id); 
+
   }
  
   @Override
