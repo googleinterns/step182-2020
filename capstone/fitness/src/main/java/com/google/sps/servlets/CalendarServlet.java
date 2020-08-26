@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.sps.util.*;
 import com.google.sps.progress.*;
+import com.google.sps.fit.*;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +53,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     Scheduler scheduler = new Scheduler(exerciseDuration);
     
-    String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
+    String wks = (DataHandler.getUserData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
     
     int daysAvailable = weeksToTrain * Time.weeksToDays;
