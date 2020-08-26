@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.sps.fit.*;
 import com.google.sps.progress.*;
 import com.google.sps.util.*;
-import com.google.sps.util.Metadata.Filter;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -42,83 +41,10 @@ public class ProgressModelServlet extends HttpServlet {
       if(model.updateModel()) {
         DataHandler.setGoalSteps(model.toJson());
       }
-      display = getProgressDisplays(paginate(model.toArray(), request.getSession()));
+      display = getProgressDisplays(model.toArray());
     }
     response.setContentType("application/json");
     response.getWriter().println(getJson(display));
-  }
-
-  private GoalStep[] paginate(GoalStep[] goalSteps, HttpSession session) {
-    // Fetch metadata in session or use default if not found.
-    Metadata metadata = (Metadata) session.getAttribute("metadata");
-    if(metadata == null) {
-      metadata = new Metadata();
-    }
-
-    // Get split array based on filter.
-    int[] pos = getPositions(goalSteps, metadata.getFilter());
-    GoalStep[] splitGoalSteps = getSplitGoalSteps(goalSteps, pos); 
-    
-    // Modify where the split array starts based on page number and goal step count per page.
-    int startingIndex = metadata.getPage() * metadata.getCount();
-    while(startingIndex >= splitGoalSteps.length) {
-      metadata.setPage(metadata.getPage() - 1);
-      startingIndex -= metadata.getCount();
-    }
-
-    // Update metadata parameters based on the goal steps array.
-    metadata.setMaxPages(getMaxPages(metadata.getCount(), splitGoalSteps.length));
-    metadata.setGoalSteps(goalSteps.length);
-    metadata.setStartIndex(pos[0] + startingIndex);
-    session.setAttribute("metadata", metadata);
-
-    // Add visible goal steps based on metadata parameters.
-    List<GoalStep> trueGoalSteps = new ArrayList<>();
-    for(int i = startingIndex; i < startingIndex + metadata.getCount() && i < splitGoalSteps.length; i++) {
-      trueGoalSteps.add(splitGoalSteps[i]);
-    }
-    return trueGoalSteps.toArray(new GoalStep[trueGoalSteps.size()]);
-  }
-
-  private int[] getPositions(GoalStep[] goalSteps, Filter filter) {
-    // Returns array of the start and end of goal step array based on the filter. 
-    int start = 0;
-    int end = goalSteps.length - 1;
-    switch(filter) {
-      case UNCOMPLETE:
-        start = end;
-        while(start > 0 && !goalSteps[start].isComplete()) {
-          start--;
-        }
-        start++;
-        break;
-      case COMPLETE:
-        end = start;
-        while(end < goalSteps.length - 1 && goalSteps[end].isComplete()) {
-          end++;
-        }
-        end--;
-        break;
-      default:
-        break;
-    }
-    return new int[] {start, end};
-  }
-
-  private GoalStep[] getSplitGoalSteps(GoalStep[] goalSteps, int[] pos) {
-    // Returns subarray of goal step array based on position tuple (start, end).
-    GoalStep[] subArr = new GoalStep[pos[1] - pos[0] + 1];
-    System.arraycopy(goalSteps, pos[0], subArr, 0, subArr.length);
-    return subArr;
-  }
-
-  private int getMaxPages(int countPerPage, int totalSize) {
-    // Returns the max number of pages an array can produce given the count per page and total size.
-    int remainder = totalSize % countPerPage != 0 ? 1 : 0;
-    int pageCount = (int)Math.floor((float)totalSize/countPerPage);
-    int maxPages = pageCount + remainder;
-    maxPages = maxPages == 0 ? 1 : maxPages;
-    return maxPages;
   }
 
   private List<JsonExercise> getProgressDisplays(GoalStep[] goalSteps) {

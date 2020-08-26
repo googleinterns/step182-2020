@@ -70,6 +70,7 @@ public class DataHandlerTest {
     datastore.put(user);
     datastore.put(workout);
 
+
     assertTrue(dh.getUserData(dh.NAME_PROPERTY, user).equals("John"));
     assertTrue(dh.getUserData(dh.AGE_PROPERTY, user).equals("18"));
     assertTrue(dh.getUserData(dh.WORKOUT_LIST_PROPERTY, user).equals("[\"running\"]"));

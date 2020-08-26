@@ -5,13 +5,12 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.auth.oauth2.AbstractAppEngineAuthorizationCodeCallbackServlet;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.util.*;
 import java.io.IOException;
-import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.annotation.WebServlet;
-import com.google.sps.util.*;
-
+import javax.servlet.ServletException;
 
 // Callback servlet handles callbacks for OAuth. 
 @WebServlet("/oauth2callback")
@@ -22,15 +21,16 @@ public class OAuth2CallbackServlet extends AbstractAppEngineAuthorizationCodeCal
   @Override
   protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
       throws ServletException, IOException {
-    resp.sendRedirect("/auth-servlet");
+    resp.sendRedirect("/calendar-servlet");
     resp.getWriter().print( nickname + " is logged in and has given access to their calendar.");
+
   } 
 
   // On failure (i.e user denies access) the callback servlet displays a simple error message.
   @Override
   protected void onError(
-      HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
-      throws ServletException, IOException {
+    HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
+    throws ServletException, IOException {
     resp.getWriter().print( nickname + " has not given access to their calendar.");
     resp.setStatus(200);
     resp.addHeader("Content-Type", "text/html");

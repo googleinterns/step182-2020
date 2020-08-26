@@ -189,6 +189,7 @@ public class DataHandler {
     datastore.put(user);
   } 
 
+
   public static Session getLastSession(Entity workout) {
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
     if(sessionsJson != null) {
@@ -200,7 +201,7 @@ public class DataHandler {
     }
     return null;
   }
-    
+  
   /**
   *getGoalSteps returns the JSON string of the goalsteps of the workout
   * @param workout  the workout we want the info from
@@ -211,6 +212,20 @@ public class DataHandler {
     return goalSteps;
   }
 
+
+  /**
+  *getGoalSteps returns the JSON string of the goalsteps of the workout
+  * @param workout  the workout we want the info from
+  * @return         the goalsteps string
+  */
+  public static String getGoalSteps() {
+    Entity user = getUser();
+    if(user == null) {
+      return null;
+    }
+    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
+    return goalSteps;
+  }
 
   /**
   * setGoalSteps updates the JSON string of the goalsteps of the workout
@@ -267,8 +282,7 @@ public class DataHandler {
       property.equals(PROGRESS_PROPERTY))
         return false;
     else
-      return true;
-       
-       
+      return true; 
   }
+  
 }
