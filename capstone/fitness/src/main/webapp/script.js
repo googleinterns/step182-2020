@@ -13,14 +13,13 @@ function initViewData() {
   displayLogIn();
 }
 
-//TODO (@piercedw) : Fetch user's nickname from LoginServlet.java.
-// get current date.
+// Fills in data for embeded calendar. 
 async function getCalendarInfo(){
-  console.log("fetching date");
-  const response = await fetch('/calendar-events');
-  const jsonDate = await response.json();
-  console.log("date is " + jsonDate);
-  document.getElementById('week-container').innerText = `Planned events for the week of ${jsonDate}:`;}
+  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
+  const urlParams = new URLSearchParams(window.location.search);;
+  const id = urlParams.get("calendarId");
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+  }
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
