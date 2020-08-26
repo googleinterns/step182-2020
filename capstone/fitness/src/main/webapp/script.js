@@ -190,6 +190,9 @@ async function createWorkout() {
                                                     method: "POST",
                                                     body: infoString
   });
+  const calendar = await fetch('/calendar-servlet',{
+                                                    method: "GET"
+  });
 
   document.getElementById("workout-information-container").innerHTML = '';
   

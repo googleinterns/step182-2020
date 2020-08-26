@@ -34,7 +34,7 @@ import java.util.*;
 // CalendarServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/calendar-servlet")
 public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
-  private static String APPLICATION_NAME = "Marathon App";
+  private static String APPLICATION_NAME = "GetIn' Progress";
   private static String colorId = "4";
   private static long exerciseDuration = 30;  
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
@@ -52,7 +52,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     Scheduler scheduler = new Scheduler(exerciseDuration);
     
-    String wks = (DataHandler.getData("weeksToTrain",DataHandler.getUser()));
+    String wks = (DataHandler.getUserData("weeksToTrain",DataHandler.getUser()));
     int weeksToTrain = Integer.parseInt(wks);
     
     int daysAvailable = weeksToTrain * Time.weeksToDays;
@@ -85,6 +85,9 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         exerciseEvent.setColorId(colorId);
         // TODO (@piercedw) : Store each event's eventID in datastore for display later.
         this.insertEvent(exerciseEvent);
+        
+        DataHandler.addEvent(DataHandler.getUser(), exerciseEvent.getId());
+
         // Increment minSpan and maxSpan by one day. 
         minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
         maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
@@ -92,7 +95,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     }
     }
     String id = this.getCalendarId();
-    response.sendRedirect("/calendar.html?calendarId=" + id); 
+    DataHandler.setCalendarID(DataHandler.getUser(), id);
   }
  
   @Override
@@ -129,7 +132,6 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         result.add(entry.getId());}
         }
         
-    // TODO (@piercedw) : Store this result in datastore.
     return result.get(0); 
   }
  private List <String> getExercises(){
