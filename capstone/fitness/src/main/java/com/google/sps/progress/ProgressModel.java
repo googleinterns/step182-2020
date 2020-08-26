@@ -163,8 +163,8 @@ public class ProgressModel {
     return success;
   }
 
-  public boolean updateModel() {
-    return updateModel(DataHandler.getLastSession());
+  public boolean updateModel(String workoutName) {
+    return updateModel(DataHandler.getLastSession(workoutName));
   }
 
   /**

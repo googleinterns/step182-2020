@@ -22,6 +22,7 @@ import com.google.sps.progress.*;
 import com.google.sps.fit.*;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +59,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     
     int daysAvailable = weeksToTrain * Time.weeksToDays;
     
-    List<String> exercises = this.getExercises();
+    List<String> exercises = this.getExercises(request);
     int timesPerWeek = daysAvailable/ exercises.size(); 
 
     // // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
@@ -133,8 +134,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     // TODO (@piercedw) : Store this result in datastore.
     return result.get(0); 
   }
- private List <String> getExercises(){
-    String goalSteps = DataHandler.getGoalSteps();
+ private List<String> getExercises(HttpServletRequest request){
+
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
+    
+    String goalSteps = DataHandler.getGoalSteps(DataHandler.getWorkout(workoutName));
+    
     ArrayList<JsonExercise> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonExercise>>(){}.getType());
     List<String> exercises = new ArrayList<String>();
     for(JsonExercise goal: goalStepsArray){
