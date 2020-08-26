@@ -135,10 +135,9 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     return result.get(0); 
   }
  private List<String> getExercises(HttpServletRequest request){
-
+    // NOTE(@ijelue): Instead of doing this, get workout list and iterate thorugh each workout, getting the exercises from each one.
     HttpSession session = request.getSession();
     String workoutName = (String) session.getAttribute("workoutName");
-    
     String goalSteps = DataHandler.getGoalSteps(DataHandler.getWorkout(workoutName));
     
     ArrayList<JsonExercise> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonExercise>>(){}.getType());
