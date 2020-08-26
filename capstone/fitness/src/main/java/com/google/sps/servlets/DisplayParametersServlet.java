@@ -15,8 +15,8 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-import com.google.sps.util.Metadata;
-import com.google.sps.util.Metadata.Filter;
+import com.google.sps.util.DisplayParameters;
+import com.google.sps.util.DisplayParameters.Filter;
 import java.io.IOException;
 import java.util.*;
 import javax.servlet.annotation.WebServlet;
@@ -26,69 +26,52 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.*; 
 
-/** Servlet that sets metadata for GoalStep ordering. */
-@WebServlet("/pagin")
-public class PaginationServlet extends HttpServlet {
+/** Servlet that sets display parameters for GoalStep ordering. */
+@WebServlet("/display-param")
+public class DisplayParametersServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     HttpSession session = request.getSession();
-    Metadata metadata = (Metadata) session.getAttribute("metadata");
-    if(metadata == null) {
-      metadata = new Metadata();
-      session.setAttribute("metadata", metadata);
+    DisplayParameters displayParam = (DisplayParameters) session.getAttribute("displayParam");
+    if(displayParam == null) {
+      displayParam = new DisplayParameters();
+      session.setAttribute("displayParam", displayParam);
     }
     response.setContentType("application/json;");
-    response.getWriter().println(getJson(metadata));
+    response.getWriter().println(getJson(displayParam));
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     HttpSession session = request.getSession();
-    Metadata metadata = (Metadata) session.getAttribute("metadata");
-    session.setAttribute("metadata", updateMetadata(metadata, request));
+    DisplayParameters displayParam = (DisplayParameters) session.getAttribute("displayParam");
+    session.setAttribute("displayParam", updateDisplayParameters(displayParam, request));
     response.sendRedirect("/progress.html");
   }
 
-  private String getJson(Metadata metadata) {
+  private String getJson(DisplayParameters displayParam) {
     Gson gson = new Gson();
-    String json = gson.toJson(metadata);
+    String json = gson.toJson(displayParam);
     return json;
   }
   
   /**
-  * Creates an updated instance of the goal steps display metadata given the request parameters
-  * @param metadata metadata to update
+  * Creates an updated instance of the goal steps display parameters given the request parameters
+  * @param displayParam display parameters to update
   * @param request holds request parameters for specific http request
   */
-  private Metadata updateMetadata(Metadata metadata, HttpServletRequest request) {
-    if(metadata == null) {
-      metadata = new Metadata();
+  private DisplayParameters updateDisplayParameters(DisplayParameters displayParam, HttpServletRequest request) {
+    if(displayParam == null) {
+      displayParam = new DisplayParameters();
     }
     
-    int count = metadata.getCount();
-    int page = metadata.getPage();
-    Filter filterData = metadata.getFilter();
+    int count = displayParam.getCount();
+    Filter filterData = displayParam.getFilter();
 
     String countString = request.getParameter("count");
     if(countString != null && !countString.isEmpty()) {
       count = Integer.parseInt(countString);
-      page = 0;
-    }
-
-    String movePage = request.getParameter("move-page");
-    if(movePage != null && !movePage.isEmpty()) {
-      if(movePage.equals("previous")) {
-        if(page != 0) {
-          page--;
-        }
-      }
-      else if(movePage.equals("next")) {
-        page++;
-      }
-      else {
-        page = Integer.parseInt(movePage);
-      }
     }
     
     String filter = request.getParameter("filter");
@@ -99,6 +82,6 @@ public class PaginationServlet extends HttpServlet {
         }
       }
     }
-    return new Metadata(count, page, filterData);
+    return new DisplayParameters(count, filterData);
   }
 }

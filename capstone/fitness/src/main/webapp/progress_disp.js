@@ -16,45 +16,73 @@ const pageLabel = "Page - of -";
 const filters = ["uncomplete", "all", "complete"];
 let viewingIndex = -1;
 
+let pageNum = 1;
+
 async function loadPage() {
-  await updateModel(-1);
+  await updateDisplay(-1);
   loadPercentages();
 }
 
-async function updateModel(insertionIndex) {
-  // Get list of goal steps and upadate user http session's metadata.
+async function updateDisplay(insertionIndex) {
   const progressResponse = await fetch("/pro");
   const progressList = await progressResponse.json();
 
-  // Get updated metadata.
-  const metadataResponse = await fetch("/pagin");
-  const metadata = await metadataResponse.json();
+  const displayResponse = await fetch("/display-param");
+  const displayParam = await displayResponse.json();
 
   // Add goal step count to pagination label.
-  document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", metadata.count)
+  document.getElementById("count-label").innerText = goalStepCountLabel.replace("-", displayParam.count)
 
-  // Set up filtered display.
-  setFilteredDisplay(metadata.filterLabel);
+  setFilteredDisplay(displayParam.filter);
 
-  // Build pagination bar.
-  const pageMove = document.getElementById("start-page-bar");
-  let paginationButtons = paginationButton.replace("pageNum", "previous").replace("pageNum", "Previous");
-  for(let i = 0; i < metadata.maxPages; i++) {
-    paginationButtons += paginationButton.replace("pageNum", i).replace("pageNum", (i + 1));
+  setupPaginationBarAndModel(insertionIndex, displayParam.filter, progressList, displayParam.count);
+}
+
+function setupPaginationBarAndModel(insertionIndex, filter, progressList, count) {
+  const goalStepsFiltered = filterGoalSteps(filter, progressList);
+  const paginationBar = $('#pagination-bar');
+  const model = $('#model');
+
+  paginationBar.pagination({
+    dataSource: goalStepsFiltered["goalSteps"],
+    pageSize: count,
+    pageNumber: pageNum,
+    callback: function(data, pagination) {
+      pageNum = pagination.pageNumber;
+      let dataHTML = "";
+      for(let i = 0; i < data.length; i++) {
+        const trueIndex = i + goalStepsFiltered["shiftedStart"] + ((pagination.pageNumber - 1) * pagination.pageSize);
+        const formattedStr = getFormattedStr(trueIndex, data[i], progressList.length, insertionIndex, i == data.length - 1);
+        dataHTML += formattedStr;
+      }
+      model.html(dataHTML);
+      document.getElementById("page-label").innerText = pageLabel.replace("-",  pagination.pageNumber).replace("-", Math.ceil(pagination.totalNumber/ pagination.pageSize));
+    }
+  });
+}
+
+function filterGoalSteps(filter, goalSteps) {
+  let start = 0;
+  let end = goalSteps.length - 1;
+  switch(filter) {
+    case "UNCOMPLETE":
+      start = end;
+      while(start > 0 && !isComplete(goalSteps[start])) {
+        start--;
+      }
+      start++;
+      break;
+    case "COMPLETE":
+      end = start;
+      while(end < goalSteps.length && isComplete(goalSteps[end])) {
+        end++;
+      }
+      end--;
+      break;
+    default:
+      break;
   }
-  paginationButtons += paginationButton.replace("pageNum", "next").replace("pageNum", "Next");
-  pageMove.innerHTML = paginationButtons;
-  document.getElementById("page-label").innerText = pageLabel.replace("-", metadata.page + 1).replace("-", metadata.maxPages);
-
-
-  // Display progress model.
-  const model = document.getElementById("model");
-  model.innerHTML = "";
-  const startIndex = metadata.startIndex;
-  for(let i = 0; i < progressList.length; i++) {
-    let formattedStr = getFormattedStr(startIndex + i, progressList[i], metadata.goalSteps, insertionIndex, i == progressList.length - 1);
-    model.innerHTML += formattedStr;
-  }
+  return {"goalSteps" : goalSteps.slice(start, end + 1), "shiftedStart" : start};
 }
 
 function setFilteredDisplay(filterLabel) {
@@ -112,7 +140,7 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
     const value = parseInt($(this).val());
     if(viewingIndex != value) {
       viewingIndex = value;
-      await updateModel(value);
+      await updateDisplay(value);
     }
 });
 
@@ -122,18 +150,8 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
 $(document).on("click", "input[name='filter']", async function() {
     const params = new URLSearchParams();
     params.append('filter', $(this).val());
-    await fetch('/pagin', {method: 'POST', body: params});
-    await updateModel(-1);
-});
-
-/**
- * Handles logic for shifts in page numbers.
- */
-$(document).on("click", "button[name='move-page']", async function() {
-    const params = new URLSearchParams();
-    params.append('move-page', $(this).val());
-    await fetch('/pagin', {method: 'POST', body: params});
-    await updateModel(-1);
+    await fetch('/display-param', {method: 'POST', body: params});
+    await updateDisplay(-1);
 });
 
 function loadPercentages() {

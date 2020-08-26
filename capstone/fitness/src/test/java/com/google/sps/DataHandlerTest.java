@@ -94,6 +94,7 @@ public class DataHandlerTest {
     assertTrue(dh.getUserData(dh.CALENDAR_ID_PROPERTY, user).equals(CALENDAR_ID));
     assertTrue(dh.getUserData(dh.EVENT_IDS_PROPERTY, user).equals(EVENT_IDS));
 
+
     assertTrue(dh.getWorkoutData(dh.WORKOUT_NAME_PROPERTY, workout).equals(WORKOUT_NAME));
     assertTrue(dh.getWorkoutData(dh.TYPE_PROPERTY, workout).equals(TYPE));
     assertTrue(dh.getWorkoutData(dh.WEEKS_TO_TRAIN_PROPERTY, workout).equals(String.valueOf(WEEKS_TO_TRAIN)));
