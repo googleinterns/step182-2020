@@ -17,9 +17,22 @@
       </div>
       
       <div id="login"></div>
-      <a href="complete-session.html"> Click to complete session. </a>
+
+      <form action="javascript:fillWorkoutQuestions();" method="POST">
+        <label for"workoutType">Chose the kind of workout you would like to create</label>
+        <select name="workoutType" id="workout-type">
+          <option value="lifting">Lift Weights</option>
+          <option value="marathon">Run a marathon</option>
+        </select>
+        <input type="submit">
+      </form>
+
+      <div id="workout-information-container"></div>
+
       <br>
-      <a href="view-data.html"> Click to view your data. </a>
+
+      <div id="view-workouts-container"></div>
+
     </div>
   </body>
 </html>

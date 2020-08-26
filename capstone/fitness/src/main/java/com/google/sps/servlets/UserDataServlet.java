@@ -14,7 +14,7 @@ import org.json.*;
  This servelet is used to easily retrieve the user's data from datastore 
  in JSON format.
 */
-@WebServlet("/get-data")
+@WebServlet("/get-user-data")
 public class UserDataServlet extends HttpServlet {
 
   @Override
@@ -31,10 +31,15 @@ public class UserDataServlet extends HttpServlet {
 
     JSONObject json = new JSONObject();
 
-    for(String property : DataHandler.USER_PROPERTIES)
-    {
-      json.put(property, DataHandler.getUserData(property, user));
+    for(String property : DataHandler.USER_PROPERTIES) {
+      if(DataHandler.isNumber(property)) {
+        json.put(property, Float.parseFloat(DataHandler.getUserData(property, user)));
+      }
+      else {
+        json.put(property, DataHandler.getUserData(property, user));    
+      }
     }
+
     response.setContentType("application/json");
     response.getWriter().println(json.toString());
   }
