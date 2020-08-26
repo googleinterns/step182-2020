@@ -44,28 +44,49 @@ public class DataHandlerTest {
 
     DataHandler dh = new DataHandler();
 
-    Entity e = new Entity("user", "hopethisisnottaken@gmail.com");
-    e.setProperty(dh.NAME_PROPERTY, "John");
-    e.setProperty(dh.AGE_PROPERTY, 18);
-    e.setProperty(dh.WEEKS_TO_TRAIN_PROPERTY, 5);
-    e.setProperty(dh.MARATHON_LENGTH_PROPERTY, 5.0);
-    e.setProperty(dh.INITIAL_TIME_PROPERTY, 2.0);
-    e.setProperty(dh.GOAL_TIME_PROPERTY, 1.0);
-    e.setProperty(dh.PROGRESS_PROPERTY, "[]");
-    e.setProperty(dh.MILE_TIME_PROPERTY, 0.2);
+    Entity user = new Entity(dh.USER_ENTITY, "hopethisisnottaken@gmail.com");
+    Entity workout = new Entity(dh.WORKOUT_ENTITY, "running");
+    
+    // Set user properties
+    user.setProperty(dh.NAME_PROPERTY, "John");
+    user.setProperty(dh.AGE_PROPERTY, 18);
+    user.setProperty(dh.WORKOUT_LIST_PROPERTY, "[\"running\"]");
+    user.setProperty(dh.CALENDAR_ID_PROPERTY, "15");
+    user.setProperty(dh.EVENT_IDS_PROPERTY, "[154,256]");
+    
+    // Set workout properties
+    workout.setProperty(dh.WORKOUT_NAME_PROPERTY, "running");
+    workout.setProperty(dh.TYPE_PROPERTY, "marathon");
+    workout.setProperty(dh.WEEKS_TO_TRAIN_PROPERTY, 5);
+    workout.setProperty(dh.GOAL_STEPS_PROPERTY, "[goalstep]");
+    workout.setProperty(dh.PROGRESS_PROPERTY, "[I am speed]");
+    // Set up marathon properties
+    workout.setProperty(dh.MARATHON_LENGTH_PROPERTY, 5.0);
+    workout.setProperty(dh.INITIAL_TIME_PROPERTY, 2.0);
+    workout.setProperty(dh.GOAL_TIME_PROPERTY, 1.0);
+    workout.setProperty(dh.MILE_TIME_PROPERTY, 0.2);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(e);
+    datastore.put(user);
+    datastore.put(workout);
 
-    assertTrue(dh.getData(dh.NAME_PROPERTY, e).equals("John"));
-    assertTrue(dh.getData(dh.AGE_PROPERTY, e).equals("18"));
-    assertTrue(dh.getData(dh.WEEKS_TO_TRAIN_PROPERTY, e).equals("5"));
-    assertTrue(dh.getData(dh.MARATHON_LENGTH_PROPERTY, e).equals("5.0"));
-    assertTrue(dh.getData(dh.INITIAL_TIME_PROPERTY, e).equals("2.0"));
-    assertTrue(dh.getData(dh.GOAL_TIME_PROPERTY, e).equals("1.0"));
-    assertTrue(dh.getData(dh.PROGRESS_PROPERTY, e).equals("[]"));
-    assertTrue(dh.getData(dh.MILE_TIME_PROPERTY, e).equals("0.2"));
+    assertTrue(dh.getUserData(dh.NAME_PROPERTY, user).equals("John"));
+    assertTrue(dh.getUserData(dh.AGE_PROPERTY, user).equals("18"));
+    assertTrue(dh.getUserData(dh.WORKOUT_LIST_PROPERTY, user).equals("[\"running\"]"));
+    assertTrue(dh.getUserData(dh.CALENDAR_ID_PROPERTY, user).equals("15"));
+    assertTrue(dh.getUserData(dh.EVENT_IDS_PROPERTY, user).equals("[154,256]"));
 
-    datastore.delete(e.getKey());
+    assertTrue(dh.getWorkoutData(dh.WORKOUT_NAME_PROPERTY, workout).equals("running"));
+    assertTrue(dh.getWorkoutData(dh.TYPE_PROPERTY, workout).equals("marathon"));
+    assertTrue(dh.getWorkoutData(dh.WEEKS_TO_TRAIN_PROPERTY, workout).equals("5"));
+    assertTrue(dh.getWorkoutData(dh.GOAL_STEPS_PROPERTY, workout).equals("[goalstep]"));
+    assertTrue(dh.getWorkoutData(dh.PROGRESS_PROPERTY, workout).equals("[I am speed]"));
+    assertTrue(dh.getWorkoutData(dh.MARATHON_LENGTH_PROPERTY, workout).equals("5.0"));
+    assertTrue(dh.getWorkoutData(dh.INITIAL_TIME_PROPERTY, workout).equals("2.0"));
+    assertTrue(dh.getWorkoutData(dh.GOAL_TIME_PROPERTY, workout).equals("1.0"));
+    assertTrue(dh.getWorkoutData(dh.MILE_TIME_PROPERTY, workout).equals("0.2"));
+
+    datastore.delete(user.getKey());
+    datastore.delete(workout.getKey());
   }
 }

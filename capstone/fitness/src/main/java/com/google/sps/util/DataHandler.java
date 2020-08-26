@@ -48,6 +48,7 @@ public class DataHandler {
     USER_PROPERTIES.add(AGE_PROPERTY);
     USER_PROPERTIES.add(CALENDAR_ID_PROPERTY);
     USER_PROPERTIES.add(EVENT_IDS_PROPERTY);
+    USER_PROPERTIES.add(WORKOUT_LIST_PROPERTY);
 
     WORKOUT_PROPERTIES.add(TYPE_PROPERTY);
     WORKOUT_PROPERTIES.add(WEEKS_TO_TRAIN_PROPERTY);
@@ -173,8 +174,6 @@ public class DataHandler {
   * @return             The value of the data as a String
   */
   public static String getWorkoutData(String property, Entity workout) {
-    //Entity user = getUser();
-    // Check if user is signed in
     if(workout == null) {
       return null;
     }
@@ -190,8 +189,8 @@ public class DataHandler {
     datastore.put(user);
   } 
 
-  public static Session getLastSession() {
-    String sessionsJson = getData(PROGRESS_PROPERTY, getUser());
+  public static Session getLastSession(Entity workout) {
+    String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
     if(sessionsJson != null) {
       ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
       if(sessions.isEmpty()) {
@@ -200,6 +199,7 @@ public class DataHandler {
       return new Session(sessions.get(sessions.size() - 1));
     }
     return null;
+  }
     
   /**
   *getGoalSteps returns the JSON string of the goalsteps of the workout
@@ -248,5 +248,27 @@ public class DataHandler {
       EventIds.add(id);
       user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
       datastore.put(user);
+  }
+
+  /**
+  * isNumber - returns whether or not a function should be stored as a number in JSON
+  *
+  * @param string property  the property we want to store in JSON
+  * @return                 wheter or not we should store it as a number
+  */
+  public static boolean isNumber(String property) {
+    if(property.equals(NAME_PROPERTY) ||
+      property.equals(WORKOUT_LIST_PROPERTY) ||
+      property.equals(CALENDAR_ID_PROPERTY) ||
+      property.equals(EVENT_IDS_PROPERTY) ||
+      property.equals(WORKOUT_NAME_PROPERTY) ||
+      property.equals(TYPE_PROPERTY) ||
+      property.equals(GOAL_REPS_PROPERTY) ||
+      property.equals(PROGRESS_PROPERTY))
+        return false;
+    else
+      return true;
+       
+       
   }
 }
