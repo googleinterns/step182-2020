@@ -3,6 +3,7 @@
  */
 function initIndex() {
   displayLogIn();
+  fillViewWorkouts();
 }
 
 /**
@@ -68,6 +69,17 @@ async function loadDataChart() {
   chart.draw(data, options);
 }
 
+async function isLoggedin() {
+  const loginResponse = await fetch('/login');
+  const loginInfo = await loginResponse.json();
+  const userEmail = loginInfo.email;
+
+  if(userEmail != "stranger")
+    return true;
+  else
+    return false;
+}
+
 /**
  Function that fills in the login div.
  Checks if the user is logged in and accordingly gives the user 
@@ -92,7 +104,7 @@ async function displayLogIn() {
 }
 
 /**
- Uses string literals to create a HTML template for logging in/out
+ Uses string literals to create a HTML template for logging in/out.
  */
 function createLoginTemplate(name, url, type) {
   var template = 
@@ -113,6 +125,9 @@ async function getUser(){
   usernameContainer.innerHTML = "Hello " + userEmail + ".";
 }
 
+/*
+  Dynamically adds a form to get the information to create a workout.
+*/
 function fillWorkoutQuestions() {
   workoutQuestions = document.getElementById("workout-information-container");
   const type = document.getElementById("workout-type").value;
@@ -139,7 +154,7 @@ function fillWorkoutQuestions() {
           <label for="goalReps">Enter your goal reps: </label>
           <input type="number" name="goalReps" min="0">
           <br>
-          <input type="submit">
+          <input type="submit" value="Create workout!">
         </form>
       `;
   }
@@ -165,12 +180,17 @@ function fillWorkoutQuestions() {
           <label for="mileTime">Enter your mile time in minutes: </label>
           <input type="number" name="mileTime" min="0" step="0.01">
           <br>
-          <input type="submit">
+          <input type="submit" value="Create workout!">
         </form>
       `;
   }
 }
 
+/*
+  Gets the information gathered from fillWorkoutQuestions,
+  creates a JSON string with it and makes a POST request to
+  /create-workout, which stores everything in datastore.
+*/
 async function createWorkout() {
   const type = document.getElementById("workout-type").value;
   var workoutInfoJson = {};
@@ -191,8 +211,7 @@ async function createWorkout() {
   }
 
   const infoString = JSON.stringify(workoutInfoJson);
-  console.log(infoString);
-  const request = await fetch('/create-workout', {
+  const createWorkoutRequest = await fetch('/create-workout', {
                                                     method: "POST",
                                                     body: infoString
   });
@@ -202,7 +221,56 @@ async function createWorkout() {
 
   });
 
+  /*
+  TODO(@piercedw) 
+  - import to your servlet: import java.io.BufferedReader;
+  - get the body from the request with: String requestBody = request.getReader().readLine();
+  - uncomment this request 
+  const createCalendar = await fetch('/calendar-servlet', {
+                                                method: "POST",
+                                                body: workoutInfoJson.workoutName;
+  })
+  */
+
   document.getElementById("workout-information-container").innerHTML = '';
   
+}
+
+/*
+  Adds a dropdown with all of a user's workouts, and when submitted,
+  it sends to user to /view-workout.
+*/
+async function fillViewWorkouts() {
+  
+  if(isLoggedin()) {
+    const userInfoRequest = await fetch('/get-user-data');
+    const userInfoJSON = await userInfoRequest.json();
+
+    var form = document.createElement("FORM");
+    form.method="GET";
+    form.action="/view-workout"
+
+    const workoutsArray = JSON.parse(userInfoJSON.workoutList);    
+    var selectWorkout = document.createElement("SELECT");
+    selectWorkout.name = "selectWorkout";
+
+    var i;
+    for(i=0; i < workoutsArray.length; i++) {
+      var option = document.createElement("OPTION");
+      option.value = workoutsArray[i];
+      option.innerHTML = workoutsArray[i];
+      selectWorkout.append(option);
+    }
+
+    form.append(selectWorkout);
+
+    var submit = document.createElement("input");
+    submit.type = "submit"; 
+    submit.value = "View workout!"
+    form.append(submit);
+
+    document.getElementById("view-workouts-container").append(form);
+
+  }
 }
 
