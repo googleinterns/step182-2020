@@ -15,11 +15,17 @@ function initViewData() {
 
 // Fills in data for embeded calendar. 
 async function getCalendarInfo(){
-  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
-  const urlParams = new URLSearchParams(window.location.search);;
-  const id = urlParams.get("calendarId");
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+  const idResponse = await fetch('/calendar-servlet',{
+                                                    method: "GET",
+                                                    mode: 'no-cors'
+ 
+  });
+  const idJson = await idResponse.json();
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + idJson + "&ctz=America%2FNew_York";
+
   }
+
+
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
@@ -191,7 +197,9 @@ async function createWorkout() {
                                                     body: infoString
   });
   const calendar = await fetch('/calendar-servlet',{
-                                                    method: "GET"
+                                                    method: "POST",
+                                                    mode: 'no-cors'
+
   });
 
   document.getElementById("workout-information-container").innerHTML = '';

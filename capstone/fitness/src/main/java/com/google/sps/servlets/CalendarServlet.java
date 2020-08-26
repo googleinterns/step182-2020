@@ -17,6 +17,7 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.sps.fit.*;
 import com.google.sps.util.*;
 import com.google.sps.progress.*;
 import java.io.IOException;
@@ -36,14 +37,14 @@ import java.util.*;
 public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String APPLICATION_NAME = "GetIn' Progress";
   private static String colorId = "4";
+  private static String weightLiftingColorId = "8";
   private static long exerciseDuration = 30;  
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   Gson gson = new Gson();
   Calendar calendar; 
   
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    response.setContentType("application/json;");
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     
     // Build calendar. 
     String userId = getUserId(request);
@@ -82,11 +83,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
         Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
         exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
+        // TODO (@piercedw) : Handle exercises of different types and make them different colors. 
         exerciseEvent.setColorId(colorId);
-        // TODO (@piercedw) : Store each event's eventID in datastore for display later.
         this.insertEvent(exerciseEvent);
-        
-        DataHandler.addEvent(DataHandler.getUser(), exerciseEvent.getId());
+        // Store each event's eventID in datastore for display later.
+        DataHandler.addEventID(DataHandler.getUser(), exerciseEvent.getId());
 
         // Increment minSpan and maxSpan by one day. 
         minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
@@ -94,8 +95,18 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         y++;
     }
     }
+    // Store calendar ID. 
     String id = this.getCalendarId();
     DataHandler.setCalendarID(DataHandler.getUser(), id);
+  }
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    // Send calendar id and events. 
+    response.setContentType("application/json;");
+    // Id is already in Json when called from Datahandler and doesn't need to be unJson'd until JS. 
+    String jsonId = DataHandler.getUserData("calendarId", DataHandler.getUser());
+    response.getWriter().println(jsonId);
+    // TODO (@piercedw) : Get eventIDs from Datahandler, loop through and send the event name and time for each one. 
   }
  
   @Override
@@ -135,6 +146,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     return result.get(0); 
   }
  private List <String> getExercises(){
+    // How to get workout?
+    // Breaks here because getGoalSteps takes a workout entity as a parameter and I'm a little confused about that. 
     String goalSteps = DataHandler.getGoalSteps();
     ArrayList<JsonExercise> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonExercise>>(){}.getType());
     List<String> exercises = new ArrayList<String>();
