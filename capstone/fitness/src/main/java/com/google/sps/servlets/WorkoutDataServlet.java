@@ -11,7 +11,7 @@ import com.google.appengine.api.datastore.Entity;
 import org.json.*;
 
 /**
- This servelet is used to easily retrieve an workout's data from datastore 
+ This servelet is used to easily retrieve a workout's data from datastore 
  in JSON format.
 */
 @WebServlet("/get-workout-data")

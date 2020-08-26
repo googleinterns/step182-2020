@@ -284,14 +284,16 @@ public class DataHandler {
   * @return                 wheter or not we should store it as a number
   */
   public static boolean isNumber(String property) {
-    if(property.equals(NAME_PROPERTY) ||
-      property.equals(WORKOUT_LIST_PROPERTY) ||
+    if(
       property.equals(CALENDAR_ID_PROPERTY) ||
       property.equals(EVENT_IDS_PROPERTY) ||
-      property.equals(WORKOUT_NAME_PROPERTY) ||
-      property.equals(TYPE_PROPERTY) ||
       property.equals(GOAL_REPS_PROPERTY) ||
-      property.equals(PROGRESS_PROPERTY))
+      property.equals(NAME_PROPERTY) ||
+      property.equals(PROGRESS_PROPERTY) ||
+      property.equals(TYPE_PROPERTY) ||
+      property.equals(WORKOUT_LIST_PROPERTY) ||
+      property.equals(WORKOUT_NAME_PROPERTY)
+      )
         return false;
     else
       return true; 
