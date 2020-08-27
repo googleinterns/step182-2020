@@ -16,6 +16,7 @@ function initViewData() {
 
 /** 
  Function that fetches the user's calendar ID and puts it into the calendar display link. 
+ Also fetches the events to display in the list
 */ 
 async function getCalendarInfo(){
 
