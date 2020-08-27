@@ -237,18 +237,16 @@ function enableViewingPanel(viewing, insertionIndex, goalIndex) {
 }
 
 function addPercentages(sessionExercise, next, goal, viewing) {
-  let index = 0;
   for (let type in sessionExercise.setValues) {
-    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type], index);
-    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type], index);
+    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type]);
+    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type]);
     if(viewing) {
-      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type], index);
+      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type]);
     }
-    index++;
   }
 }
 
-function addToPanel(keyword, sessionValues, comparisonValues, index) {
+function addToPanel(keyword, sessionValues, comparisonValues) {
   let percentage = (sum(sessionValues)/sum(comparisonValues) * 100).toPrecision(2);
   if(percentage >= 100) {
     percentage = "100";
