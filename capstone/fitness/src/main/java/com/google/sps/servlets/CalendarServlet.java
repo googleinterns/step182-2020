@@ -44,11 +44,12 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   Gson gson = new Gson();
   Calendar calendar; 
+
+  int scheduledLength = 0;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     
-    // if (DataHandler.getUserData(DataHandler.getUser(), "calendarId") )
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
@@ -57,11 +58,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     Scheduler scheduler = new Scheduler(exerciseDuration);
 
     List<String> workoutList = this.getWorkoutList();
-
-    for (String workout : workoutList){
-        String type = this.getWorkoutType(workout);
-      List<String> exercises = this.getExercises(workout);
-      String wks = this.getWeeksToTrain(workout);
+    if (workoutList.size() > scheduledLength){ 
+    for (int b = scheduledLength; b <workoutList.size(); b++){
+        String type = this.getWorkoutType(workoutList.get(b));
+      List<String> exercises = this.getExercises(workoutList.get(b));
+      String wks = this.getWeeksToTrain(workoutList.get(b));
       int weeksToTrain = Integer.parseInt(wks);
     
         int daysAvailable = weeksToTrain * Time.weeksToDays;
@@ -80,7 +81,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
         // Use the scheduler to schedule one exercise per day. 
         int y = 0;
-
+    
         for (int x = 0; x < daysAvailable; x += timesPerWeek){
         if (y >= exercises.size()){
             break;
@@ -99,7 +100,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             }
             this.insertEvent(exerciseEvent);
             // Store each event's eventID in datastore for display later.
-            DataHandler.addEventID(DataHandler.getUser(), exerciseEvent.getId());
+            String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
+            DataHandler.addEventID(DataHandler.getUser(),eventDescription);
 
             // Increment minSpan and maxSpan by one day. 
             minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
@@ -107,12 +109,17 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             y++;
         }
         }
+    scheduledLength++; 
     }
-
     // Store calendar ID. 
     String id = this.getCalendarId();
     DataHandler.setCalendarID(DataHandler.getUser(), id);
-    response.sendRedirect("/calendar.html?calendarId=" + id); 
+}
+    else{
+    }
+
+
+    response.sendRedirect("/calendar.html"); 
 
   }
  

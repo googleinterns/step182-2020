@@ -18,11 +18,28 @@ function initViewData() {
  Function that fetches the user's calendar ID and puts it into the calendar display link. 
 */ 
 async function getCalendarInfo(){
-  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
-  const urlParams = new URLSearchParams(window.location.search);;
-  const id = urlParams.get("calendarId");
+
+  const calendarInfo = await fetch("/cal-display");
+  console.log("fetched info");
+  const calJson = await calendarInfo.json();
+  const id = calJson[0];
   document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+
+  const eventsContainer = document.getElementById('list-container');
+  eventsContainer.innerHTML = '';
+  var i;
+  eventLoop:
+  for(i=1; i < calJson.length; i++) {
+    if(calJson[i]) {
+      eventsContainer.appendChild(newLi(calJson[i]));    
+    }
   }
+  }
+function newLi(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
 
 
 /**
@@ -213,22 +230,6 @@ async function createWorkout() {
                                                     method: "POST",
                                                     body: infoString
   });
-//   const calendar = await fetch('/calendar-servlet',{
-//                                                     method: "POST",
-//                                                     mode: 'no-cors'
-
-//   });
-
-  /*
-  TODO(@piercedw) 
-  - import to your servlet: import java.io.BufferedReader;
-  - get the body from the request with: String requestBody = request.getReader().readLine();
-  - uncomment this request 
-  const createCalendar = await fetch('/calendar-servlet', {
-                                                method: "POST",
-                                                body: workoutInfoJson.workoutName;
-  })
-  */
 
   document.getElementById("workout-information-container").innerHTML = '';
   
