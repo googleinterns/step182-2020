@@ -34,6 +34,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,21 +60,23 @@ public class ProgressServlet extends HttpServlet {
 
     @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
 
-    Entity user=DataHandler.getUser();
+    Entity workout = DataHandler.getWorkout(workoutName);
 
     // TODO(gabrieldg@) change to throw exception.
     // Redirect if user not found.
-    if(user == null) {
+    if(workout == null) {
       RequestDispatcher view = request.getRequestDispatcher("/");
       view.forward(request, response);
     }
 
     // Get the users current progress string (JSON format).
-    String progressJson = (String) (user.getProperty(DataHandler.PROGRESS_PROPERTY));
+    String progressJson = (String) (workout.getProperty(DataHandler.PROGRESS_PROPERTY));
 
     // Get the users marathon length.
-    float marathonLength = (float) (double) user.getProperty(DataHandler.MARATHON_LENGTH_PROPERTY);
+    float marathonLength = (float) (double) workout.getProperty(DataHandler.MARATHON_LENGTH_PROPERTY);
 
     // Should never happen if user is not null.
     // TODO(@gabrieldg) throw actual exception.
@@ -102,9 +105,9 @@ public class ProgressServlet extends HttpServlet {
     progressJson = gson.toJson(sessions);
 
     // Update new progress string in datastore.
-    user.setProperty(DataHandler.PROGRESS_PROPERTY, progressJson);
+    workout.setProperty(DataHandler.PROGRESS_PROPERTY, progressJson);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
+    datastore.put(workout);
 
     // Redirect to home.
     RequestDispatcher view = request.getRequestDispatcher("/");
