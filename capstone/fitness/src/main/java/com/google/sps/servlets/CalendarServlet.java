@@ -1,5 +1,6 @@
 package com.google.sps.servlets;
- 
+
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
@@ -32,8 +33,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;   
 import java.util.*;
 
-
-
 // CalendarServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/calendar-servlet")
 public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
@@ -44,29 +43,31 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   Gson gson = new Gson();
   Calendar calendar; 
-
   int scheduledLength = 0;
+  int timesPerWeek;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
     calendar= new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
 
     Scheduler scheduler = new Scheduler(exerciseDuration);
-
-    List<String> workoutList = this.getWorkoutList();
-    if (workoutList.size() > scheduledLength){ 
-    for (int b = scheduledLength; b <workoutList.size(); b++){
-        String type = this.getWorkoutType(workoutList.get(b));
-      List<String> exercises = this.getExercises(workoutList.get(b));
-      String wks = this.getWeeksToTrain(workoutList.get(b));
-      int weeksToTrain = Integer.parseInt(wks);
     
+    // Store user entity for calling other DataHandler methods. 
+    Entity user = DataHandler.getUser();
+
+    List<String> workoutList = this.getWorkoutList(user);
+    
+    if (workoutList.size() > scheduledLength){ 
+      for (int b = scheduledLength; b <workoutList.size(); b++){
+        String type = this.getWorkoutType(workoutList.get(b));
+        List<String> exercises = this.getExercises(workoutList.get(b));
+        String wks = this.getWeeksToTrain(workoutList.get(b));
+        int weeksToTrain = Integer.parseInt(wks);
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        int timesPerWeek = daysAvailable/ exercises.size(); 
+        timesPerWeek = daysAvailable/ exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
@@ -83,15 +84,17 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         int y = 0;
     
         for (int x = 0; x < daysAvailable; x += timesPerWeek){
-        if (y >= exercises.size()){
+          if (y >= exercises.size()){
             break;
             }
-        else{
+          else{
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
+            // User scheduler to get free time and return corresponding event. 
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
+            // Event name and description match the user's workout name and type of workout.
             exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
             exerciseEvent.setDescription(type);
-            // TODO (@piercedw) : Handle exercises of different types and make them different colors. 
+            // Set event color depending on the type of workot. 
             if (type.equals("lifting")){
               exerciseEvent.setColorId(liftingColorId);
             }
@@ -99,29 +102,20 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
               exerciseEvent.setColorId(runningColorId);
             }
             this.insertEvent(exerciseEvent);
+            
             // Store each event's eventID in datastore for display later.
             String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
-            DataHandler.addEventID(DataHandler.getUser(),eventDescription);
+            DataHandler.addEventID(user,eventDescription);
 
             // Increment minSpan and maxSpan by one day. 
-            minSpan = new DateTime(minSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
-            maxSpan = new DateTime(maxSpan.getValue() + (Time.millisecondsPerDay * timesPerWeek));
-            y++;
-        }
-        }
-    scheduledLength++; 
-    }
-    // Store calendar ID. 
-    String id = this.getCalendarId();
-    DataHandler.setCalendarID(DataHandler.getUser(), id);
-}
-    else{
-    }
-
-
-    response.sendRedirect("/calendar.html"); 
-
-  }
+            minSpan = this.incrementDay(minSpan);
+            maxSpan = this.incrementDay(maxSpan);
+            y++;}}
+        scheduledLength++; }
+      // Store calendar ID. 
+      String id = this.getCalendarId();
+      DataHandler.setCalendarID(user, id);}
+    response.sendRedirect("/calendar.html"); }
  
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
@@ -143,7 +137,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private void insertEvent(Event event) throws IOException{
     Event myNewEvent = calendar.events().insert("primary", event).execute();
   }
-
+  
+  // Getting the user's primary calendar Id to display in html. 
   private String getCalendarId() throws IOException{
     com.google.api.services.calendar.Calendar.CalendarList.List listRequest = calendar.calendarList().list();
     listRequest.setFields("items(id)").setMaxResults(1);
@@ -153,19 +148,19 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     if (feed.getItems() != null) {
       for (CalendarListEntry entry : feed.getItems()) {
-        result.add(entry.getId());}
-        }
-        
+        result.add(entry.getId());}}
     return result.get(0); 
   }
-  private List<String> getWorkoutList(){
-    String workoutsString = DataHandler.getUserData("workoutList", DataHandler.getUser());
+  
+  // Getting all of the user's workout names to iterate through and create exercises. 
+  private List<String> getWorkoutList(Entity user){
+    String workoutsString = DataHandler.getUserData("workoutList", user);
     ArrayList<String> workoutNamesList = gson.fromJson(workoutsString, new TypeToken<List<String>>(){}.getType());
     return workoutNamesList;    
   }
 
+  // Gets exercises from a workout. 
   private List<String> getExercises(String workoutName){
-    // NOTE(@ijelue): Instead of doing this, get workout list and iterate through each workout, getting the exercises from each one.
     String goalSteps = DataHandler.getGoalSteps(DataHandler.getWorkout(workoutName));
     ArrayList<JsonExercise> goalStepsArray = gson.fromJson(goalSteps, new TypeToken<List<JsonExercise>>(){}.getType());
     
@@ -175,12 +170,21 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     }
     return exercises; 
   }
+
+  // Gets the # of weeks from a workout. 
   private String getWeeksToTrain(String workoutName){
       String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
       return weekNum;
   }
+
   private String getWorkoutType(String workoutName){
       String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
       return workoutType;
+  }
+  
+  // Increments day in scheduling flow.
+  private DateTime incrementDay(DateTime moment){
+    DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
+    return incremented;
   }
 }
