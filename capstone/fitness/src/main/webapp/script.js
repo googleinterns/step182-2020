@@ -24,8 +24,7 @@ async function getCalendarInfo(){
   console.log("fetched info");
   const calJson = await calendarInfo.json();
   const id = calJson[0];
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
-
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York&mode=AGENDA";
   const eventsContainer = document.getElementById('list-container');
   eventsContainer.innerHTML = '';
   var i;
