@@ -48,9 +48,77 @@ body {
   height: 25%;
 }
 
+/*
+  Progress Styling. 
+  Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
+*/
+
 .progress {
   background: none;
+  color:black !important;
   height: 150px;
-  margin: auto;
+  position: relative;
   width: 150px;
+}
+
+.progress::after {
+  border: 6px solid #eee;
+  border-radius: 50%;
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress>span {
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 50%;
+  z-index: 1;
+}
+
+.progress .progress-left {
+  left: 0;
+}
+
+.progress .progress-bar {
+  background: none;
+  border-style: solid;
+  border-width: 6px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress .progress-left .progress-bar {
+  border-bottom-right-radius: 80px;
+  border-left: 0;
+  border-top-right-radius: 80px;
+  left: 100%;
+  transform-origin: center left;
+  -webkit-transform-origin: center left;
+}
+
+.progress .progress-right {
+  right: 0;
+}
+
+.progress .progress-right .progress-bar {
+  border-bottom-left-radius: 80px;
+  border-right: 0;
+  border-top-left-radius: 80px;
+  left: -100%;
+  transform-origin: center right;
+  -webkit-transform-origin: center right;
+}
+
+.progress .progress-value {
+  left: 0;
+  position: absolute;
+  top: 0;
 }
