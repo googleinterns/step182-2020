@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;   
@@ -105,7 +106,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             
             // Store each event's eventID in datastore for display later.
             String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
-            DataHandler.addEventID(user,eventDescription);
+            DataHandler.addEventID(exerciseEvent.getId());
 
             // Increment minSpan and maxSpan by one day. 
             minSpan = this.incrementDay(minSpan);
@@ -115,7 +116,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       // Store calendar ID. 
       String id = this.getCalendarId();
       DataHandler.setCalendarID(user, id);}
-    response.sendRedirect("/calendar.html"); }
+    
+    request.setAttribute("events","****test*****");
+    RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
+    rd.forward(request,response);}
+    // response.sendRedirect("/calendar.html"); }
  
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
@@ -186,5 +191,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private DateTime incrementDay(DateTime moment){
     DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     return incremented;
+  }
+  private String formatEvents(){
+    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    List<String> eventIdArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
+    
+    for (String eachId : eventIdArray){
+        this.calendar
+    }
+
   }
 }
