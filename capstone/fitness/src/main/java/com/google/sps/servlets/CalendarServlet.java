@@ -38,8 +38,8 @@ import java.util.*;
 @WebServlet("/calendar-servlet")
 public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String APPLICATION_NAME = "GetIn' Progress";
-  private static String colorId = "4";
-  private static String weightLiftingColorId = "8";
+  private static String runningColorId = "4";
+  private static String liftingColorId = "8";
   private static long exerciseDuration = 30;  
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
   Gson gson = new Gson();
@@ -55,25 +55,19 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     calendar= new Calendar.Builder(new UrlFetchTransport(), new JacksonFactory(), credential).setApplicationName(APPLICATION_NAME).build();
 
     Scheduler scheduler = new Scheduler(exerciseDuration);
-    
-    // This needs to get the workout data instead. 
-    // String wks = (DataHandler.getUserData("weeksToTrain",DataHandler.getUser()));
-    // int weeksToTrain = Integer.parseInt(wks);
 
-    // String wks = this.getWeeksToTrain(request);
     List<String> workoutList = this.getWorkoutList();
-    System.out.println("WORKOUT NAME: " + workoutList.get(0));
 
     for (String workout : workoutList){
+        String type = this.getWorkoutType(workout);
       List<String> exercises = this.getExercises(workout);
       String wks = this.getWeeksToTrain(workout);
       int weeksToTrain = Integer.parseInt(wks);
     
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        
         int timesPerWeek = daysAvailable/ exercises.size(); 
 
-        // // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
+        // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
         DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
@@ -95,8 +89,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
             exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
+            exerciseEvent.setDescription(type);
             // TODO (@piercedw) : Handle exercises of different types and make them different colors. 
-            exerciseEvent.setColorId(colorId);
+            if (type.equals("lifting")){
+              exerciseEvent.setColorId(liftingColorId);
+            }
+            else{
+              exerciseEvent.setColorId(runningColorId);
+            }
             this.insertEvent(exerciseEvent);
             // Store each event's eventID in datastore for display later.
             DataHandler.addEventID(DataHandler.getUser(), exerciseEvent.getId());
@@ -107,13 +107,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             y++;
         }
         }
-      System.out.println("WEEKS TO TRAIN: " + wks);
-      System.out.println("FIRST GOAL STEP: " + exercises.get(0));
     }
 
     // Store calendar ID. 
     String id = this.getCalendarId();
-    // DataHandler.setCalendarID(DataHandler.getUser(), id);
+    DataHandler.setCalendarID(DataHandler.getUser(), id);
     response.sendRedirect("/calendar.html?calendarId=" + id); 
 
   }
@@ -173,5 +171,9 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private String getWeeksToTrain(String workoutName){
       String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
       return weekNum;
+  }
+  private String getWorkoutType(String workoutName){
+      String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
+      return workoutType;
   }
 }
