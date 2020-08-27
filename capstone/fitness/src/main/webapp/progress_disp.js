@@ -39,7 +39,7 @@ const progressSets = `
     </div>
   </div>
 `;
-const progressBarDiv = `<div class="row progress" id="keywordId-index"></div>`;
+const progressBarDiv = `<div class="row progress" id="keywordId-index"></div><br>`;
 
 async function loadPage() {
   await updateDisplay(-1);
@@ -177,7 +177,7 @@ async function updatePanels(insertionIndex, goalIndex) {
   // Add percentage comparisons between session exercises and panel headers (next goal step, goal, and viewing step).
   for(let i = 0; i < panelsList.length; i++) {
     if(panelsList[i].tag.includes(sessionKeyword) && panelsList[i].name === goal.name) {
-      addPercentages(panelsList[i], next, goal, viewing, i);
+      addPercentages(panelsList[i], next, goal, viewing);
     }
   }
 }
@@ -227,13 +227,15 @@ function enableViewingPanel(viewing, insertionIndex, goalIndex) {
   }
 }
 
-function addPercentages(sessionExercise, next, goal, viewing, index) {
+function addPercentages(sessionExercise, next, goal, viewing) {
+  let index = 0;
   for (let type in sessionExercise.setValues) {
     addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type], index);
     addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type], index);
     if(viewing) {
       addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type], index);
     }
+    index++;
   }
 }
 
@@ -256,7 +258,8 @@ function sum(values) {
 }
 
 function loadCircleProgressBars(id, fraction, index) {
-  var circle = new ProgressBar.Circle(`#${id}-${index}`, {
+  const container = `#${id}-${index}`;
+  var circle = new ProgressBar.Circle(container, {
     color: '#aaa',
     duration: 1500,
     easing: 'bounce',
@@ -274,8 +277,9 @@ function loadCircleProgressBars(id, fraction, index) {
   });
   
   circle.text.style.fontSize = '2rem';
-
   circle.animate(fraction);
+
+  console.log(fraction);
 }
 
 /** 
