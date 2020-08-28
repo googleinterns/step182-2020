@@ -76,9 +76,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
+
         String minRCF3339 = nextDayOfMonth + nextDayStartTime;
-        String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime minSpan = new DateTime(minRCF3339);
+        
+        String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime maxSpan = new DateTime(maxRCF3399);
 
         // Use the scheduler to schedule one exercise per day. 
