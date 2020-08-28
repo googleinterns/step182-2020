@@ -66,12 +66,12 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     List<String> workoutList = this.getWorkoutList(user);
     
     if (workoutList.size() > scheduledLength){ 
-      for (int b = scheduledLength; b <workoutList.size(); b++){
+      for (int b = scheduledLength; b < workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
         int weeksToTrain = Integer.parseInt(this.getWeeksToTrain(workoutList.get(b)));
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        int timesPerWeek = daysAvailable/ exercises.size(); 
+        int timesPerWeek = daysAvailable/exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
@@ -105,11 +105,16 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             // Increment minSpan and maxSpan by one day. 
             minSpan = this.incrementDay(minSpan, timesPerWeek);
             maxSpan = this.incrementDay(maxSpan, timesPerWeek);
-            y++;}}
-        scheduledLength++; }
+            y++;
+            }
+          }
+        scheduledLength++;
+         }
       // Store calendar ID. 
-      DataHandler.setCalendarID(user, this.getCalendarId());}
-    response.sendRedirect("/calendar.html"); }
+      DataHandler.setCalendarID(user, this.getCalendarId());
+      }
+    response.sendRedirect("/calendar.html"); 
+    }
  
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
@@ -183,20 +188,20 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   }
 
   private Event configureEvent(Event event, String summary, String type){
-            // Event name and description match the user's workout name and type of workout.
-            event.setSummary(APPLICATION_NAME + ": " + summary);
-            event.setDescription(type);
-            // Set event color depending on the type of workout. 
-            if (type.equals(liftingType)){
-              event.setColorId(liftingColorId);
-            }
-            else if(type.equals(liftingType)){
-              event.setColorId(runningColorId);
-            }
-            else{
-              event.setColorId(unknownWorkoutColorId); 
-            }
-            return event; 
+    // Event name and description match the user's workout name and type of workout.
+    event.setSummary(APPLICATION_NAME + ": " + summary);
+    event.setDescription(type);
+    // Set event color depending on the type of workout. 
+    if (type.equals(liftingType)){
+      event.setColorId(liftingColorId);
+    }
+    else if(type.equals(marathonType)){
+      event.setColorId(runningColorId);
+    }
+    else{
+      event.setColorId(unknownWorkoutColorId); 
+    }
+    return event; 
   }
   
 }
