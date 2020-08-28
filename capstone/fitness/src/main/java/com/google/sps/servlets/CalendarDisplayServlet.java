@@ -12,22 +12,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 // CalendarDisplayServlet sends the correct information to calendar.html to display the calendar and the workout. 
 @WebServlet("/cal-display")
 public class CalendarDisplayServlet extends HttpServlet { 
   Gson gson = new Gson();
-
+  String eventsJson;
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException { 
-    response.setContentType("application/json");
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
+    response.sendRedirect("/calendar.html");
+    eventsJson = (String)request.getAttribute("events");
 
-    String id = DataHandler.getUserData("calendarId", DataHandler.getUser());
-    
-    String events = DataHandler.getUserData("EventIds", DataHandler.getUser());
-    List<String> eventArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
-
-    eventArray.add(0, id);
-
-    response.getWriter().println(gson.toJson(eventArray));
   }
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+    response.setContentType("application/json");
+    response.getWriter().println(eventsJson);
+}
+>>>>>>> eventId-branch
 }
