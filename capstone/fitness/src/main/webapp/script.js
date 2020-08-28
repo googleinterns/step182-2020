@@ -34,8 +34,11 @@ async function loadDataChart() {
   data.addColumn('number', 'speed');
 
   // Gets the JSON object that holds all the sesssions.
-  const progressData = await fetch('/progress');
-  const dataJson = await progressData.json();
+  const progressRequest = await fetch('/progress').text();
+  const progressData = progressRequest.split("\n");
+
+  const sessions = progressData[0].json();
+
   // Create matrix with sessions numbers and speeds.
   var dataRows = [];
   var i=0;
