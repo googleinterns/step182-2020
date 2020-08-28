@@ -276,4 +276,3 @@ async function fillViewWorkouts() {
 
   }
 }
-
