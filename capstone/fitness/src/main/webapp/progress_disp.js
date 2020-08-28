@@ -170,7 +170,7 @@ async function updatePanels(insertionIndex, goalIndex) {
   // Get stats for the panels of the page.
   const params = new URLSearchParams();
   params.append('insertion', insertionIndex);
-  await fetch('/panels', {method: 'POST', body: params});
+  await fetch('/stats', {method: 'POST', body: params});
 
   clearPanels();
   

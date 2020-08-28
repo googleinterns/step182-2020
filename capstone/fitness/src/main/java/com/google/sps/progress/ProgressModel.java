@@ -33,6 +33,7 @@ public class ProgressModel {
     private int daysAvailable;
 
     public Builder() {
+      String name = "Running";
       goalSteps = null;
       start = null;
       goal = null;
@@ -59,22 +60,6 @@ public class ProgressModel {
     public Builder setDurationIncrementGoal(String name, float goal) {
       this.goal = new Exercise.Builder(name)
                         .addSetTypeWithValues(SetType.DURATION_INC, new float[] {goal})
-                        .build();
-      return this;
-    }
-
-    public Builder setStrengthTrainingStart(String name, int startReps, float startWeight) {
-      this.start = new Exercise.Builder(name)
-                        .addSetTypeWithValues(SetType.REPS, new float[] {startReps})
-                        .addSetTypeWithValues(SetType.WEIGHT, new float[] {startWeight})
-                        .build();
-      return this;
-    }
-
-    public Builder setStrengthTrainingGoal(String name, int goalReps, float goalWeight) {
-      this.goal = new Exercise.Builder(name)
-                        .addSetTypeWithValues(SetType.REPS, new float[] {goalReps})
-                        .addSetTypeWithValues(SetType.WEIGHT, new float[] {goalWeight})
                         .build();
       return this;
     }
@@ -163,8 +148,8 @@ public class ProgressModel {
     return success;
   }
 
-  public boolean updateModel(String workoutName) {
-    return updateModel(DataHandler.getLastSession(workoutName));
+  public boolean updateModel() {
+    return updateModel(DataHandler.getLastSession());
   }
 
   /**

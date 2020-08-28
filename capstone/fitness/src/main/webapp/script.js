@@ -14,13 +14,36 @@ function initViewData() {
   displayLogIn();
 }
 
-// Fills in data for embeded calendar. 
+/** 
+ Function that fetches the user's calendar ID and puts it into the calendar display link. 
+ Also fetches the events to display in the list.
+*/ 
 async function getCalendarInfo(){
-  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
-  const urlParams = new URLSearchParams(window.location.search);;
-  const id = urlParams.get("calendarId");
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+
+  const calendarInfo = await fetch("/cal-display");
+  console.log("fetched info");
+  const calJson = await calendarInfo.json();
+  const id = calJson[0];
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York&mode=AGENDA";
+  const eventsContainer = document.getElementById('list-container');
+  eventsContainer.innerHTML = '';
+  var i;
+  eventLoop:
+  for(i=1; i < calJson.length; i++) {
+    if(calJson[i]) {
+      eventsContainer.appendChild(newLi(calJson[i]));    
+    }
   }
+  }
+
+//   Helper function for displaying list items 
+function newLi(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
+
 /**
  Function that fills in the charts div.
  Retrieves sesssion data from datastore and displays it on the chart.
@@ -209,17 +232,6 @@ async function createWorkout() {
                                                     method: "POST",
                                                     body: infoString
   });
-
-  /*
-  TODO(@piercedw) 
-  - import to your servlet: import java.io.BufferedReader;
-  - get the body from the request with: String requestBody = request.getReader().readLine();
-  - uncomment this request 
-  const createCalendar = await fetch('/calendar-servlet', {
-                                                method: "POST",
-                                                body: workoutInfoJson.workoutName;
-  })
-  */
 
   document.getElementById("workout-information-container").innerHTML = '';
   

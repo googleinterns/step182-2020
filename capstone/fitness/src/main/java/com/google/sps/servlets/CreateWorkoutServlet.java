@@ -1,6 +1,5 @@
 package com.google.sps.servlets;
 
-import com.google.sps.progress.*;
 import com.google.sps.util.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -22,7 +21,6 @@ import java.util.List;
 @WebServlet("/create-workout")
 public class CreateWorkoutServlet extends HttpServlet { 
 
-  private static final int DAYS_PER_WEEK = 3;
   static Gson gson = new Gson();
 
   @Override
@@ -55,39 +53,24 @@ public class CreateWorkoutServlet extends HttpServlet {
 
     // Assign the correct properties depending on the type
     if(workoutType.equals("lifting")) {
-      int repsStart = Integer.parseInt((String) workoutJSON.get(DataHandler.INITIAL_REPS_PROPERTY));
-      int repsGoal = Integer.parseInt((String) workoutJSON.get(DataHandler.GOAL_REPS_PROPERTY));
-      float weightStart = Float.parseFloat((String) workoutJSON.get(DataHandler.INITIAL_WEIGHT_PROPERTY));
-      float weightGoal = Float.parseFloat((String) workoutJSON.get(DataHandler.GOAL_WEIGHT_PROPERTY));
-
-      newWorkout.setProperty(DataHandler.INITIAL_WEIGHT_PROPERTY, weightStart);
-      newWorkout.setProperty(DataHandler.INITIAL_REPS_PROPERTY, repsStart);
-      newWorkout.setProperty(DataHandler.GOAL_WEIGHT_PROPERTY, weightGoal);
-      newWorkout.setProperty(DataHandler.GOAL_REPS_PROPERTY, repsGoal);
-      newWorkout.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
-                                                            .setDaysAvailable(weeksToTrain, DAYS_PER_WEEK)
-                                                            .setStrengthTrainingStart(workoutName, repsStart, weightStart)
-                                                            .setStrengthTrainingGoal(workoutName, repsGoal, weightGoal)
-                                                            .build()
-                                                            .toJson()));
+      newWorkout.setProperty(DataHandler.INITIAL_WEIGHT_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.INITIAL_WEIGHT_PROPERTY)));
+      newWorkout.setProperty(DataHandler.INITIAL_REPS_PROPERTY, 
+                             Integer.parseInt((String) workoutJSON.get(DataHandler.INITIAL_REPS_PROPERTY)));
+      newWorkout.setProperty(DataHandler.GOAL_WEIGHT_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.GOAL_WEIGHT_PROPERTY)));
+      newWorkout.setProperty(DataHandler.GOAL_REPS_PROPERTY, 
+                             Integer.parseInt((String) workoutJSON.get(DataHandler.GOAL_REPS_PROPERTY)));
     }
     else {
-      float lengthOfMarathon = Float.parseFloat((String) workoutJSON.get(DataHandler.MARATHON_LENGTH_PROPERTY));
-      float initialTime = Float.parseFloat((String) workoutJSON.get(DataHandler.INITIAL_TIME_PROPERTY));
-      float goalTime = Float.parseFloat((String) workoutJSON.get(DataHandler.GOAL_TIME_PROPERTY));
-
-      newWorkout.setProperty(DataHandler.MARATHON_LENGTH_PROPERTY, lengthOfMarathon);
-      newWorkout.setProperty(DataHandler.INITIAL_TIME_PROPERTY, initialTime);
-      newWorkout.setProperty(DataHandler.GOAL_TIME_PROPERTY, goalTime);
-      newWorkout.setProperty(DataHandler.MILE_TIME_PROPERTY,
-                            Float.parseFloat((String) workoutJSON.get(DataHandler.MILE_TIME_PROPERTY))/((float) 60.0));
-      
-      newWorkout.setProperty(DataHandler.GOAL_STEPS_PROPERTY, new Text(new ProgressModel.Builder()
-                                                            .setDaysAvailable(weeksToTrain, DAYS_PER_WEEK)
-                                                            .setDurationIncrementStart(workoutName, lengthOfMarathon/initialTime)
-                                                            .setDurationIncrementGoal(workoutName, lengthOfMarathon/goalTime)
-                                                            .build()
-                                                            .toJson()));
+      newWorkout.setProperty(DataHandler.MARATHON_LENGTH_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.MARATHON_LENGTH_PROPERTY)));
+      newWorkout.setProperty(DataHandler.INITIAL_TIME_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.INITIAL_TIME_PROPERTY)));
+      newWorkout.setProperty(DataHandler.GOAL_TIME_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.GOAL_TIME_PROPERTY)));
+      newWorkout.setProperty(DataHandler.MILE_TIME_PROPERTY, 
+                             Float.parseFloat((String) workoutJSON.get(DataHandler.MILE_TIME_PROPERTY))/((float) 60.0));
     }
 
     // Put the new workout in datastore and update the user

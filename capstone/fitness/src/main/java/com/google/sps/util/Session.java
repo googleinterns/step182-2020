@@ -17,7 +17,6 @@ package com.google.sps.util;
 import com.google.sps.fit.*;
 import com.google.sps.fit.Exercise.SetType;
 import java.io.Serializable;
-import java.util.*;
 
 /*
  * Mock Session object. 
@@ -32,17 +31,9 @@ public class Session implements Serializable {
     this.workout = workout;
   }
 
-  public Session(MarathonSession ms, String workoutName) {
-    Exercise exercise = new Exercise.Builder(workoutName)
+  public Session(MarathonSession ms) {
+    Exercise exercise = new Exercise.Builder("Running")
                             .addSetTypeWithValues(SetType.DURATION_INC, new float[] {ms.getSpeed()})
-                            .build();
-    this.workout = new Exercise[] {exercise};
-  }
-
-  public Session(LiftingSession ls, String workoutName) {
-    Exercise exercise = new Exercise.Builder(workoutName)
-                            .addSetTypeWithValues(SetType.REPS, new float[] {ls.getReps()})
-                            .addSetTypeWithValues(SetType.WEIGHT, new float[] {ls.getWeight()})
                             .build();
     this.workout = new Exercise[] {exercise};
   }
@@ -50,8 +41,4 @@ public class Session implements Serializable {
   public Exercise[] getWorkout() {
     return workout;
   } 
-
-  public String toString() {
-    return Arrays.toString(workout);
-  }
 }

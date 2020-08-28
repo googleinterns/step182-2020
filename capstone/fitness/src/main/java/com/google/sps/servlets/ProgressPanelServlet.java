@@ -37,17 +37,16 @@ public class ProgressPanelServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HttpSession session = request.getSession();
-    String workoutName = (String) session.getAttribute("workoutName");
-    String goalStepsJson = DataHandler.getGoalSteps(DataHandler.getWorkout(workoutName));
+    String goalStepsJson = DataHandler.getGoalSteps();
     List<JsonExercise> panelDisplay = Collections.emptyList();
     if(goalStepsJson != null) {
       ProgressModel model = new ProgressModel.Builder()
                             .setJsonGoalSteps(goalStepsJson)
                             .build();
+      HttpSession session = request.getSession();
       Integer insertion = (Integer) session.getAttribute("insertion");
       GoalStep viewing = insertion == null ? null : model.toArray()[insertion];
-      panelDisplay = getPanelItems(DataHandler.getLastSession(workoutName), model.getCurrentMainGoalStep(), model.getLast(), viewing);
+      panelDisplay = getPanelItems(DataHandler.getLastSession(), model.getCurrentMainGoalStep(), model.getLast(), viewing);
     }
     response.setContentType("application/json");
     response.getWriter().println(getJson(panelDisplay));
