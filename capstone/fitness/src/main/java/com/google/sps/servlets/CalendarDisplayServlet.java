@@ -24,10 +24,10 @@ public class CalendarDisplayServlet extends HttpServlet {
     eventsJson = (String)request.getAttribute("events");
 
   }
+  
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
     response.setContentType("application/json");
     response.getWriter().println(eventsJson);
-}
->>>>>>> eventId-branch
+  }
 }

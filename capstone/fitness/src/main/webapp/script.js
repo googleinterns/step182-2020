@@ -19,14 +19,11 @@ function initViewData() {
  Also fetches the events to display in the list.
 */ 
 async function getCalendarInfo(){
-
   const calendarInfo = await fetch("/cal-display", {
                                                     method: "POST"});
   const idJson = await fetch("/embed");
   const calJson = await calendarInfo.json();
-
   const id = await idJson.json();
-
   document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York&mode=AGENDA";
   const eventsContainer = document.getElementById('list-container');
   eventsContainer.innerHTML = '';
@@ -38,7 +35,7 @@ async function getCalendarInfo(){
       eventsContainer.appendChild(newLi(calJson[i].summary + ", " + date.toLocaleString() + " (" + calJson[i].description + ")"));    
     }
   }
-  }
+}
 
 //   Helper function for displaying list items 
 function newLi(text) {
@@ -275,6 +272,7 @@ async function fillViewWorkouts() {
     form.append(submit);
 
     document.getElementById("view-workouts-container").append(form);
+
 
   }
 }

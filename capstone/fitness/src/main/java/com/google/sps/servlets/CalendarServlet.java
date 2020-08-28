@@ -16,6 +16,7 @@ import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import com.google.api.services.calendar.Calendar.Events.Get;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.sps.fit.*;
@@ -34,7 +35,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;   
 import java.util.*;
 
-import com.google.api.services.calendar.Calendar.Events.Get;
 
 // CalendarServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/calendar-servlet")
@@ -68,7 +68,6 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List<String> workoutList = this.getWorkoutList(user);
     if (newWorkouts(user)){ 
-      System.out.println("*****new workouts****");
       for (int b = scheduledLength; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
@@ -88,7 +87,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
         // Use the scheduler to schedule one exercise per day. 
         int y = 0;
-    
+
         for (int x = 0; x < daysAvailable; x += timesPerWeek){
           if (y >= exercises.size()){
             break;
@@ -101,8 +100,6 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
-            // TODO (@piercedw) : Storing the events as the entire string for now until I can work throught the event Id issue we discussed in podsync.
-            String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
             DataHandler.addEventID(user, this.getEventId(exerciseEvent.getStart().getDateTime()));
 
             // Increment minSpan and maxSpan by one day. 
@@ -110,13 +107,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             maxSpan = this.incrementDay(maxSpan, timesPerWeek);
             y++;
             }
-          }
+        }
         scheduledLength++;
-         }
+      }
       // Store calendar ID. 
       String id = this.getCalendarId();
-      DataHandler.setCalendarID(user, id);}
-    System.out.println("*****no new workouts****");
+      DataHandler.setCalendarID(user, id);
+    }
     String jsonEvents = this.formatEvents();
     request.setAttribute("events", jsonEvents);
     RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
@@ -224,7 +221,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       // Do not display deleted events. 
       if (!nextEvent.getStatus().equals("cancelled")){
         displayEvents.add(nextEvent);
-        }
+      }
     }
     // Turn events into Json and send to calendar display servlet.
     String jsonEvents = gson.toJson(displayEvents);
@@ -238,13 +235,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private boolean newWorkouts(Entity user){
     // Get all the goalsteps belonging to the user.
     List<String> workouts = this.getWorkoutList(user);
-    
     String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
-
     List <String> totalExercises = new ArrayList();
     for (String workout : workouts){
-        totalExercises.addAll(this.getExercises(workout));
+      totalExercises.addAll(this.getExercises(workout));
     }
     // compare the number of goalsteps to the number of eventIds.
     return totalExercises.size() > eventIdArray.size();
