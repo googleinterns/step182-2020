@@ -208,7 +208,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     for (String eachId : eventIdArray){
       com.google.api.services.calendar.Calendar.Events.Get get = calendar.events().get("primary", eachId);
       Event nextEvent = get.execute();
-      if (nextEvent!=null){
+      // Do not display deleted events. 
+      if (!nextEvent.getStatus().equals("cancelled")){
         displayEvents.add(nextEvent);
         }
     }
@@ -233,7 +234,6 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         totalExercises.addAll(this.getExercises(workout));
     }
     // compare the number of goalsteps to the number of eventIds.
-    // return.
     return totalExercises.size() > eventIdArray.size();
   }
 }
