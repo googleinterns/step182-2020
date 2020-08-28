@@ -34,6 +34,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;   
 import java.util.*;
 
+import com.google.api.services.calendar.Calendar.Events.Get;
+
 // CalendarServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/calendar-servlet")
 public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
@@ -106,7 +108,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             
             // Store each event's eventID in datastore for display later.
             String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
-            DataHandler.addEventID(user, exerciseEvent.getId());
+            DataHandler.addEventID(user, this.getEventId(exerciseEvent.getStart().getDateTime()));
 
             // Increment minSpan and maxSpan by one day. 
             minSpan = this.incrementDay(minSpan);
@@ -117,7 +119,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       String id = this.getCalendarId();
       DataHandler.setCalendarID(user, id);}
     
-    request.setAttribute("events","****test*****");
+    String jsonEvents = this.formatEvents();
+    request.setAttribute("events", jsonEvents);
     RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
     rd.forward(request,response);}
     // response.sendRedirect("/calendar.html"); }
@@ -192,13 +195,30 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     return incremented;
   }
-  private String formatEvents(){
-    // String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
-    // List<String> eventIdArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
-    
-    // for (String eachId : eventIdArray){
-    //     this.calendar
-    // }
-    return "no";
+  
+  private String formatEvents() throws IOException{
+    // Get eventIds from datastore. 
+    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
+
+    List<Event> displayEvents = new ArrayList();
+
+    // Unzip into real event instances using events.get(). Ignore null (deleted) events. 
+    for (String eachId : eventIdArray){
+      com.google.api.services.calendar.Calendar.Events.Get get = calendar.events().get("primary", eachId);
+      Event nextEvent = get.execute();
+      if (nextEvent!=null){
+        displayEvents.add(nextEvent);
+        }
+    }
+    // Turn events into Json and send to calendar display servlet.
+    String jsonEvents = gson.toJson(displayEvents);
+    return jsonEvents;
   }
+  private String getEventId(DateTime time) throws IOException {
+    Events events = calendar.events().list("primary").setTimeMin(time).setOrderBy("startTime").setSingleEvents(true).execute();
+    List<Event> items = events.getItems();
+    return items.get(0).getId();
+  }
+
 }

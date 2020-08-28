@@ -49,27 +49,17 @@ import java.util.*;
 @WebServlet("/cal-display")
 public class CalendarDisplayServlet extends HttpServlet { 
   Gson gson = new Gson();
-  String someName;
+  String eventsJson;
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
 
     response.sendRedirect("/calendar.html");
-    someName = (String)request.getAttribute("events");
-    System.out.println("EVENTS : " + someName);
+    eventsJson = (String)request.getAttribute("events");
 
   }
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
     response.setContentType("application/json");
-
-    System.out.println("FROM POST:" + someName);
-    String id = DataHandler.getUserData("calendarId", DataHandler.getUser());
-    
-    // String events = DataHandler.getUserData("EventIds", DataHandler.getUser());
-    // List<String> eventArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
-
-    // eventArray.add(0, id);
-
-    // response.getWriter().println(gson.toJson(eventArray));
+    response.getWriter().println(eventsJson);
 }
 }
