@@ -41,13 +41,15 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String liftingColorId = "8";
   private static String unknownWorkoutColorId = "10";
   private static long exerciseDuration = 30;  
+  private static DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");
   private static String liftingType = "lifting";
   private static String marathonType = "marathon";  
+  private static String nextDayStartTime = "T11:00:00+00:00";
+  private static String nextDayEndTime = "T23:00:00+00:00";
   Gson gson = new Gson();
   Calendar calendar; 
   int scheduledLength = 0;
-  int timesPerWeek;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -67,17 +69,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       for (int b = scheduledLength; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
-        String wks = this.getWeeksToTrain(workoutList.get(b));
-        int weeksToTrain = Integer.parseInt(wks);
+        int weeksToTrain = Integer.parseInt(this.getWeeksToTrain(workoutList.get(b)));
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        timesPerWeek = daysAvailable/ exercises.size(); 
+        int timesPerWeek = daysAvailable/ exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
-        DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
-        String nextDayStartTime = "T11:00:00+00:00";
-        String nextDayEndTime = "T23:00:00+00:00";
         String minRCF3339 = nextDayOfMonth + nextDayStartTime;
         String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime minSpan = new DateTime(minRCF3339);
@@ -94,19 +92,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
             // User scheduler to get free time and return corresponding event. 
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-            // Event name and description match the user's workout name and type of workout.
-            exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
-            exerciseEvent.setDescription(type);
-            // Set event color depending on the type of workout. 
-            if (type.equals(liftingType)){
-              exerciseEvent.setColorId(liftingColorId);
-            }
-            else if(type.equals(liftingType)){
-              exerciseEvent.setColorId(runningColorId);
-            }
-            else{
-              exerciseEvent.setColorId(unknownWorkoutColorId); 
-            }
+            exerciseEvent = this.configureEvent(exerciseEvent, type, exercises.get(y));
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
@@ -115,12 +101,12 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             DataHandler.addEventID(user,eventDescription);
 
             // Increment minSpan and maxSpan by one day. 
-            minSpan = this.incrementDay(minSpan);
-            maxSpan = this.incrementDay(maxSpan);
+            minSpan = this.incrementDay(minSpan, timesPerWeek);
+            maxSpan = this.incrementDay(maxSpan, timesPerWeek);
             y++;}}
         scheduledLength++; }
-    // Store calendar ID. 
-    DataHandler.setCalendarID(user, this.getCalendarId());}
+      // Store calendar ID. 
+      DataHandler.setCalendarID(user, this.getCalendarId());}
     response.sendRedirect("/calendar.html"); }
  
   @Override
@@ -189,8 +175,26 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   }
   
   // Increments day in scheduling flow.
-  private DateTime incrementDay(DateTime moment){
+  private DateTime incrementDay(DateTime moment, int timesPerWeek){
     DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     return incremented;
   }
+
+  private Event configureEvent(Event event, String summary, String type){
+            // Event name and description match the user's workout name and type of workout.
+            event.setSummary(APPLICATION_NAME + ": " + summary);
+            event.setDescription(type);
+            // Set event color depending on the type of workout. 
+            if (type.equals(liftingType)){
+              event.setColorId(liftingColorId);
+            }
+            else if(type.equals(liftingType)){
+              event.setColorId(runningColorId);
+            }
+            else{
+              event.setColorId(unknownWorkoutColorId); 
+            }
+            return event; 
+  }
+  
 }
