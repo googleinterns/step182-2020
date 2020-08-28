@@ -63,7 +63,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List<String> workoutList = this.getWorkoutList(user);
     
-    if (workoutList.size() > scheduledLength){ 
+    if (newWorkouts(user)){ 
+      System.out.println("*****new workouts****");
       for (int b = scheduledLength; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
@@ -118,7 +119,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       // Store calendar ID. 
       String id = this.getCalendarId();
       DataHandler.setCalendarID(user, id);}
-    
+    System.out.println("*****no new workouts****");
     String jsonEvents = this.formatEvents();
     request.setAttribute("events", jsonEvents);
     RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
@@ -201,8 +202,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
-    List<Event> displayEvents = new ArrayList();
-
+    // List<Event> displayEvents = new ArrayList();
+    PriorityQueue<Event> displayEvents = new PriorityQueue<Event>((eventIdArray.size() +1), new EventComparator());
     // Unzip into real event instances using events.get(). Ignore null (deleted) events. 
     for (String eachId : eventIdArray){
       com.google.api.services.calendar.Calendar.Events.Get get = calendar.events().get("primary", eachId);
@@ -220,5 +221,19 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     List<Event> items = events.getItems();
     return items.get(0).getId();
   }
+  private boolean newWorkouts(Entity user){
+    // Get all the goalsteps belonging to the user.
+    List<String> workouts = this.getWorkoutList(user);
+    
+    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
+    List <String> totalExercises = new ArrayList();
+    for (String workout : workouts){
+        totalExercises.addAll(this.getExercises(workout));
+    }
+    // compare the number of goalsteps to the number of eventIds.
+    // return.
+    return totalExercises.size() > eventIdArray.size();
+  }
 }

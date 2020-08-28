@@ -9,7 +9,7 @@ import com.google.api.services.calendar.model.Event;
 
 
 // Comparator for Event class. Orders Event instances by milliseconds.
-class EventComparator implements Comparator<Event> 
+public class EventComparator implements Comparator<Event> 
 { 
   public int compare(Event a, Event b) {
     return Long.compare(a.getStart().getDateTime().getValue(), b.getStart().getDateTime().getValue());

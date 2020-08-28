@@ -35,7 +35,7 @@ async function getCalendarInfo(){
   for(i=0; i < calJson.length; i++) {
     if(calJson[i]) {
       const date = new Date(calJson[i].start.dateTime.value);
-      eventsContainer.appendChild(newLi(calJson[i].summary + " at " + date.toLocaleString() + " (" + calJson[i].description + ")"));    
+      eventsContainer.appendChild(newLi(calJson[i].summary + ", " + date.toLocaleString() + " (" + calJson[i].description + ")"));    
     }
   }
   }
