@@ -22,8 +22,6 @@ public class ViewWorkoutServlet extends HttpServlet {
     String workoutName = request.getParameter("selectWorkout");
     HttpSession session = request.getSession();
     session.setAttribute("workoutName", workoutName);
-    // response.setContentType("text/html");
-    // response.getWriter().println(workoutName);
     response.sendRedirect("/progress.html");
   }
 }
