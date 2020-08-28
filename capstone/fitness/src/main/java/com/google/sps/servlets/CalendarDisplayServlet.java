@@ -70,6 +70,6 @@ public class CalendarDisplayServlet extends HttpServlet {
 
     // eventArray.add(0, id);
 
-    response.getWriter().println(gson.toJson(eventArray));
+    // response.getWriter().println(gson.toJson(eventArray));
 }
 }

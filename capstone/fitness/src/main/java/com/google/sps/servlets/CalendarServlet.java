@@ -106,7 +106,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             
             // Store each event's eventID in datastore for display later.
             String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
-            DataHandler.addEventID(exerciseEvent.getId());
+            DataHandler.addEventID(user, exerciseEvent.getId());
 
             // Increment minSpan and maxSpan by one day. 
             minSpan = this.incrementDay(minSpan);
@@ -193,12 +193,12 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     return incremented;
   }
   private String formatEvents(){
-    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
-    List<String> eventIdArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
+    // String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    // List<String> eventIdArray = gson.fromJson(events, new TypeToken<List<String>>(){}.getType());
     
-    for (String eachId : eventIdArray){
-        this.calendar
-    }
-
+    // for (String eachId : eventIdArray){
+    //     this.calendar
+    // }
+    return "no";
   }
 }
