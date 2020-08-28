@@ -35,6 +35,8 @@ async function getCalendarInfo(){
     }
   }
   }
+
+//   Helper function for displaying list items 
 function newLi(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;

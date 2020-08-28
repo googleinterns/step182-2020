@@ -39,8 +39,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String APPLICATION_NAME = "GetIn' Progress";
   private static String runningColorId = "4";
   private static String liftingColorId = "8";
+  private static String unknownWorkoutColorId = "10";
   private static long exerciseDuration = 30;  
-  private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
+  private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");
+  private static String liftingType = "lifting";
+  private static String marathonType = "marathon";  
   Gson gson = new Gson();
   Calendar calendar; 
   int scheduledLength = 0;
@@ -94,16 +97,20 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             // Event name and description match the user's workout name and type of workout.
             exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
             exerciseEvent.setDescription(type);
-            // Set event color depending on the type of workot. 
-            if (type.equals("lifting")){
+            // Set event color depending on the type of workout. 
+            if (type.equals(liftingType)){
               exerciseEvent.setColorId(liftingColorId);
             }
-            else{
+            else if(type.equals(liftingType)){
               exerciseEvent.setColorId(runningColorId);
+            }
+            else{
+              exerciseEvent.setColorId(unknownWorkoutColorId); 
             }
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
+            // TODO (@piercedw) : Storing the events as the entire string for now until I can work throught the event Id issue we discussed in podsync.
             String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
             DataHandler.addEventID(user,eventDescription);
 
@@ -112,9 +119,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             maxSpan = this.incrementDay(maxSpan);
             y++;}}
         scheduledLength++; }
-      // Store calendar ID. 
-      String id = this.getCalendarId();
-      DataHandler.setCalendarID(user, id);}
+    // Store calendar ID. 
+    DataHandler.setCalendarID(user, this.getCalendarId());}
     response.sendRedirect("/calendar.html"); }
  
   @Override
