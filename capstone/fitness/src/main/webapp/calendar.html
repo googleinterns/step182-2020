@@ -11,7 +11,7 @@
   <!-- TODO: stylize navbar.  -->
   <div class="topnav">
     <a class="active" href="/">Home</a>
-    <a href="//calendar-servlet">Calendar</a>
+    <a href="/calendar-servlet">Calendar</a>
     <a href="/">Progress</a>
   </div>
   <body onload="getCalendarInfo();">
@@ -20,5 +20,6 @@
     <h1 style="background-color:Tomato;">Your Calendar</h1>
     <!-- Embed user calendar.  -->    
     <iframe id = "calendar-container" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-  </body>
+    <h2>Your upcoming exercises:</h2>
+    <div id = "list-container"> </div>  </body>
 </html>
