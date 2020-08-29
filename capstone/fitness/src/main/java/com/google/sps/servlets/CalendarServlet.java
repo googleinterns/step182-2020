@@ -95,20 +95,10 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
             // User scheduler to get free time and return corresponding event. 
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-            // Event name and description match the user's workout name and type of workout.
-            exerciseEvent.setSummary(APPLICATION_NAME + ": " + exercises.get(y));
-            exerciseEvent.setDescription(type);
-            // Set event color depending on the type of workot. 
-            if (type.equals("lifting")){
-              exerciseEvent.setColorId(liftingColorId);
-            }
-            else{
-              exerciseEvent.setColorId(runningColorId);
-            }
+            exerciseEvent = this.configureEvent(exerciseEvent, type, exercises.get(y));
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
-            String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
             DataHandler.addEventID(user, this.getEventId(exerciseEvent.getStart().getDateTime()));
 
             // Increment minSpan and maxSpan by one day. 
