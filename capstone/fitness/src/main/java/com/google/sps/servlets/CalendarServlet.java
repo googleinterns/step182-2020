@@ -44,10 +44,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String liftingColorId = "8";
   private static long exerciseDuration = 30;  
   private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
+  private static String liftingType = "lifting";
+  private static String marathonType = "marathon";  
+  private static String nextDayStartTime = "T11:00:00+00:00";
+  private static String nextDayEndTime = "T23:00:00+00:00";
+
   Gson gson = new Gson();
   Calendar calendar; 
   int scheduledLength = 0;
-  int timesPerWeek;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -71,19 +75,18 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
         String wks = this.getWeeksToTrain(workoutList.get(b));
         int weeksToTrain = Integer.parseInt(wks);
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        timesPerWeek = daysAvailable/ exercises.size(); 
+        int timesPerWeek = daysAvailable/ exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
-        DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
-        String nextDayStartTime = "T11:00:00+00:00";
-        String nextDayEndTime = "T23:00:00+00:00";
+ 
         String minRCF3339 = nextDayOfMonth + nextDayStartTime;
-        String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime minSpan = new DateTime(minRCF3339);
+        
+        String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime maxSpan = new DateTime(maxRCF3399);
-
+ 
         // Use the scheduler to schedule one exercise per day. 
         int y = 0;
     
