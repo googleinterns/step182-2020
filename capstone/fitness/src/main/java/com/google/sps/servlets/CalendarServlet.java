@@ -226,4 +226,21 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     // compare the number of goalsteps to the number of eventIds.
     return totalExercises.size() > eventIdArray.size();
   }
+
+  private Event configureEvent(Event event, String summary, String type){
+    // Event name and description match the user's workout name and type of workout.
+    event.setSummary(APPLICATION_NAME + ": " + summary);
+    event.setDescription(type);
+    // Set event color depending on the type of workout. 
+    if (type.equals(liftingType)){
+      event.setColorId(liftingColorId);
+    }
+    else if(type.equals(marathonType)){
+      event.setColorId(runningColorId);
+    }
+    else{
+      event.setColorId(unknownWorkoutColorId); 
+    }
+    return event; 
+  }
 }
