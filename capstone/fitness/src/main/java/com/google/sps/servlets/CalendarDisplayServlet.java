@@ -48,18 +48,13 @@ import java.util.*;
 // CalendarDisplayServlet sends the correct information to calendar.html to display the calendar and the workout. 
 @WebServlet("/cal-display")
 public class CalendarDisplayServlet extends HttpServlet { 
-  Gson gson = new Gson();
-  String eventsJson;
+  static Gson gson = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
-
-    response.sendRedirect("/calendar.html");
-    eventsJson = (String)request.getAttribute("events");
-
-  }
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
     response.setContentType("application/json");
+    HttpSession session = request.getSession();
+    String eventsJson = (String) session.getAttribute("events");
     response.getWriter().println(eventsJson);
-}
+  }
 }

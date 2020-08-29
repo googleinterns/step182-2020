@@ -20,8 +20,7 @@ function initViewData() {
 */ 
 async function getCalendarInfo(){
 
-  const calendarInfo = await fetch("/cal-display", {
-                                                    method: "POST"});
+  const calendarInfo = await fetch("/cal-display");
   const idJson = await fetch("/embed");
   const calJson = await calendarInfo.json();
 

@@ -117,9 +117,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       DataHandler.setCalendarID(user, id);}
     System.out.println("*****no new workouts****");
     String jsonEvents = this.formatEvents();
-    request.setAttribute("events", jsonEvents);
-    RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
-    rd.forward(request,response);}
+    // request.setAttribute("events", jsonEvents);
+    // RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
+    // rd.forward(request,response);
+    
+    session.setAttribute("events", jsonEvents);
+    response.sendRedirect("/calendar.html");
+    }
     // response.sendRedirect("/calendar.html"); }
  
   @Override
