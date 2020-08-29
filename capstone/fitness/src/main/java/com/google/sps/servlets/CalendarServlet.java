@@ -50,12 +50,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String marathonType = "marathon";  
   private static String nextDayStartTime = "T11:00:00+00:00";
   private static String nextDayEndTime = "T23:00:00+00:00";
-  Gson gson = new Gson();
+  private static Gson gson = new Gson();
   Calendar calendar; 
   int scheduledLength = 0;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    HttpSession session = request.getSession();
+
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
@@ -99,15 +101,15 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
             // User scheduler to get free time and return corresponding event. 
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-            exerciseEvent = this.configureEvent(exerciseEvent, type, exercises.get(y));
+            exerciseEvent = this.configureEvent(exerciseEvent, exercises.get(y), type);
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
             DataHandler.addEventID(user, this.getEventId(exerciseEvent.getStart().getDateTime()));
 
             // Increment minSpan and maxSpan by one day. 
-            minSpan = this.incrementDay(minSpan);
-            maxSpan = this.incrementDay(maxSpan);
+            minSpan = this.incrementDay(minSpan, timesPerWeek);
+            maxSpan = this.incrementDay(maxSpan, timesPerWeek);
             y++;}}
         scheduledLength++; }
       // Store calendar ID. 
@@ -186,10 +188,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   }
   
   // Increments day in scheduling flow.
-  private DateTime incrementDay(DateTime moment){
+  private DateTime incrementDay(DateTime moment, int timesPerWeek){
     DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     return incremented;
   }
+
   
   private String formatEvents() throws IOException{
     // Get eventIds from datastore. 
