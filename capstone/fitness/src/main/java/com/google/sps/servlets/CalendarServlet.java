@@ -42,13 +42,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String APPLICATION_NAME = "GetIn' Progress";
   private static String runningColorId = "4";
   private static String liftingColorId = "8";
+  private static String unknownWorkoutColorId = "10";
   private static long exerciseDuration = 30;  
-  private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");  
+  private static DateTimeFormatter myDtf = DateTimeFormatter.ofPattern("YYYY-MM-dd");  
+  private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/YYYY");
   private static String liftingType = "lifting";
   private static String marathonType = "marathon";  
   private static String nextDayStartTime = "T11:00:00+00:00";
   private static String nextDayEndTime = "T23:00:00+00:00";
-
   Gson gson = new Gson();
   Calendar calendar; 
   int scheduledLength = 0;
