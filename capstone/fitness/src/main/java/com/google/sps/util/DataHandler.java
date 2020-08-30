@@ -297,4 +297,10 @@ public class DataHandler {
       return true; 
   }
   
+  public static String getUserEmail() {
+    UserService userService = UserServiceFactory.getUserService();
+    String userEmail = userService.getCurrentUser().getEmail();
+    return userEmail;
+  }
+
 }

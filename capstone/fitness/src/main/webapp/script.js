@@ -196,7 +196,7 @@ async function fillViewWorkouts() {
     for(i=0; i < workoutsArray.length; i++) {
       var option = document.createElement("OPTION");
       option.value = workoutsArray[i];
-      option.innerHTML = workoutsArray[i];
+      option.innerHTML = removeEmail(workoutsArray[i], userInfoJSON.email);
       selectWorkout.append(option);
     }
 
@@ -210,5 +210,10 @@ async function fillViewWorkouts() {
     document.getElementById("view-workouts-container").append(form);
 
   }
+}
+
+function removeEmail(id, email) {
+  const emailLen = email.length;
+  return id.substring(emailLen);
 }
 
