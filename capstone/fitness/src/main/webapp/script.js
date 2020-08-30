@@ -21,50 +21,7 @@ async function getCalendarInfo(){
   const id = urlParams.get("calendarId");
   document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
   }
-/**
- Function that fills in the charts div.
- Retrieves sesssion data from datastore and displays it on the chart.
- */
-google.charts.load('current', {packages: ['corechart', 'line']});
-async function loadDataChart() {
-  
-  // Set up chart for X/Y visualization.
-  var data = new google.visualization.DataTable();
-  data.addColumn('number', 'numberOfSessions');
-  data.addColumn('number', 'speed');
 
-  // Gets the JSON object that holds all the sesssions.
-  const progressRequest = await fetch('/progress').text();
-  const progressData = progressRequest.split("\n");
-
-  const sessions = progressData[0].json();
-
-  // Create matrix with sessions numbers and speeds.
-  var dataRows = [];
-  var i=0;
-  while(dataJson[i]) {
-    dataRows[i] = [i, dataJson[i].speed];
-    i++;
-  }
-  // Adds the data points to the chart.
-  data.addRows(dataRows);
-
-  //TODO(gabrieldg)
-  //  Get the initial and goal time to display as horizontal lines.
-
-  // Customizing the chart
-  var options = {
-    hAxis: {
-      title: 'Session #'
-    },
-    vAxis: {
-      title: 'Speed (Km/h)'
-    }
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
-  chart.draw(data, options);
-}
 
 async function isLoggedin() {
   const loginResponse = await fetch('/login');
@@ -212,17 +169,6 @@ async function createWorkout() {
                                                     method: "POST",
                                                     body: infoString
   });
-
-  /*
-  TODO(@piercedw) 
-  - import to your servlet: import java.io.BufferedReader;
-  - get the body from the request with: String requestBody = request.getReader().readLine();
-  - uncomment this request 
-  const createCalendar = await fetch('/calendar-servlet', {
-                                                method: "POST",
-                                                body: workoutInfoJson.workoutName;
-  })
-  */
 
   document.getElementById("workout-information-container").innerHTML = '';
   
