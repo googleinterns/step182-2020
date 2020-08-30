@@ -58,7 +58,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     HttpSession session = request.getSession();
 
     Integer scheduledNum;
-    if (session.getAttribute("scheduledNum")==null){
+    if (session.getAttribute("scheduledNum")==null ){
         scheduledNum = 0; 
     }
     else{
