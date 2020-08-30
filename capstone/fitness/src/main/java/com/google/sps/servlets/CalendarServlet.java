@@ -52,7 +52,6 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String nextDayEndTime = "T23:00:00+00:00";
   private static Gson gson = new Gson();
   static Calendar calendar; 
-  int scheduledLength = 0;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -78,7 +77,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List<String> workoutList = this.getWorkoutList(user);
     
-    if (newWorkouts()){ 
+    if (newWorkouts(user)){ 
       for (int b = scheduledNum; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
@@ -118,10 +117,12 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             minSpan = this.incrementDay(minSpan, timesPerWeek);
             maxSpan = this.incrementDay(maxSpan, timesPerWeek);
             y++;}}
-        scheduledNum++; }
+        scheduledNum++; 
+        }
       // Store calendar ID. 
       String id = this.getCalendarId();
-      DataHandler.setCalendarID(user, id);}
+      DataHandler.setCalendarID(user, id);
+      }
     String jsonEvents = this.formatEvents();
     session.setAttribute("scheduledNum", scheduledNum);
     session.setAttribute("events", jsonEvents);
@@ -184,13 +185,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
   // Gets the # of weeks from a workout. 
   private String getWeeksToTrain(String workoutName){
-      String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
-      return weekNum;
+    String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
+    return weekNum;
   }
 
   private String getWorkoutType(String workoutName){
-      String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
-      return workoutType;
+    String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
+    return workoutType;
   }
   
   // Increments day in scheduling flow.
@@ -199,14 +200,13 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     return incremented;
   }
 
-  
   private String formatEvents() throws IOException{
     // Get eventIds from datastore. 
     String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
-    // List<Event> displayEvents = new ArrayList();
     PriorityQueue<Event> displayEvents = new PriorityQueue<Event>((eventIdArray.size() +1), new EventComparator());
+    
     // Unzip into real event instances using events.get(). Ignore null (deleted) events. 
     for (String eachId : eventIdArray){
       com.google.api.services.calendar.Calendar.Events.Get get = calendar.events().get("primary", eachId);
@@ -214,7 +214,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       // Do not display deleted events. 
       if (!nextEvent.getStatus().equals("cancelled")){
         displayEvents.add(nextEvent);
-        }
+      }
     }
     // Turn events into Json and send to calendar display servlet.
     String jsonEvents = gson.toJson(displayEvents);
@@ -234,7 +234,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List <String> totalExercises = new ArrayList();
     for (String workout : workouts){
-        totalExercises.addAll(this.getExercises(workout));
+      totalExercises.addAll(this.getExercises(workout));
     }
     // compare the number of goalsteps to the number of eventIds.
     return totalExercises.size() > eventIdArray.size();

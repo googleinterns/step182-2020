@@ -48,7 +48,7 @@ import java.util.*;
 // Servlet sends calendarId. 
 @WebServlet("/embed")
 public class EmbedCalendarServlet extends HttpServlet { 
-  Gson gson = new Gson();
+  static Gson gson = new Gson();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {     
     response.setContentType("application/json");
