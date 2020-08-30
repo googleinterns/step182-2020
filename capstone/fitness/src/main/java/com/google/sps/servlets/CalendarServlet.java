@@ -51,12 +51,20 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String nextDayStartTime = "T11:00:00+00:00";
   private static String nextDayEndTime = "T23:00:00+00:00";
   private static Gson gson = new Gson();
-  Calendar calendar; 
+  static Calendar calendar; 
   int scheduledLength = 0;
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     HttpSession session = request.getSession();
+
+    Integer scheduledNum;
+    if (session.getAttribute("scheduledNum")==null){
+        scheduledNum = 0; 
+    }
+    else{
+      scheduledNum = (Integer)session.getAttribute("scheduledNum");
+    }
 
     // Build calendar. 
     String userId = getUserId(request);
@@ -70,9 +78,8 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List<String> workoutList = this.getWorkoutList(user);
     
-    if (newWorkouts(user)){ 
-      System.out.println("*****new workouts****");
-      for (int b = scheduledLength; b <workoutList.size(); b++){
+    if (newWorkouts()){ 
+      for (int b = scheduledNum; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
         String wks = this.getWeeksToTrain(workoutList.get(b));
@@ -111,20 +118,15 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             minSpan = this.incrementDay(minSpan, timesPerWeek);
             maxSpan = this.incrementDay(maxSpan, timesPerWeek);
             y++;}}
-        scheduledLength++; }
+        scheduledNum++; }
       // Store calendar ID. 
       String id = this.getCalendarId();
       DataHandler.setCalendarID(user, id);}
-    System.out.println("*****no new workouts****");
     String jsonEvents = this.formatEvents();
-    // request.setAttribute("events", jsonEvents);
-    // RequestDispatcher rd = request.getRequestDispatcher("/cal-display");
-    // rd.forward(request,response);
-    
+    session.setAttribute("scheduledNum", scheduledNum);
     session.setAttribute("events", jsonEvents);
     response.sendRedirect("/calendar.html");
     }
-    // response.sendRedirect("/calendar.html"); }
  
   @Override
   protected String getRedirectUri(HttpServletRequest req) throws ServletException, IOException {
