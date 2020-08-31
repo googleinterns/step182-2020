@@ -54,3 +54,19 @@ body {
   margin: auto;
   width: 150px;
 }
+
+#calendar-container{
+  float:left; 
+  width:45%; 
+}
+ 
+#list-container{
+  float:right; 
+  width:45%; 
+}
+ 
+#exercise-header{  
+  float:right; 
+  width:45%; 
+}
+ 
