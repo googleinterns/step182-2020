@@ -184,6 +184,23 @@ body {
   text-align-last: center;
 }
 
+#calendar-container{
+  float:left; 
+  width:45%; 
+}
+ 
+#exercise-header{  
+  float:right; 
+  width:45%; 
+}
+
+#list-container{
+  float:right; 
+  width:45%; 
+}
+ 
+ 
+=======
 .select:focus,
 .select:hover {
     border: 2px solid #bbbbbb;
