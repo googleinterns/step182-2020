@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Complete session</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  
+  <body>
+    <div id="content">
+      <form action="/progress" method="POST">
+        <div id="input-time">
+          <p class="separator">Enter your number of reps:</p>
+          <input class="time-box" type="number" name="reps" min="0">
+          <br>
+          <p class="separator">Enter your max weight:</p>
+          <input class="time-box" type="number" name="weight">
+        </div>
+        <br>
+        <input type="submit">
+      </form>
+    </div>
+  </body>
+</html>
