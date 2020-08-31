@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
 * ViewWorkoutServlet will show the user the progress in the workout 
 * as well as the ability to complete sessions.
-* TODO(@gabrieldg @ijelue) integrate all components of our UIs
 */
 @WebServlet("/view-workout")
 public class ViewWorkoutServlet extends HttpServlet { 
