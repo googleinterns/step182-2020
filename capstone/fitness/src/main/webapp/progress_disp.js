@@ -51,6 +51,7 @@ const progressCircle = `
 
 async function loadPage() {
   await updateDisplay(-1);
+  loadDataChart();
 }
 
 async function updateDisplay(insertionIndex) {
@@ -295,6 +296,70 @@ $(document).on("mouseover", "button[name='" + viewStep + "']", async function() 
     }
 });
 
+
+/**
+ Function that fills in the charts div.
+ Retrieves sesssion data from datastore and displays it on the chart.
+ */
+google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(loadDataChart);
+async function loadDataChart() {
+
+  // Gets the JSON object that holds all the sesssions.
+  const progressRequest = await fetch('/progress');
+  const progressText = await progressRequest.text();
+  var progressData = progressText.split("\n");
+
+  const sessions = JSON.parse(progressData[0]);
+  const type = progressData[1];
+
+  var yAxis='';
+  if(type == "marathon") {
+    yAxis = 'Speed';
+  }
+  else {
+    yAxis = 'WeightXReps'
+  }
+
+  // Set up chart for X/Y visualization.
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'numberOfSessions');
+  data.addColumn('number', yAxis);
+
+
+  // Create matrix with sessions numbers and speeds.
+  var dataRows = [];
+  var i=0;
+  while(sessions[i]) {
+    if(type == "marathon") {
+        dataRows[i] = [i, sessions[i].speed];
+    }
+    else {
+      dataRows[i] = [i, sessions[i].reps * sessions[i].weight];
+    }
+    i++;
+  }
+
+  // Adds the data points to the chart.
+  data.addRows(dataRows);
+
+  // Customizing the chart
+  var options = {
+    title: 'progress',
+    width: 500,
+    length: 800,
+    hAxis: {
+      title: 'Session #'
+    },
+    vAxis: {
+      title: yAxis
+    }
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
+  chart.draw(data, options);
+}
+
 /**
  * Changes the filter and progress page's goal steps if a radio button is selected. 
  */
@@ -304,3 +369,4 @@ $(document).on("click", "input[name='filter']", async function() {
     await fetch('/display-param', {method: 'POST', body: params});
     await updateDisplay(-1);
 });
+

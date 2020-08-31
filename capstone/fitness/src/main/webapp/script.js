@@ -37,7 +37,7 @@ async function getCalendarInfo(){
       eventsContainer.appendChild(newLi(calJson[i].summary + ", " + date.toLocaleString() + " (" + calJson[i].description + ")"));    
     }
   }
-  }
+}
 
 //   Helper function for displaying list items 
 function newLi(text) {
@@ -46,48 +46,6 @@ function newLi(text) {
   return liElement;
 }
 
-
-/**
- Function that fills in the charts div.
- Retrieves sesssion data from datastore and displays it on the chart.
- */
-google.charts.load('current', {packages: ['corechart', 'line']});
-async function loadDataChart() {
-  
-  // Set up chart for X/Y visualization.
-  var data = new google.visualization.DataTable();
-  data.addColumn('number', 'numberOfSessions');
-  data.addColumn('number', 'speed');
-
-  // Gets the JSON object that holds all the sesssions.
-  const progressData = await fetch('/progress');
-  const dataJson = await progressData.json();
-  // Create matrix with sessions numbers and speeds.
-  var dataRows = [];
-  var i=0;
-  while(dataJson[i]) {
-    dataRows[i] = [i, dataJson[i].speed];
-    i++;
-  }
-  // Adds the data points to the chart.
-  data.addRows(dataRows);
-
-  //TODO(gabrieldg)
-  //  Get the initial and goal time to display as horizontal lines.
-
-  // Customizing the chart
-  var options = {
-    hAxis: {
-      title: 'Session #'
-    },
-    vAxis: {
-      title: 'Speed (Km/h)'
-    }
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
-  chart.draw(data, options);
-}
 
 async function isLoggedin() {
   const loginResponse = await fetch('/login');
@@ -108,14 +66,16 @@ async function isLoggedin() {
 async function displayLogIn() {
   const loginResponse = await fetch('/login');
   const loginInfo = await loginResponse.json();
-  
+
   const userEmail = loginInfo.email;
   const url = loginInfo.url;
 
   const loginContainer = document.getElementById("login");
   
-
-  if(userEmail != "stranger") {
+  if(userEmail != "stranger") {  
+    const userData = await fetch('/get-user-data');
+    const userDataJson = await userData.json();
+    console.log(userDataJson);
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "out");
   }
   else {
@@ -155,24 +115,24 @@ function fillWorkoutQuestions() {
   if(type == "lifting") {
     workoutQuestions.innerHTML = 
       `
-        <form action="javascript:createWorkout();" method="POST">
-          <label for="workoutName">Enter a name for this workout</label>
-          <textarea name="workoutName"></textarea>
+        <form action="javascript:createWorkout();" method="POST" class="input-form">
+          <label for="workoutName">Name for this workout</label>
+          <textarea name="workoutName" rows="1" class="input-text"></textarea>
           <br>
-          <label for="weekstoTrain">How many weeks do you have to train: </label>
-          <input type="number" name="weeksToTrain" min="5">
+          <label for="weekstoTrain">Weeks to train:</label>
+          <input type="number" name="weeksToTrain" min="5"  class="input-number"/>
           <br>
-          <label for="initialWeight">Enter your current max weight: </label>
-          <input type="number" name="initialWeight" min="0" step="0.01">
+          <label for="initialWeight">Current weight(in lbs):</label>
+          <input type="number" name="initialWeight" min="0" step="0.01" class="input-number"/>
           <br>
-          <label for="initialReps">Enter your current max reps: </label>
-          <input type="number" name="initialReps" min="0">
+          <label for="initialReps">Current reps: </label>
+          <input type="number" name="initialReps" min="0" class="input-number"/>
           <br>
-          <label for="goalWeight">Enter your goal weight: </label>
-          <input type="number" name="goalWeight" min="0" step="0.01">
+          <label for="goalWeight">Goal weight(in lbs): </label>
+          <input type="number" name="goalWeight" min="0" step="0.01" class="input-number"/>
           <br>
-          <label for="goalReps">Enter your goal reps: </label>
-          <input type="number" name="goalReps" min="0">
+          <label for="goalReps">Goal reps: </label>
+          <input type="number" name="goalReps" min="0" class="input-number"/>
           <br>
           <input type="submit" value="Create workout!">
         </form>
@@ -181,24 +141,25 @@ function fillWorkoutQuestions() {
   else {
     workoutQuestions.innerHTML =
       `
-        <form action="javascript:createWorkout();" method="POST">
-          <label for="workoutName">Enter a name for this workout</label>
-          <textarea name="workoutName"></textarea>
+        <form action="javascript:createWorkout();" method="POST" class="input-form">
+          <label for="workoutName">Name for this workout</label>
+          <textarea name="workoutName" rows="1" class="input-text"></textarea>
           <br>
-          <label for="weekstoTrain">How many weeks do you have to train: </label>
-          <input type="number" name="weeksToTrain" min="5">
+          <label for="weekstoTrain">Weeks to train: </label>
+          <input type="number" name="weeksToTrain" min="5" class="input-number"/>
           <br>
-          <label for="marathonLength">How long is your marathon (in kilometers) </label>
-          <input type="number" name="marathonLength" min="5" step="0.01">
+          <label for="marathonLength">Marathon length (in Km) </label>
+          <input type="number" name="marathonLength" min="5" step="0.01" class="input-number"/>
           <br>
-          <label for="initialTime">Enter your current time in hours: </label>
-          <input type="number" name="initialTime" min="0" step="0.01">
+          <label for="initialTime">Current time in hours: </label>
+          <input type="number" name="initialTime" min="0" step="0.01" class="input-number"/>
           <br>
-          <label for="goalTime">Enter your goal time in hours: </label>
-          <input type="number" name="goalTime" min="0" step="0.01">
+          <label for="goalTime">Goal time in hours: </label>
+          <input type="number" name="goalTime" min="0" step="0.01" class="input-number"/>
           <br>
-          <label for="mileTime">Enter your mile time in minutes: </label>
-          <input type="number" name="mileTime" min="0" step="0.01">
+          <label for="mileTime">Mile time in minutes: </label>
+          <input type="number" name="mileTime" min="0" step="0.01" class="input-number"/>
+          <br>
           <br>
           <input type="submit" value="Create workout!">
         </form>
@@ -257,12 +218,18 @@ async function fillViewWorkouts() {
     const workoutsArray = JSON.parse(userInfoJSON.workoutList);    
     var selectWorkout = document.createElement("SELECT");
     selectWorkout.name = "selectWorkout";
-
+    selectWorkout.setAttribute("class", "select");
+    
+    var default_disabled = document.createElement("OPTION");
+    default_disabled.selected=true;
+    default_disabled.disabled = true;
+    default_disabled.innerHTML = "Your workouts";
+    selectWorkout.append(default_disabled);
     var i;
     for(i=0; i < workoutsArray.length; i++) {
       var option = document.createElement("OPTION");
       option.value = workoutsArray[i];
-      option.innerHTML = workoutsArray[i];
+      option.innerHTML = removeEmail(workoutsArray[i], userInfoJSON.email);
       selectWorkout.append(option);
     }
 
@@ -270,10 +237,17 @@ async function fillViewWorkouts() {
 
     var submit = document.createElement("input");
     submit.type = "submit"; 
-    submit.value = "View workout!"
+    submit.value = "View workout!";
+    submit.style = "margin-left: 6px;";
     form.append(submit);
 
     document.getElementById("view-workouts-container").append(form);
 
   }
 }
+
+function removeEmail(id, email) {
+  const emailLen = email.length;
+  return id.substring(emailLen);
+}
+

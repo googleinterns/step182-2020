@@ -186,6 +186,7 @@ public class DataHandler {
   }
 
   public static Session getLastSession(String workoutName) {
+    String trueName = workoutName.substring(getUserEmail().length());
     Entity workout = getWorkout(workoutName);
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
     String type = getWorkoutData(TYPE_PROPERTY, workout);
@@ -196,13 +197,13 @@ public class DataHandler {
           if(liftingSessions.isEmpty()) {
             return null;
           }
-          return new Session(liftingSessions.get(liftingSessions.size() - 1), workoutName);
+          return new Session(liftingSessions.get(liftingSessions.size() - 1), trueName);
         case "marathon":
           ArrayList<MarathonSession> marathonSessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
           if(marathonSessions.isEmpty()) {
             return null;
           }
-          return new Session(marathonSessions.get(marathonSessions.size() - 1), workoutName);
+          return new Session(marathonSessions.get(marathonSessions.size() - 1), trueName);
         default:
           return null;
       }
@@ -286,4 +287,10 @@ public class DataHandler {
       return true; 
   }
   
+  public static String getUserEmail() {
+    UserService userService = UserServiceFactory.getUserService();
+    String userEmail = userService.getCurrentUser().getEmail();
+    return userEmail;
+  }
+
 }
