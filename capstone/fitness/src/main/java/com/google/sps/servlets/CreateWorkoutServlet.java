@@ -39,14 +39,16 @@ public class CreateWorkoutServlet extends HttpServlet {
                                                                            user), new TypeToken<List<String>>(){}.getType());
 
     // Add this new workout to their list
-    String workoutName = (String) workoutJSON.get(DataHandler.WORKOUT_NAME_PROPERTY); 
-    userWorkouts.add(workoutName);
+    String workoutName = (String) workoutJSON.get(DataHandler.WORKOUT_NAME_PROPERTY);
+    String userEmail = DataHandler.getUserEmail();
+    String workoutID = userEmail + workoutName; 
+    userWorkouts.add(workoutID);
     user.setProperty(DataHandler.WORKOUT_LIST_PROPERTY, gson.toJson(userWorkouts));
 
     String workoutType = (String) workoutJSON.get(DataHandler.TYPE_PROPERTY);
     int weeksToTrain = Integer.parseInt((String) workoutJSON.get(DataHandler.WEEKS_TO_TRAIN_PROPERTY));
 
-    Entity newWorkout = new Entity(DataHandler.WORKOUT_ENTITY, workoutName);
+    Entity newWorkout = new Entity(DataHandler.WORKOUT_ENTITY, workoutID);
     // Set the properties that all workouts share
     newWorkout.setProperty(DataHandler.PROGRESS_PROPERTY, "[]");
     newWorkout.setProperty(DataHandler.GOAL_STEPS_PROPERTY, "[]");

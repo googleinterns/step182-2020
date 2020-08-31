@@ -14,77 +14,14 @@ function initViewData() {
   displayLogIn();
 }
 
-/** 
- Function that fetches the user's calendar ID and puts it into the calendar display link. 
- Also fetches the events to display in the list.
-*/ 
+// Fills in data for embeded calendar. 
 async function getCalendarInfo(){
-
-  const calendarInfo = await fetch("/cal-display");
-  console.log("fetched info");
-  const calJson = await calendarInfo.json();
-  const id = calJson[0];
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York&mode=AGENDA";
-  const eventsContainer = document.getElementById('list-container');
-  eventsContainer.innerHTML = '';
-  var i;
-  eventLoop:
-  for(i=1; i < calJson.length; i++) {
-    if(calJson[i]) {
-      eventsContainer.appendChild(newLi(calJson[i]));    
-    }
-  }
+  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
+  const urlParams = new URLSearchParams(window.location.search);;
+  const id = urlParams.get("calendarId");
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
   }
 
-//   Helper function for displaying list items 
-function newLi(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
-
-
-/**
- Function that fills in the charts div.
- Retrieves sesssion data from datastore and displays it on the chart.
- */
-google.charts.load('current', {packages: ['corechart', 'line']});
-async function loadDataChart() {
-  
-  // Set up chart for X/Y visualization.
-  var data = new google.visualization.DataTable();
-  data.addColumn('number', 'numberOfSessions');
-  data.addColumn('number', 'speed');
-
-  // Gets the JSON object that holds all the sesssions.
-  const progressData = await fetch('/progress');
-  const dataJson = await progressData.json();
-  // Create matrix with sessions numbers and speeds.
-  var dataRows = [];
-  var i=0;
-  while(dataJson[i]) {
-    dataRows[i] = [i, dataJson[i].speed];
-    i++;
-  }
-  // Adds the data points to the chart.
-  data.addRows(dataRows);
-
-  //TODO(gabrieldg)
-  //  Get the initial and goal time to display as horizontal lines.
-
-  // Customizing the chart
-  var options = {
-    hAxis: {
-      title: 'Session #'
-    },
-    vAxis: {
-      title: 'Speed (Km/h)'
-    }
-  };
-
-  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
-  chart.draw(data, options);
-}
 
 async function isLoggedin() {
   const loginResponse = await fetch('/login');
@@ -259,7 +196,7 @@ async function fillViewWorkouts() {
     for(i=0; i < workoutsArray.length; i++) {
       var option = document.createElement("OPTION");
       option.value = workoutsArray[i];
-      option.innerHTML = workoutsArray[i];
+      option.innerHTML = removeEmail(workoutsArray[i], userInfoJSON.email);
       selectWorkout.append(option);
     }
 
@@ -275,3 +212,7 @@ async function fillViewWorkouts() {
   }
 }
 
+function removeEmail(id, email) {
+  const emailLen = email.length;
+  return id.substring(emailLen);
+}
