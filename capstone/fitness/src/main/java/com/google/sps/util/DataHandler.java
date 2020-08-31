@@ -186,6 +186,7 @@ public class DataHandler {
   }
 
   public static Session getLastSession(String workoutName) {
+    String trueName = workoutName.substring(getUserEmail().length());
     Entity workout = getWorkout(workoutName);
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
     String type = getWorkoutData(TYPE_PROPERTY, workout);

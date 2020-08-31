@@ -47,15 +47,17 @@ public class ProgressServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    Entity user = DataHandler.getUser();
-    
-
-    // Get the users progress from datastore
-    String progressString = (String) user.getProperty(DataHandler.PROGRESS_PROPERTY);
+    // Get the workout progress from datastore
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
+    Entity workout = DataHandler.getWorkout(workoutName);
+    String progressString = (String) DataHandler.getWorkoutData(DataHandler.PROGRESS_PROPERTY, workout);
+    String type = (String) DataHandler.getWorkoutData(DataHandler.TYPE_PROPERTY, workout);
 
     //Give the output in JSON format
     response.setContentType("application/json");
     response.getWriter().println(progressString);
+    response.getWriter().println(type);
   }
 
     @Override
