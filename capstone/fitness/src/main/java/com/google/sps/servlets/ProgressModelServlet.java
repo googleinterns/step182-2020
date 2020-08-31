@@ -31,15 +31,17 @@ public class ProgressModelServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String goalStepsJson = DataHandler.getGoalSteps();
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
+    String goalStepsJson = DataHandler.getGoalSteps(DataHandler.getWorkout(workoutName));
     List<JsonExercise> display = Collections.emptyList();
     if(goalStepsJson != null) {
       // Replicate existing model and stored version based on session in DataHandler.
       ProgressModel model = new ProgressModel.Builder()
                   .setJsonGoalSteps(goalStepsJson)
                   .build();
-      if(model.updateModel()) {
-        DataHandler.setGoalSteps(model.toJson());
+      if(model.updateModel(workoutName)) {
+        DataHandler.setGoalSteps(model.toJson(), DataHandler.getWorkout(workoutName));
       }
       display = getProgressDisplays(model.toArray());
     }
