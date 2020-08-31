@@ -185,16 +185,6 @@ public class DataHandler {
     return data; 
   }
 
-  /*
-  public static void setGoalSteps(String goalStepsJson) {
-    Entity user = getUser();
-    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
-  } 
-  */
-
-
   public static Session getLastSession(String workoutName) {
     Entity workout = getWorkout(workoutName);
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
@@ -251,7 +241,6 @@ public class DataHandler {
 
   /**
   * setCalendarID sets the ID for authentication of the calendar
-
   * @param user the user's whose calendar ID we want to update
   * @param id   the new Calendar ID
   * @return     none

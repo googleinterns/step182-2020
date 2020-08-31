@@ -81,15 +81,14 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
       for (int b = scheduledNum; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
-        String wks = this.getWeeksToTrain(workoutList.get(b));
-        int weeksToTrain = Integer.parseInt(wks);
+        int weeksToTrain = Integer.parseInt(this.getWeeksToTrain(workoutList.get(b)));
         int daysAvailable = weeksToTrain * Time.weeksToDays;
         int timesPerWeek = daysAvailable/ exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
- 
+        
         String minRCF3339 = nextDayOfMonth + nextDayStartTime;
         DateTime minSpan = new DateTime(minRCF3339);
         
