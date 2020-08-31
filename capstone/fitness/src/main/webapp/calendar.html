@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Your Calendar</title>
+    <title>GetIn' Progress: Your Calendar</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
@@ -17,9 +17,10 @@
   <body onload="getCalendarInfo();">
     <div id="content">
     <br><br>
-    <h1 style="background-color:Tomato;">Your Calendar</h1>
+    <h1 id = "calendar-header">GetIn' Progress: Your Calendar</h1>
     <!-- Embed user calendar.  -->    
     <iframe id = "calendar-container" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-    <h2>Your upcoming exercises:</h2>
+    <!-- List upcoming exercises.  -->
+    <h2 id = "exercise-header" >Your upcoming exercises:</h2>
     <div id = "list-container"> </div>  </body>
 </html>

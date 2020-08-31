@@ -207,33 +207,18 @@ body {
   padding-left: 35px
 }
 
-
-#calendar-header{
-  font-family: "Open Sans"; 
-  font-size: 23px;
-  font-style: bold;
-  font-variant: normal; 
-  font-weight: 700; 
-  line-height: 23px; 
-}
  
 #calendar-container{
   float:left; 
   width:45%; 
 }
  
- 
 #list-container{
-  font-family: "Open Sans"; 
-  font-size: 14px;
-  font-style: normal;
-  font-variant: normal; 
   float:right; 
-  width:35%; 
+  width:45%; 
 }
  
 #exercise-header{  
-  font-family: "Open Sans"; 
-  font-style: normal;
-  font-variant: normal; 
+  float:right; 
+  width:45%; 
 }
