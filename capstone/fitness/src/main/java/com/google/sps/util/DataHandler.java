@@ -242,7 +242,6 @@ public class DataHandler {
 
   /**
   * setCalendarID sets the ID for authentication of the calendar
-
   * @param user the user's whose calendar ID we want to update
   * @param id   the new Calendar ID
   * @return     none

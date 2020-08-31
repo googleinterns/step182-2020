@@ -14,13 +14,37 @@ function initViewData() {
   displayLogIn();
 }
 
-// Fills in data for embeded calendar. 
+/** 
+ Function that fetches the user's calendar ID and puts it into the calendar display link. 
+ Also fetches the events to display in the list.
+*/ 
 async function getCalendarInfo(){
-  // Get calendar ID from URL instead of from JSON to avoid CORS error. 
-  const urlParams = new URLSearchParams(window.location.search);;
-  const id = urlParams.get("calendarId");
-  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York";
+
+  const calendarInfo = await fetch("/cal-display");
+  const idJson = await fetch("/embed");
+  const calJson = await calendarInfo.json();
+
+  const id = await idJson.json();
+
+  document.getElementById("calendar-container").src = "https://calendar.google.com/calendar/embed?src=" + id + "&ctz=America%2FNew_York&mode=AGENDA";
+  const eventsContainer = document.getElementById('list-container');
+  eventsContainer.innerHTML = '';
+  var i;
+  eventLoop:
+  for(i=0; i < calJson.length; i++) {
+    if(calJson[i]) {
+      const date = new Date(calJson[i].start.dateTime.value);
+      eventsContainer.appendChild(newLi(calJson[i].summary + ", " + date.toLocaleString() + " (" + calJson[i].description + ")"));    
+    }
   }
+}
+
+//   Helper function for displaying list items 
+function newLi(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
 
 
 async function isLoggedin() {
