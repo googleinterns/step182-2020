@@ -292,5 +292,4 @@ public class DataHandler {
     String userEmail = userService.getCurrentUser().getEmail();
     return userEmail;
   }
-
 }

@@ -41,7 +41,7 @@ public class CreateWorkoutServlet extends HttpServlet {
     // Add this new workout to their list
     String workoutName = (String) workoutJSON.get(DataHandler.WORKOUT_NAME_PROPERTY);
     String userEmail = DataHandler.getUserEmail();
-    String workoutID = userEmail+workoutName; 
+    String workoutID = userEmail + workoutName; 
     userWorkouts.add(workoutID);
     user.setProperty(DataHandler.WORKOUT_LIST_PROPERTY, gson.toJson(userWorkouts));
 

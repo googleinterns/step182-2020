@@ -23,10 +23,16 @@ public class GoalStep extends BananaNode {
   private static final long serialVersionUID = -2478810042129355868L;     
 
   private final Exercise marker;
+  private final String name;
 
   public GoalStep(Exercise marker) {
+    this(marker, marker.getName());
+  }
+
+  public GoalStep(Exercise marker, String name) {
     super();
     this.marker = marker;
+    this.name = name;
   }
 
   public GoalStep(JsonExercise je) {
@@ -34,6 +40,7 @@ public class GoalStep extends BananaNode {
     this.marker = new Exercise.Builder(je.getName())
                       .addSetValues(je.getSetValues())
                       .build();
+    this.name = je.getName();
     setComplete(je.getTag().contains("Complete"));
   }
 
@@ -42,11 +49,11 @@ public class GoalStep extends BananaNode {
   }
 
   public String getName() {
-    return marker.getName();
+    return name;
   }
 
   @Override
   public String toString() {
-    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), marker.toString());
+    return String.format("Goal Step\nComplete? %b\n{\n%s}", isComplete(), marker);
   }
 }

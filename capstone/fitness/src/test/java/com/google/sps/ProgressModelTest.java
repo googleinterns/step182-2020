@@ -200,7 +200,7 @@ public class ProgressModelTest {
     
     // Update GoalStep based of off mock session.
     model.updateModel(sess);
-
+    
     // Test validity of updated dynamic model being a progression.
     boolean betterThanInOneType = model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DISTANCE).orElse(false) ||
                                    model.getCurrentMainGoalStep().getMarker().betterThan(start, SetType.DURATION_DEC).orElse(false); 

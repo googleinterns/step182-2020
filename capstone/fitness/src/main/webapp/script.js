@@ -14,12 +14,8 @@ function initViewData() {
   displayLogIn();
 }
 
-/** 
- Function that fetches the user's calendar ID and puts it into the calendar display link. 
- Also fetches the events to display in the list.
-*/ 
+// Fills in data for embeded calendar. 
 async function getCalendarInfo(){
-
   const calendarInfo = await fetch("/cal-display");
   const idJson = await fetch("/embed");
   const calJson = await calendarInfo.json();
@@ -45,7 +41,6 @@ function newLi(text) {
   liElement.innerText = text;
   return liElement;
 }
-
 
 async function isLoggedin() {
   const loginResponse = await fetch('/login');
@@ -250,4 +245,3 @@ function removeEmail(id, email) {
   const emailLen = email.length;
   return id.substring(emailLen);
 }
-

@@ -73,7 +73,13 @@ public class ProgressPanelServlet extends HttpServlet {
     }
 
     // Add panel comparison exercises.
-    exercises.add(new JsonExercise(NEXT_STEP, next));
+    if(next.getMarker() != null) {
+      exercises.add(new JsonExercise(NEXT_STEP, next));
+    }
+    else {
+      exercises.add(new JsonExercise(NEXT_STEP, goal));
+    }
+
     exercises.add(new JsonExercise(GOAL, goal));
     if(viewing != null) {
       exercises.add(new JsonExercise(VIEWING_STEP, viewing));

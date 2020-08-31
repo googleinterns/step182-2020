@@ -22,6 +22,7 @@ import com.google.sps.util.*;
 import java.util.*;
 
 public class ProgressModel {
+  private static final GoalStep FINISHING_PLACEHOLDER = new GoalStep(null, "");
 
   private GoalStep head;
   private int size;
@@ -138,7 +139,7 @@ public class ProgressModel {
   public boolean progressMainGoalStep(Exercise userExercise) {
     Exercise marker = head.getMarker();
     boolean progressed = false;
-    while(userExercise.betterThan(marker) || userExercise.equalTo(marker)) {
+    while(marker != null && (userExercise.betterThan(marker) || userExercise.equalTo(marker))) {
       progressed = progressMain();
       marker = head.getMarker();
     }
@@ -197,7 +198,7 @@ public class ProgressModel {
   }
 
   public int getSize() {
-    return size;
+    return size - 1;
   }
 
   public GoalStep getLast() {
@@ -205,7 +206,7 @@ public class ProgressModel {
     while(last.getNext() != null) {
         last = last.getNext();
     }
-    return (GoalStep) last;
+    return (GoalStep) last.getPrev();
   }
 
   /**
@@ -215,7 +216,7 @@ public class ProgressModel {
    */
   public GoalStep[] toArray() {
     // Get size based on uncompleted nodes.
-    int length = size;
+    int length = getSize();
     BananaNode firstGoalStep = head;
 
     // Get the true size of queue based on the first ever node.
@@ -245,7 +246,7 @@ public class ProgressModel {
 
   @Override
   public String toString() {
-    String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), size);
+    String str = String.format("Progress Model For %s\nSize: %d\n", head.getName(), getSize());
     GoalStep[] arr = toArray();
     for(int i = 0; i < arr.length; i++) {
       str += arr[i] + "\n\n";
@@ -282,6 +283,8 @@ public class ProgressModel {
       GoalStep last = buildSupplementalGoalSteps(new GoalStep(goal));
       addMainGoalStep(last);
     }
+
+    addMainGoalStep(FINISHING_PLACEHOLDER);
   }
 
   private HashMap<SetType, Float> getValuesChangeBy(int changeCount, Exercise src, Exercise goal) {
@@ -444,6 +447,8 @@ public class ProgressModel {
       goalSteps[0].enqueue(goalSteps[i]);
     }
     
+    goalSteps[0].enqueue(FINISHING_PLACEHOLDER);
+
     BananaNode goalStep = goalSteps[0];
     while(!goalStep.isHead()) {
       goalStep = goalStep.getNext();
