@@ -340,17 +340,14 @@ async function loadDataChart() {
     i++;
   }
 
-  //TODO(gabrieldg)
-  //  Get the initial and goal time to display as horizontal lines.
-
   // Adds the data points to the chart.
   data.addRows(dataRows);
 
   // Customizing the chart
   var options = {
     title: 'progress',
-    width: 300,
-    length: 500,
+    width: 500,
+    length: 800,
     hAxis: {
       title: 'Session #'
     },
