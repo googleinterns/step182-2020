@@ -28,10 +28,13 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;   
 import java.util.*;
+
+import com.google.api.services.calendar.Calendar.Events.Get;
 
 // CalendarServlet initializes the OAuth process and does calendar functions. 
 @WebServlet("/calendar-servlet")
@@ -47,12 +50,21 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
   private static String marathonType = "marathon";  
   private static String nextDayStartTime = "T11:00:00+00:00";
   private static String nextDayEndTime = "T23:00:00+00:00";
-  Gson gson = new Gson();
-  Calendar calendar; 
-  int scheduledLength = 0;
+  private static Gson gson = new Gson();
+  static Calendar calendar; 
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    HttpSession session = request.getSession();
+
+    Integer scheduledNum;
+    if (session.getAttribute("scheduledNum")==null ){
+        scheduledNum = 0; 
+    }
+    else{
+      scheduledNum = (Integer)session.getAttribute("scheduledNum");
+    }
+
     // Build calendar. 
     String userId = getUserId(request);
     Credential credential = Utils.newFlow().loadCredential(userId);
@@ -65,24 +77,24 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
     List<String> workoutList = this.getWorkoutList(user);
     
-    if (workoutList.size() > scheduledLength){ 
-      for (int b = scheduledLength; b < workoutList.size(); b++){
+    if (newWorkouts(user)){ 
+      for (int b = scheduledNum; b <workoutList.size(); b++){
         String type = this.getWorkoutType(workoutList.get(b));
         List<String> exercises = this.getExercises(workoutList.get(b));
         int weeksToTrain = Integer.parseInt(this.getWeeksToTrain(workoutList.get(b)));
         int daysAvailable = weeksToTrain * Time.weeksToDays;
-        int timesPerWeek = daysAvailable/exercises.size(); 
+        int timesPerWeek = daysAvailable/ exercises.size(); 
 
         // Sets minSpan to 7:00 AM the next day, and maxSpan to 7PM the next day.
         LocalDateTime now = LocalDateTime.now();  
         String nextDayOfMonth = myDtf.format(now.plusDays(1));
-
+        
         String minRCF3339 = nextDayOfMonth + nextDayStartTime;
         DateTime minSpan = new DateTime(minRCF3339);
         
         String maxRCF3399 = nextDayOfMonth + nextDayEndTime;
         DateTime maxSpan = new DateTime(maxRCF3399);
-
+ 
         // Use the scheduler to schedule one exercise per day. 
         int y = 0;
     
@@ -94,26 +106,27 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             List<Event> currentlyScheduledEvents = this.getEventsInTimespan(minSpan, maxSpan);
             // User scheduler to get free time and return corresponding event. 
             Event exerciseEvent = scheduler.getFreeTime(minSpan, maxSpan, currentlyScheduledEvents);
-            exerciseEvent = this.configureEvent(exerciseEvent, type, exercises.get(y));
+            exerciseEvent = this.configureEvent(exerciseEvent, exercises.get(y), type);
             this.insertEvent(exerciseEvent);
             
             // Store each event's eventID in datastore for display later.
-            // TODO (@piercedw) : Storing the events as the entire string for now until I can work throught the event Id issue we discussed in podsync.
-            String eventDescription = type + " at " + exerciseEvent.getStart().getDateTime();
-            DataHandler.addEventID(user,eventDescription);
+            DataHandler.addEventID(user, this.getEventId(exerciseEvent.getStart().getDateTime()));
 
             // Increment minSpan and maxSpan by one day. 
             minSpan = this.incrementDay(minSpan, timesPerWeek);
             maxSpan = this.incrementDay(maxSpan, timesPerWeek);
-            y++;
-            }
-          }
-        scheduledLength++;
-         }
-      // Store calendar ID. 
-      DataHandler.setCalendarID(user, this.getCalendarId());
+            y++;}}
+        scheduledNum++; 
+        }
       }
-    response.sendRedirect("/calendar.html"); 
+    // Store calendar ID. 
+    String id = this.getCalendarId();
+    DataHandler.setCalendarID(user, id);
+    
+    String jsonEvents = this.formatEvents();
+    session.setAttribute("scheduledNum", scheduledNum);
+    session.setAttribute("events", jsonEvents);
+    response.sendRedirect("/calendar.html");
     }
  
   @Override
@@ -172,19 +185,59 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
   // Gets the # of weeks from a workout. 
   private String getWeeksToTrain(String workoutName){
-      String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
-      return weekNum;
+    String weekNum = DataHandler.getWorkoutData("weeksToTrain", DataHandler.getWorkout(workoutName));
+    return weekNum;
   }
 
   private String getWorkoutType(String workoutName){
-      String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
-      return workoutType;
+    String workoutType = DataHandler.getWorkoutData("workoutType", DataHandler.getWorkout(workoutName));
+    return workoutType;
   }
   
   // Increments day in scheduling flow.
   private DateTime incrementDay(DateTime moment, int timesPerWeek){
     DateTime incremented = new DateTime(moment.getValue() + (Time.millisecondsPerDay * timesPerWeek));
     return incremented;
+  }
+
+  private String formatEvents() throws IOException{
+    // Get eventIds from datastore. 
+    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
+
+    PriorityQueue<Event> displayEvents = new PriorityQueue<Event>((eventIdArray.size() +1), new EventComparator());
+    
+    // Unzip into real event instances using events.get(). Ignore null (deleted) events. 
+    for (String eachId : eventIdArray){
+      com.google.api.services.calendar.Calendar.Events.Get get = calendar.events().get("primary", eachId);
+      Event nextEvent = get.execute();
+      // Do not display deleted events. 
+      if (!nextEvent.getStatus().equals("cancelled")){
+        displayEvents.add(nextEvent);
+      }
+    }
+    // Turn events into Json and send to calendar display servlet.
+    String jsonEvents = gson.toJson(displayEvents);
+    return jsonEvents;
+  }
+  private String getEventId(DateTime time) throws IOException {
+    Events events = calendar.events().list("primary").setTimeMin(time).setOrderBy("startTime").setSingleEvents(true).execute();
+    List<Event> items = events.getItems();
+    return items.get(0).getId();
+  }
+  private boolean newWorkouts(Entity user){
+    // Get all the goalsteps belonging to the user.
+    List<String> workouts = this.getWorkoutList(user);
+    
+    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
+
+    List <String> totalExercises = new ArrayList();
+    for (String workout : workouts){
+      totalExercises.addAll(this.getExercises(workout));
+    }
+    // compare the number of goalsteps to the number of eventIds.
+    return totalExercises.size() > eventIdArray.size();
   }
 
   private Event configureEvent(Event event, String summary, String type){
@@ -203,5 +256,4 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     }
     return event; 
   }
-  
 }

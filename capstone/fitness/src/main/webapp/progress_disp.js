@@ -39,10 +39,19 @@ const progressSets = `
     </div>
   </div>
 `;
-const progressBarDiv = `<div class="row progress" id="keywordId-index"></div>`;
+
+const progressCircle = `
+  <div class="progress mx-auto" data-value='percentage'>
+    <span class="progress-left"><span class="progress-bar border-primary"></span></span>
+    <span class="progress-right"><span class="progress-bar border-primary"></span></span>
+    <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+      <div class="h2 font-weight-bold">percentage<sup class="small">%</sup></div>
+    </div>
+  </div><br>`;
 
 async function loadPage() {
   await updateDisplay(-1);
+  loadDataChart();
 }
 
 async function updateDisplay(insertionIndex) {
@@ -162,7 +171,7 @@ async function updatePanels(insertionIndex, goalIndex) {
   // Get stats for the panels of the page.
   const params = new URLSearchParams();
   params.append('insertion', insertionIndex);
-  await fetch('/stats', {method: 'POST', body: params});
+  await fetch('/panels', {method: 'POST', body: params});
 
   clearPanels();
   
@@ -177,9 +186,10 @@ async function updatePanels(insertionIndex, goalIndex) {
   // Add percentage comparisons between session exercises and panel headers (next goal step, goal, and viewing step).
   for(let i = 0; i < panelsList.length; i++) {
     if(panelsList[i].tag.includes(sessionKeyword) && panelsList[i].name === goal.name) {
-      addPercentages(panelsList[i], next, goal, viewing, i);
+      addPercentages(panelsList[i], next, goal, viewing);
     }
   }
+  loadPercentages();
 }
 
 function clearPanels() {
@@ -227,26 +237,24 @@ function enableViewingPanel(viewing, insertionIndex, goalIndex) {
   }
 }
 
-function addPercentages(sessionExercise, next, goal, viewing, index) {
+function addPercentages(sessionExercise, next, goal, viewing) {
   for (let type in sessionExercise.setValues) {
-    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type], index);
-    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type], index);
+    addToPanel(nextKeyword, sessionExercise.setValues[type], next.setValues[type]);
+    addToPanel(goalKeyword, sessionExercise.setValues[type], goal.setValues[type]);
     if(viewing) {
-      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type], index);
+      addToPanel(viewKeyword, sessionExercise.setValues[type], viewing.setValues[type]);
     }
   }
 }
 
-function addToPanel(keyword, sessionValues, comparisonValues, index) {
-  let fraction = (sum(sessionValues)/sum(comparisonValues)).toPrecision(2);
-  if(fraction > 1) {
-    fraction = 1;
+function addToPanel(keyword, sessionValues, comparisonValues) {
+  let percentage = (sum(sessionValues)/sum(comparisonValues) * 100).toPrecision(2);
+  if(percentage >= 100) {
+    percentage = "100";
   }
   // Set the progress bar and sets for the panel of the corresponding keyword.
   var keywordTuple = getBarAndSets(keyword);
-  const id = keywordTuple["bar"].attr('id');
-  keywordTuple["bar"].html(keywordTuple["bar"].html() +  progressBarDiv.replace("index", index).replace("keywordId", id));
-  loadCircleProgressBars(id, fraction, index);
+  keywordTuple["bar"].html(keywordTuple["bar"].html() + progressCircle.replace("percentage", percentage).replace("percentage", percentage));
   keywordTuple["sets"].html(keywordTuple["sets"].html() + progressSets.replace("sets", sessionValues).replace("sets", comparisonValues).replace("keyword", keyword));
 }
 
@@ -255,39 +263,102 @@ function sum(values) {
   return summation;
 }
 
-function loadCircleProgressBars(id, fraction, index) {
-  var circle = new ProgressBar.Circle(`#${id}-${index}`, {
-    color: '#aaa',
-    duration: 1500,
-    easing: 'bounce',
-    strokeWidth: 4,
-    trailWidth: 1,
-    from: { color: '#aaa', width: 1 },
-    to: { color: '#333', width: 4 },
-    step: function(state, circle) {
-      circle.path.setAttribute('stroke', state.color);
-      circle.path.setAttribute('stroke-width', state.width);
-
-      var value = Math.round(circle.value() * 100);
-      circle.setText(value + "%");
+function loadPercentages() {
+  $(".progress").each(function() {
+    // Takes each progress panel and writes two half circles to it that make up the circular progress bar.
+    var value = $(this).attr('data-value');
+    var left = $(this).find('.progress-left .progress-bar');
+    var right = $(this).find('.progress-right .progress-bar');
+    
+    if (value > 0) {
+      if (value <= 50) {
+        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)');
+      } else {
+        right.css('transform', 'rotate(180deg)');
+        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)');
+      }
     }
   });
-  
-  circle.text.style.fontSize = '2rem';
+}
 
-  circle.animate(fraction);
+function percentageToDegrees(percentage) {
+  return percentage / 100 * 360;
 }
 
 /** 
  * Updates progress page's viewing panel if the user hovers over a goal step.
  */
 $(document).on("mouseover", "button[name='" + viewStep + "']", async function() {
-    const value = parseInt($(this).val());
+    const value = parseInt(await $(this).val());
     if(viewingIndex != value) {
       viewingIndex = value;
       await updateDisplay(value);
     }
 });
+
+
+/**
+ Function that fills in the charts div.
+ Retrieves sesssion data from datastore and displays it on the chart.
+ */
+google.charts.load('current', {packages: ['corechart', 'line']});
+google.charts.setOnLoadCallback(loadDataChart);
+async function loadDataChart() {
+
+  // Gets the JSON object that holds all the sesssions.
+  const progressRequest = await fetch('/progress');
+  const progressText = await progressRequest.text();
+  var progressData = progressText.split("\n");
+
+  const sessions = JSON.parse(progressData[0]);
+  const type = progressData[1];
+
+  var yAxis='';
+  if(type == "marathon") {
+    yAxis = 'Speed';
+  }
+  else {
+    yAxis = 'WeightXReps'
+  }
+
+  // Set up chart for X/Y visualization.
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'numberOfSessions');
+  data.addColumn('number', yAxis);
+
+
+  // Create matrix with sessions numbers and speeds.
+  var dataRows = [];
+  var i=0;
+  while(sessions[i]) {
+    if(type == "marathon") {
+        dataRows[i] = [i, sessions[i].speed];
+    }
+    else {
+      dataRows[i] = [i, sessions[i].reps * sessions[i].weight];
+    }
+    i++;
+  }
+
+  // Adds the data points to the chart.
+  data.addRows(dataRows);
+
+  // Customizing the chart
+  var options = {
+    title: 'progress',
+    width: 500,
+    length: 800,
+    hAxis: {
+      title: 'Session #'
+    },
+    vAxis: {
+      title: yAxis
+    }
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('data-chart'));
+  chart.draw(data, options);
+}
 
 /**
  * Changes the filter and progress page's goal steps if a radio button is selected. 
@@ -298,3 +369,4 @@ $(document).on("click", "input[name='filter']", async function() {
     await fetch('/display-param', {method: 'POST', body: params});
     await updateDisplay(-1);
 });
+

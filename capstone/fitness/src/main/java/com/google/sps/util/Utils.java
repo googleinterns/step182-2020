@@ -22,7 +22,7 @@ import com.google.api.services.calendar.Calendar;
 
 // Utils.java contains helper functions for both Abstract Authorization Servlets
 public class Utils {
-  static String APPLICATION_NAME = "Marathon App";
+  static String APPLICATION_NAME = "GetIn' Progress";
   /**   * Global instance of the {@link DataStoreFactory}.    */
 
   private static final AppEngineDataStoreFactory DATA_STORE_FACTORY =

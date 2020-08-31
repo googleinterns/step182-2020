@@ -34,6 +34,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,65 +47,80 @@ public class ProgressServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    Entity user = DataHandler.getUser();
-    
-
-    // Get the users progress from datastore
-    String progressString = (String) user.getProperty(DataHandler.PROGRESS_PROPERTY);
+    // Get the workout progress from datastore
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
+    Entity workout = DataHandler.getWorkout(workoutName);
+    String progressString = (String) DataHandler.getWorkoutData(DataHandler.PROGRESS_PROPERTY, workout);
+    String type = (String) DataHandler.getWorkoutData(DataHandler.TYPE_PROPERTY, workout);
 
     //Give the output in JSON format
     response.setContentType("application/json");
     response.getWriter().println(progressString);
+    response.getWriter().println(type);
   }
 
     @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    HttpSession session = request.getSession();
+    String workoutName = (String) session.getAttribute("workoutName");
 
-    Entity user=DataHandler.getUser();
+    Entity workout = DataHandler.getWorkout(workoutName);
+    String type = DataHandler.getWorkoutData(DataHandler.TYPE_PROPERTY, workout);
+     
+    // Get the date.
+    long timestamp = System.currentTimeMillis();
+    String date = DataHandler.getDate(timestamp);
 
     // TODO(gabrieldg@) change to throw exception.
     // Redirect if user not found.
-    if(user == null) {
+    if(workout == null) {
       RequestDispatcher view = request.getRequestDispatcher("/");
       view.forward(request, response);
     }
 
     // Get the users current progress string (JSON format).
-    String progressJson = (String) (user.getProperty(DataHandler.PROGRESS_PROPERTY));
+    String progressJson = (String) (workout.getProperty(DataHandler.PROGRESS_PROPERTY));
 
-    // Get the users marathon length.
-    float marathonLength = (float) (double) user.getProperty(DataHandler.MARATHON_LENGTH_PROPERTY);
+    if(type.equals("marathon")) {
 
-    // Should never happen if user is not null.
-    // TODO(@gabrieldg) throw actual exception.
-    if(progressJson == null) {
-      progressJson = "[]";
+      // Get the users marathon length.
+      float marathonLength = (float) (double) workout.getProperty(DataHandler.MARATHON_LENGTH_PROPERTY);
+  
+      // Get parameters from progress update and calculate total time.
+      float hours = Float.parseFloat(request.getParameter("hours"));
+      float minutes = Float.parseFloat(request.getParameter("minutes"));
+      float seconds = Float.parseFloat(request.getParameter("seconds"));
+      float totalhours = hours + minutes/((float) 60) + seconds/((float) 3660);
+  
+      // Convert progress JSON string into an arraylist of sessions.
+      ArrayList<MarathonSession> sessions = gson.fromJson(progressJson, new TypeToken<List<MarathonSession>>(){}.getType());
+      
+      // Add current session to the list of sessions.
+      MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
+      sessions.add(curSession);
+  
+      //Convert the sessions back to a JSON string.
+      progressJson = gson.toJson(sessions);
+
+    }
+    else {
+      int weight = Integer.parseInt(request.getParameter("weight"));
+      int reps = Integer.parseInt(request.getParameter("reps"));
+      
+      // Convert progress JSON string into an arraylist of sessions.
+      ArrayList<LiftingSession> sessions = gson.fromJson(progressJson, new TypeToken<List<LiftingSession>>(){}.getType());
+
+      LiftingSession curSession = new LiftingSession(timestamp, reps, weight, date);
+      sessions.add(curSession);
+
+      progressJson = gson.toJson(sessions);
     }
 
-    // Get parameters from progress update and calculate total time.
-    float hours = Float.parseFloat(request.getParameter("hours"));
-    float minutes = Float.parseFloat(request.getParameter("minutes"));
-    float seconds = Float.parseFloat(request.getParameter("seconds"));
-    float totalhours = hours + minutes/((float) 60) + seconds/((float) 3660);
-
-    // Convert progress JSON string into an arraylist of sessions.
-    ArrayList<MarathonSession> sessions = gson.fromJson(progressJson, new TypeToken<List<MarathonSession>>(){}.getType());
-
-    // Get the date.
-    long timestamp = System.currentTimeMillis();
-    String date = DataHandler.getDate(timestamp);
-    
-    // Add current session to the list of sessions.
-    MarathonSession curSession = new MarathonSession(timestamp, marathonLength/totalhours, date);
-    sessions.add(curSession);
-
-    //Convert the sessions back to a JSON string.
-    progressJson = gson.toJson(sessions);
-
     // Update new progress string in datastore.
-    user.setProperty(DataHandler.PROGRESS_PROPERTY, progressJson);
+    workout.setProperty(DataHandler.PROGRESS_PROPERTY, progressJson);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
+    datastore.put(workout);
 
     // Redirect to home.
     RequestDispatcher view = request.getRequestDispatcher("/");

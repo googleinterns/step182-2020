@@ -135,6 +135,9 @@ public class DataHandler {
   * @return     the workout entity
   */
   public static Entity getWorkout(String name) {
+    if(name == null) {
+      return null;
+    }
     // Find user in datastore.
     Query query = new Query(WORKOUT_ENTITY);
     PreparedQuery results = datastore.prepare(query);
@@ -182,50 +185,45 @@ public class DataHandler {
     return data; 
   }
 
-  public static void setGoalSteps(String goalStepsJson) {
-    Entity user = getUser();
-    user.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(user);
-  } 
-
-
-  public static Session getLastSession(Entity workout) {
+  public static Session getLastSession(String workoutName) {
+    String trueName = workoutName.substring(getUserEmail().length());
+    Entity workout = getWorkout(workoutName);
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
+    String type = getWorkoutData(TYPE_PROPERTY, workout);
     if(sessionsJson != null) {
-      ArrayList<MarathonSession> sessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
-      if(sessions.isEmpty()) {
-        return null;
+      switch(type) {
+        case "lifting":
+          ArrayList<LiftingSession> liftingSessions = new Gson().fromJson(sessionsJson, new TypeToken<List<LiftingSession>>(){}.getType());
+          if(liftingSessions.isEmpty()) {
+            return null;
+          }
+          return new Session(liftingSessions.get(liftingSessions.size() - 1), trueName);
+        case "marathon":
+          ArrayList<MarathonSession> marathonSessions = new Gson().fromJson(sessionsJson, new TypeToken<List<MarathonSession>>(){}.getType());
+          if(marathonSessions.isEmpty()) {
+            return null;
+          }
+          return new Session(marathonSessions.get(marathonSessions.size() - 1), trueName);
+        default:
+          return null;
       }
-      return new Session(sessions.get(sessions.size() - 1));
     }
     return null;
   }
-  
+
   /**
   *getGoalSteps returns the JSON string of the goalsteps of the workout
   * @param workout  the workout we want the info from
   * @return         the goalsteps string
   */
   public static String getGoalSteps(Entity workout) {
+    if(workout == null) {
+      return "";
+    }
     String goalSteps = ((Text) workout.getProperty(GOAL_STEPS_PROPERTY)).getValue();
     return goalSteps;
   }
 
-
-  /**
-  *getGoalSteps returns the JSON string of the goalsteps of the workout
-  * @param workout  the workout we want the info from
-  * @return         the goalsteps string
-  */
-  public static String getGoalSteps() {
-    Entity user = getUser();
-    if(user == null) {
-      return null;
-    }
-    String goalSteps = ((Text) user.getProperty(GOAL_STEPS_PROPERTY)).getValue();
-    return goalSteps;
-  }
 
   /**
   * setGoalSteps updates the JSON string of the goalsteps of the workout
@@ -235,13 +233,15 @@ public class DataHandler {
   * @return                 none
   */
   public static void setGoalSteps(String goalStepsJson, Entity workout) {
+    if(workout == null) {
+      return;
+    }
     workout.setProperty(GOAL_STEPS_PROPERTY, new Text(goalStepsJson));
     datastore.put(workout);
   }
 
   /**
   * setCalendarID sets the ID for authentication of the calendar
-
   * @param user the user's whose calendar ID we want to update
   * @param id   the new Calendar ID
   * @return     none
@@ -287,4 +287,10 @@ public class DataHandler {
       return true; 
   }
   
+  public static String getUserEmail() {
+    UserService userService = UserServiceFactory.getUserService();
+    String userEmail = userService.getCurrentUser().getEmail();
+    return userEmail;
+  }
+
 }
