@@ -119,10 +119,11 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
             y++;}}
         scheduledNum++; 
         }
-      // Store calendar ID. 
-      String id = this.getCalendarId();
-      DataHandler.setCalendarID(user, id);
       }
+    // Store calendar ID. 
+    String id = this.getCalendarId();
+    DataHandler.setCalendarID(user, id);
+    
     String jsonEvents = this.formatEvents();
     session.setAttribute("scheduledNum", scheduledNum);
     session.setAttribute("events", jsonEvents);
