@@ -51,8 +51,7 @@ async function displayLogIn() {
   if(userEmail != "stranger") {  
     const userData = await fetch('/get-user-data');
     const userDataJson = await userData.json();
-    console.log(userDataJson);
-    loginContainer.innerHTML = createLoginTemplate(userEmail, url, "out");
+    loginContainer.innerHTML = createLoginTemplate(userDataJson.name, url, "out");
   }
   else {
     loginContainer.innerHTML = createLoginTemplate(userEmail, url, "in");
