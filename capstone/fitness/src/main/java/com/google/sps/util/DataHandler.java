@@ -190,7 +190,6 @@ public class DataHandler {
     Entity workout = getWorkout(workoutName);
     String sessionsJson = getWorkoutData(PROGRESS_PROPERTY, workout);
     String type = getWorkoutData(TYPE_PROPERTY, workout);
-    String trueName = workoutName.substring(getUserEmail().length());
     if(sessionsJson != null) {
       switch(type) {
         case "lifting":
