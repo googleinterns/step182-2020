@@ -9,8 +9,9 @@
 }
 
 body {
-  background: #878787;
+  background: #3cbcfc;
   color: white;
+  font-family: Consolas, monaco, monospace;
 }
 
 .text-gray {
@@ -48,9 +49,160 @@ body {
   height: 25%;
 }
 
+/*
+  Progress Styling. 
+  Code Snippet taken from https://jsfiddle.net/bootstrapious/3xnomecr.
+*/
+
 .progress {
   background: none;
+  color:black !important;
   height: 150px;
-  margin: auto;
+  position: relative;
   width: 150px;
+}
+
+.progress::after {
+  border: 6px solid #eee;
+  border-radius: 50%;
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress>span {
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 50%;
+  z-index: 1;
+}
+
+.progress .progress-left {
+  left: 0;
+}
+
+.progress .progress-bar {
+  background: none;
+  border-style: solid;
+  border-width: 6px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.progress .progress-left .progress-bar {
+  border-bottom-right-radius: 80px;
+  border-left: 0;
+  border-top-right-radius: 80px;
+  left: 100%;
+  transform-origin: center left;
+  -webkit-transform-origin: center left;
+}
+
+.progress .progress-right {
+  right: 0;
+}
+
+.progress .progress-right .progress-bar {
+  border-bottom-left-radius: 80px;
+  border-right: 0;
+  border-top-left-radius: 80px;
+  left: -100%;
+  transform-origin: center right;
+  -webkit-transform-origin: center right;
+}
+
+.progress .progress-value {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+#header {
+  width: 100%;
+  float: left;
+  text-align: end;
+  padding-bottom: 100px;
+}
+
+#title {
+  float: left;
+  font-weight: bold;
+  margin-left: 10%;
+}
+
+#login {
+
+}
+
+#ui {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  overflow: hidden;
+}
+
+#create-workout {
+  float: left;
+  width: 30%;
+  text-align: center;
+}
+
+#view-workout {
+  float: left;
+  width: 30%;
+  margin-left: 5%;
+  text-align: center;
+}
+
+#calendar {
+  float: left;
+  width: 30%;
+  margin-left: 5%;
+  text-align: center;
+}
+
+#running-guy {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.select {
+  border: 1px solid #dddddd;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #ffffff;
+  background-color: royalblue;
+  height: 30px;
+  width: 150px;
+  text-align-last: center;
+}
+
+.select:focus,
+.select:hover {
+    border: 2px solid #bbbbbb;
+}
+
+.title-text {
+  padding: 10px;
+}
+
+.input-number {
+    width: 60px;
+    margin: 5px;
+}
+
+.input-text {
+    margin: 5px;
+}
+
+.input-form {
+  text-align: start;
+  padding-left: 35px
 }

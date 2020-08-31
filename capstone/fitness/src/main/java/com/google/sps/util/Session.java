@@ -50,8 +50,4 @@ public class Session implements Serializable {
   public Exercise[] getWorkout() {
     return workout;
   } 
-
-  public String toString() {
-    return Arrays.toString(workout);
-  }
 }

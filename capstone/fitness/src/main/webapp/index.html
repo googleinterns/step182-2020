@@ -2,37 +2,47 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>GetIn' Progress</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
   <body onload="initIndex();">
     <div id="content">
-      <!-- basic navbar for navigation during development. can be stylized later. -->
-      <div class="topnav">
-        <a class="active" href="/">Home</a>
-        <a href="/calendar-servlet">Calendar</a>
-        <a href="/progress.html">Progress</a>
-        <a href="/view-data.html">Data</a>
-      </div>
       
-      <div id="login"></div>
-
-      <form action="javascript:fillWorkoutQuestions();" method="POST">
-        <label for"workoutType">Chose the kind of workout you would like to create</label>
-        <select name="workoutType" id="workout-type">
-          <option value="lifting">Lift Weights</option>
-          <option value="marathon">Run a marathon</option>
-        </select>
-        <input type="submit" value="Chose this workout">
-      </form>
-
-      <div id="workout-information-container"></div>
-
+      <div id="header">
+        <h1 id="title">GetIn' Progress!</h1>
+        <div id="login"></div>
+      </div>
       <br>
+      <div id="ui">
+        <div id="create-workout">
+          <form action="javascript:fillWorkoutQuestions();" method="POST">
+            <h2 class="title-text">Choose a type of workout to create</h2>
+            <select class="select" name="workoutType" id="workout-type">
+              <option disabled selected>Choose a type</option>
+              <option value="lifting">Strength</option>
+              <option value="marathon">Cardio</option>
+            </select>
+            <input type="submit" value="Chose this workout">
+          </form>
+          <br>
+          <div id="workout-information-container"></div>
+        </div>
 
-      <div id="view-workouts-container"></div>
+        <div id="view-workout">
+            <h2 class="title-text">Choose the workout you would like to view</h2>
+          <div id="view-workouts-container"></div>
+        </div>
 
+        <div id="calendar">
+          <h2 class="title-text">Click to see your calendar!</h2>
+          <a href="calendar.html">calendar</a>  
+        </div>
+      </div>
+
+      <div id="running-guy">
+        <img src="running-guy.gif" alt="running-guy">
+      </div>
     </div>
   </body>
 </html>

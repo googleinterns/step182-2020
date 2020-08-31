@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
 * ViewWorkoutServlet will show the user the progress in the workout 
 * as well as the ability to complete sessions.
-* TODO(@gabrieldg @ijelue) integrate all components of our UIs
 */
 @WebServlet("/view-workout")
 public class ViewWorkoutServlet extends HttpServlet { 
@@ -22,8 +21,6 @@ public class ViewWorkoutServlet extends HttpServlet {
     String workoutName = request.getParameter("selectWorkout");
     HttpSession session = request.getSession();
     session.setAttribute("workoutName", workoutName);
-    // response.setContentType("text/html");
-    // response.getWriter().println(workoutName);
     response.sendRedirect("/progress.html");
   }
 }

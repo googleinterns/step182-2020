@@ -40,6 +40,8 @@ public class UserDataServlet extends HttpServlet {
       }
     }
 
+    json.put("email", DataHandler.getUserEmail());
+
     response.setContentType("application/json");
     response.getWriter().println(json.toString());
   }
