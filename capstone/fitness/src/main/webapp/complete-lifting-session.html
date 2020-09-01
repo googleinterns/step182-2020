@@ -9,17 +9,23 @@
   
   <body>
     <div id="content">
-      <form action="/progress" method="POST">
-        <div id="input-time">
-          <p class="separator">Enter your number of reps:</p>
-          <input class="time-box" type="number" name="reps" min="0">
+      <div class="topnav">
+        <a href="/">Home</a>
+      </div>
+      <div class="complete-session-content">
+        <h2>Complete session<h2>
+        <form action="/progress" method="POST">
+          <div id="input-time">
+            <p class="separator">Enter your number of reps:</p>
+            <input class="time-box" type="number" name="reps" min="0">
+            <br>
+            <p class="separator">Enter your max weight:</p>
+            <input class="time-box" type="number" name="weight">
+          </div>
           <br>
-          <p class="separator">Enter your max weight:</p>
-          <input class="time-box" type="number" name="weight">
-        </div>
-        <br>
-        <input type="submit">
-      </form>
+          <input type="submit">
+        </form>
+      </div>
     </div>
   </body>
 </html>
