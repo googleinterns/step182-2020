@@ -220,6 +220,7 @@ public class DataHandler {
     if(workout == null) {
       return "";
     }
+    System.out.println("***** CLASS: " + workout.getProperty(GOAL_STEPS_PROPERTY).getClass());
     String goalSteps = ((Text) workout.getProperty(GOAL_STEPS_PROPERTY)).getValue();
     return goalSteps;
   }
@@ -259,9 +260,10 @@ public class DataHandler {
   * @return     null
   */
   public static void addEventID(Entity user, String id) {
-      ArrayList<String> EventIds = gson.fromJson(getUserData(EVENT_IDS_PROPERTY, user), new TypeToken<List<String>>(){}.getType());
+      String e = getIds(user);
+      ArrayList<String> EventIds = gson.fromJson(e, new TypeToken<List<String>>(){}.getType());
       EventIds.add(id);
-      user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
+      user.setProperty(EVENT_IDS_PROPERTY, new Text(gson.toJson(EventIds)));
       datastore.put(user);
   }
 
@@ -292,4 +294,13 @@ public class DataHandler {
     String userEmail = userService.getCurrentUser().getEmail();
     return userEmail;
   }
+
+
+
+  public static String getIds(Entity user) {
+    System.out.println("***** CLASS: " + user.getProperty(EVENT_IDS_PROPERTY).getClass());
+    String ids = ((Text) user.getProperty(EVENT_IDS_PROPERTY)).getValue();
+    return ids;
+  }
+  
 }
