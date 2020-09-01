@@ -295,7 +295,12 @@ public class DataHandler {
   }
 
 
-
+  /**
+  * getIDS - converts the Text object to a Json string and returns it.
+  *
+  * @param user the user
+  * @return     Json string of ids
+  */
   public static String getIds(Entity user) {
     String ids = ((Text) user.getProperty(EVENT_IDS_PROPERTY)).getValue();
     return ids;
