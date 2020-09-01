@@ -205,7 +205,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
-    PriorityQueue<Event> displayEvents = new PriorityQueue<Event>((eventIdArray.size() +1), new EventComparator());
+    ArrayList<Event> displayEvents = new ArrayList<Event>();
     
     // Unzip into real event instances using events.get(). Ignore null (deleted) events. 
     for (String eachId : eventIdArray){
