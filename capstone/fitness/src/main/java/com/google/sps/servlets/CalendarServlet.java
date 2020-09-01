@@ -202,7 +202,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
 
   private String formatEvents() throws IOException{
     // Get eventIds from datastore. 
-    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    String eventIdsHolder = DataHandler.getIds(  DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
     ArrayList<Event> displayEvents = new ArrayList<Event>();
@@ -229,7 +229,7 @@ public class CalendarServlet extends AbstractAppEngineAuthorizationCodeServlet {
     // Get all the goalsteps belonging to the user.
     List<String> workouts = this.getWorkoutList(user);
     
-    String eventIdsHolder = DataHandler.getUserData("EventIds", DataHandler.getUser());
+    String eventIdsHolder = DataHandler.getIds( DataHandler.getUser());
     List<String> eventIdArray = gson.fromJson(eventIdsHolder, new TypeToken<List<String>>(){}.getType());
 
     List <String> totalExercises = new ArrayList();

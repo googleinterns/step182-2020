@@ -259,9 +259,10 @@ public class DataHandler {
   * @return     null
   */
   public static void addEventID(Entity user, String id) {
-      ArrayList<String> EventIds = gson.fromJson(getUserData(EVENT_IDS_PROPERTY, user), new TypeToken<List<String>>(){}.getType());
+      String e = getIds(user);
+      ArrayList<String> EventIds = gson.fromJson(e, new TypeToken<List<String>>(){}.getType());
       EventIds.add(id);
-      user.setProperty(EVENT_IDS_PROPERTY, gson.toJson(EventIds));
+      user.setProperty(EVENT_IDS_PROPERTY, new Text(gson.toJson(EventIds)));
       datastore.put(user);
   }
 
@@ -292,4 +293,17 @@ public class DataHandler {
     String userEmail = userService.getCurrentUser().getEmail();
     return userEmail;
   }
+
+
+  /**
+  * getIDS - converts the Text object to a Json string and returns it.
+  *
+  * @param user the user
+  * @return     Json string of ids
+  */
+  public static String getIds(Entity user) {
+    String ids = ((Text) user.getProperty(EVENT_IDS_PROPERTY)).getValue();
+    return ids;
+  }
+  
 }
