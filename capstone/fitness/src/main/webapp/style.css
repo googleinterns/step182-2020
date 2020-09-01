@@ -199,8 +199,6 @@ body {
   width:45%; 
 }
  
- 
-=======
 .select:focus,
 .select:hover {
     border: 2px solid #bbbbbb;
@@ -222,4 +220,9 @@ body {
 .input-form {
   text-align: start;
   padding-left: 35px
+}
+
+.complete-session-content {
+    text-align: center;
+    padding-top: 50px;
 }
