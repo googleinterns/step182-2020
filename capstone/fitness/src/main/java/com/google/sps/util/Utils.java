@@ -47,7 +47,7 @@ public class Utils {
     return clientSecrets;
   }
   public static String getRedirectUri(HttpServletRequest req) {
-    return req.getContextPath() + "/oauth2callback";
+    return "https://capstone-step182-2020.uc.r.appspot.com/oauth2callback";
   }
 
   public static GoogleAuthorizationCodeFlow newFlow() throws IOException {
