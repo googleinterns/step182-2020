@@ -220,7 +220,6 @@ public class DataHandler {
     if(workout == null) {
       return "";
     }
-    System.out.println("***** CLASS: " + workout.getProperty(GOAL_STEPS_PROPERTY).getClass());
     String goalSteps = ((Text) workout.getProperty(GOAL_STEPS_PROPERTY)).getValue();
     return goalSteps;
   }
@@ -298,7 +297,6 @@ public class DataHandler {
 
 
   public static String getIds(Entity user) {
-    System.out.println("***** CLASS: " + user.getProperty(EVENT_IDS_PROPERTY).getClass());
     String ids = ((Text) user.getProperty(EVENT_IDS_PROPERTY)).getValue();
     return ids;
   }
