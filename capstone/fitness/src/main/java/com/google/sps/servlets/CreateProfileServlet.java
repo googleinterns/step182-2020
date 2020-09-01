@@ -65,7 +65,7 @@ public class CreateProfileServlet extends HttpServlet {
     newUser.setProperty(DataHandler.AGE_PROPERTY, age);
     newUser.setProperty(DataHandler.WORKOUT_LIST_PROPERTY, "[]");
     newUser.setProperty(DataHandler.CALENDAR_ID_PROPERTY, "");
-    newUser.setProperty(DataHandler.EVENT_IDS_PROPERTY, "[]");
+    newUser.setProperty(DataHandler.EVENT_IDS_PROPERTY, new Text("[]"));
 
     
     // Put user in datastore.
